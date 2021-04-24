@@ -1,8 +1,0 @@
-{
-  "parent": "nationsmod:block/side",
-  "textures": {
-    "bottom": "block/phillar_bottom",
-    "top": "block/phillar_top",
-    "side": "block/phillar_side"
-  }
-}

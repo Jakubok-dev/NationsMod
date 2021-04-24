@@ -5,8 +5,8 @@ import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;
 
-public class NationPhillarItemBase extends BlockItem {
-    public NationPhillarItemBase(Block block) {
+public class NationPillarItemBase extends BlockItem {
+    public NationPillarItemBase(Block block) {
         super(block, new FabricItemSettings().group(Nations.nations_tab));
     }
 }

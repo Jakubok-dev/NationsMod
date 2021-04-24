@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "nationsmod:block/nation_pillar" },
+    "facing=east":  { "model": "nationsmod:block/nation_pillar", "y":  90},
+    "facing=south": { "model": "nationsmod:block/nation_pillar", "y": 180 },
+    "facing=west":  { "model": "nationsmod:block/nation_pillar", "y": 270 }
+  }
+}

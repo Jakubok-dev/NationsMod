@@ -1,16 +1,22 @@
 package me.Jakubok.nations.util;
 
 import me.Jakubok.nations.Nations;
-import me.Jakubok.nations.block.NationPhillarBase;
+import me.Jakubok.nations.block.NationPillarBase;
+import me.Jakubok.nations.block.NationPillarEntity;
 import net.minecraft.block.Block;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
 public class Blocks {
 
-    public static final Block NATION_PHILLAR = new NationPhillarBase();
+    public static final Block NATION_PILLAR = new NationPillarBase();
+
+    // Block Entities
+    public static BlockEntityType<NationPillarEntity> NATION_PILLAR_ENTITY;
 
     public static void init() {
-        Registry.register(Registry.BLOCK, new Identifier(Nations.MOD_ID, "nation_phillar"), NATION_PHILLAR);
+        Registry.register(Registry.BLOCK, new Identifier(Nations.MOD_ID, "nation_pillar"), NATION_PILLAR);
+        NATION_PILLAR_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Nations.MOD_ID, "nation_pillar_entity"), BlockEntityType.Builder.create(NationPillarEntity::new, NATION_PILLAR).build(null));
     }
 }

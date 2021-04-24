@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "nationsmod:item/health_of_nation"
+    "layer0": "nationsmod:item/heart_of_nation"
   }
 }

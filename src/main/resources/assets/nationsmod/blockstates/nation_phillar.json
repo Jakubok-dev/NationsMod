@@ -1,8 +1,0 @@
-{
-  "variants": {
-    "facing=north": { "model": "nationsmod:block/nation_phillar" },
-    "facing=east":  { "model": "nationsmod:block/nation_phillar", "y":  90},
-    "facing=south": { "model": "nationsmod:block/nation_phillar", "y": 180 },
-    "facing=west":  { "model": "nationsmod:block/nation_phillar", "y": 270 }
-  }
-}
