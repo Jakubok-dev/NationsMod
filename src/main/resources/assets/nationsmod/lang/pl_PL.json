@@ -1,6 +1,13 @@
 {
   "item.nationsmod.constitution": "Konstytucja",
   "itemGroup.nationsmod.nations_tab": "Nacje",
-  "block.nationsmod.nation_phillar": "Filar Narodu",
-  "item.nationsmod.health_of_nation": "Serce Kraju"
+  "block.nationsmod.nation_pillar": "Filar Narodu",
+  "item.nationsmod.heart_of_nation": "Serce Kraju",
+  "block.nationsmod.nation_pillar.lore.0": "Nienaładowane",
+  "block.nationsmod.nation_pillar.lore.1": "Poziom 1",
+  "block.nationsmod.nation_pillar.lore.2": "Poziom 2",
+  "block.nationsmod.nation_pillar.lore.3": "Poziom 3",
+  "block.nationsmod.nation_pillar.lore.4": "Poziom 4",
+  "block.nationsmod.nation_pillar.lore.5": "Poziom 5",
+  "block.nationsmod.nation_pillar.lore.no_heart": "Nie włożono serca"
 }

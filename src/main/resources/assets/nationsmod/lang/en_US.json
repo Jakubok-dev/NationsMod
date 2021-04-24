@@ -1,6 +1,13 @@
 {
   "item.nationsmod.constitution": "Constitution",
   "itemGroup.nationsmod.nations_tab": "Nations",
-  "block.nationsmod.nation_phillar": "Nation Phillar",
-  "item.nationsmod.health_of_nation": "Health of Nation"
+  "block.nationsmod.nation_pillar": "Nation Pillar",
+  "item.nationsmod.heart_of_nation": "Health of Nation",
+  "block.nationsmod.nation_pillar.lore.0": "Uncharged",
+  "block.nationsmod.nation_pillar.lore.1": "Level 1",
+  "block.nationsmod.nation_pillar.lore.2": "Level 2",
+  "block.nationsmod.nation_pillar.lore.3": "Level 3",
+  "block.nationsmod.nation_pillar.lore.4": "Level 4",
+  "block.nationsmod.nation_pillar.lore.5": "Level 5",
+  "block.nationsmod.nation_pillar.lore.no_heart": "No heart has been inserted"
 }
