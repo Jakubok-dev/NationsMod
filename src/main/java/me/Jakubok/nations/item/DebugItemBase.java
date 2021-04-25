@@ -1,6 +1,8 @@
 package me.Jakubok.nations.item;
 
 import me.Jakubok.nations.Nations;
+import me.Jakubok.nations.administration.TeritorryClaimer;
+import me.Jakubok.nations.collections.ChunkBinaryTree;
 import me.Jakubok.nations.terrain.ModChunkPos;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.entity.player.PlayerEntity;
@@ -14,13 +16,11 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 public class DebugItemBase extends Item {
 
-    List<ModChunkPos> chunks = new ArrayList<>();
+    ChunkBinaryTree chunks = new ChunkBinaryTree();
     public DebugItemBase() {
         super(new FabricItemSettings()
         .maxCount(1)
@@ -37,11 +37,11 @@ public class DebugItemBase extends Item {
         ChunkPos chunkPos = chunk.getPos();
         user.sendMessage(Text.of("Your chunk: " + Integer.toString(chunkPos.x) + " " + Integer.toString(chunkPos.z)), false);
 
-        ModChunkPos modChunkPos = new ModChunkPos(chunkPos);
+        ModChunkPos modChunkPos = new ModChunkPos(chunkPos, new TeritorryClaimer(world));
         if (!chunks.contains(modChunkPos)) chunks.add(modChunkPos);
-        int index = chunks.indexOf(modChunkPos);
+        modChunkPos = chunks.get(modChunkPos);
 
-        if (chunks.get(index).isBelonging(pos)) {
+        if (modChunkPos.isBelonging(pos)) {
             user.sendMessage(Text.of("This block was belonging"), true);
         }
         else {
@@ -49,9 +49,7 @@ public class DebugItemBase extends Item {
         }
 
         Random random = new Random();
-        chunks.get(index).markAsBelonging(pos);
-
-        user.sendMessage(Text.of(Integer.toString(index)), false);
+        modChunkPos.markAsBelonging(pos);
 
         return TypedActionResult.success(user.getStackInHand(hand));
     }
