@@ -4,57 +4,48 @@ import me.Jakubok.nations.administration.TeritorryClaimer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ModChunkPos extends ChunkPos {
 
-    protected List<BlockPos> belongingBlocks = new ArrayList<>();
-    public TeritorryClaimer chunkBelongsTo;
+    protected Map<BlockPos, TeritorryClaimer> belongingBlocks = new HashMap<>();
 
-    public ModChunkPos(ChunkPos chunkPos, TeritorryClaimer chunkBelongsTo) {
+    public ModChunkPos(ChunkPos chunkPos, TeritorryClaimer claimer) {
         super(chunkPos.x, chunkPos.z);
-        this.chunkBelongsTo = chunkBelongsTo;
     }
 
-    public boolean isBelonging(BlockPos pos) {
+    public boolean isBelonging(BlockPos pos, TeritorryClaimer claimer) {
         BlockPos fixedPos = new BlockPos(pos.getX(), 64, pos.getZ());
-        return belongingBlocks.contains(fixedPos);
+
+        if (!belongingBlocks.containsKey(fixedPos)) return false;
+        return belongingBlocks.get(fixedPos) == claimer;
     }
 
-    public boolean isBelonging(int x, int z) {
+    public boolean isBelonging(int x, int z, TeritorryClaimer claimer) {
         BlockPos pos = new BlockPos(x, 64, z);
-        return belongingBlocks.contains(pos);
+
+        if (!belongingBlocks.containsKey(pos)) return false;
+        return belongingBlocks.get(pos) == claimer;
     }
 
-    public boolean markAsBelonging(BlockPos pos) {
-        return belongingBlocks.add(new BlockPos(pos.getX(), 64, pos.getZ()));
+    public void markAsBelonging(BlockPos pos, TeritorryClaimer claimer) {
+        belongingBlocks.put(new BlockPos(pos.getX(), 64, pos.getZ()), claimer);
     }
 
-    public boolean markAsBelonging(int x, int z) {
-        return belongingBlocks.add(new BlockPos(x, 64, z));
+    public void markAsBelonging(int x, int z, TeritorryClaimer claimer) {
+        belongingBlocks.put(new BlockPos(x, 64, z), claimer);
     }
 
-    public boolean markAsNotBelonging(BlockPos pos) {
-        return belongingBlocks.remove(new BlockPos(pos.getX(), 64, pos.getZ()));
+    public void markAsNotBelonging(BlockPos pos) {
+        belongingBlocks.remove(new BlockPos(pos.getX(), 64, pos.getZ()));
     }
 
-    public boolean markAsNotBelonging(int x, int z) {
-        return belongingBlocks.remove(new BlockPos(x, 64, z));
+    public void markAsNotBelonging(int x, int z) {
+        belongingBlocks.remove(new BlockPos(x, 64, z));
     }
 
     public void abandon() {
         belongingBlocks.clear();
-    }
-
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o instanceof ModChunkPos) {
-            ModChunkPos chunkPos = (ModChunkPos) o;
-            if (belongingBlocks.equals(chunkPos.belongingBlocks) && super.equals(chunkPos)) {
-                return true;
-            }
-        }
-        return false;
     }
 }

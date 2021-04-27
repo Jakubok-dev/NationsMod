@@ -5,16 +5,15 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-public class Town extends TeritorryClaimer {
+public class Town {
 
-    protected String name;
+    public String name;
     protected BlockPos center;
-    protected LivingEntity ruler;
+    public LivingEntity ruler;
     protected Province province;
     protected long wealth;
 
-    public Town(String name, BlockPos center, World world, LivingEntity ruler, @Nullable Province province) {
-        super(world);
+    public Town(String name, BlockPos center, LivingEntity ruler, @Nullable Province province) {
         this.name = name;
         this.center = center;
         this.ruler = ruler;
@@ -25,16 +24,8 @@ public class Town extends TeritorryClaimer {
         return !(province == null);
     }
 
-    public String getName() {
-        return name;
-    }
-
     public BlockPos getCenter() {
         return center;
-    }
-
-    public LivingEntity getRuler() {
-        return ruler;
     }
 
     @Nullable

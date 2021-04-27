@@ -19,7 +19,6 @@ public class Nations implements ModInitializer {
 		// Proceed with mild caution.
 
 		System.out.println("Nations mod initializing!");
-
 		Blocks.init();
 		Items.init();
 	}

@@ -72,58 +72,13 @@ public class ChunkBinaryTree {
         return null;
     }
 
-    protected Node<ModChunkPos> getMin(Node<ModChunkPos> value) {
-        Node<ModChunkPos> minimum = value;
-        while (value != null) {
-            if (value.value.x < minimum.value.x) minimum = value;
-            else if (value.value.x == minimum.value.x && value.value.z < minimum.value.z) minimum = value;
-            value = value.left;
-        }
-        return minimum;
-    }
-
-    @Nullable
-    protected Node<ModChunkPos> removeRec(Node<ModChunkPos> node, ModChunkPos value) {
-        if (node == null) return null;
-
-        if (node.value.x > value.x) {
-            node.right = removeRec(node.right, value);
-        }
-        else if (node.value.x == value.x) {
-            if (node.value.z > value.z) {
-                node.right = removeRec(node.right, value);
-            }
-            else if (node.value.z < value.z) {
-                node.left = removeRec(node.left, value);
-            }
-
-            if (node.left == null) {
-                return node.right;
-            }
-            else if (node.right == null) {
-                return node.left;
-            }
-
-            Node<ModChunkPos> min = getMin(node.right);
-            node.value = min.value;
-            removeRec(node.right, min.value);
-        }
-        node.left = removeRec(node.left, value);
-
-        return node;
-    }
-
-    public boolean remove(ModChunkPos pos) {
-        return removeRec(root, pos) != null;
-    }
-
     public boolean contains(int x, int z) {
-        return get(x, z) == null ? false : true;
+        return get(x, z) != null;
     }
 
     public boolean contains(ModChunkPos pos) {
         int x = pos.x;
         int z = pos.z;
-        return get(x, z) == null ? false : true;
+        return get(x, z) != null;
     }
 }

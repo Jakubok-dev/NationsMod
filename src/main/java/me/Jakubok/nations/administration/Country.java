@@ -7,35 +7,34 @@ import java.util.List;
 
 public class Country {
 
-    protected String name;
+    public String name;
     protected Town capital;
-    protected List<Town> towns;
-    protected Regime regime;
+    public List<Province> provinces;
+    public Regime regime;
     protected LivingEntity ruler;
     protected long wealth;
 
-    public Country(String name, Town capital, List<Town> towns, Regime regime, LivingEntity ruler) {
+    public Country(String name, Town capital, List<Province> provinces, Regime regime, LivingEntity ruler) {
         this.name = name;
         this.capital = capital;
-        this.towns = towns;
+        this.provinces = provinces;
         this.regime = regime;
         this.ruler = ruler;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public Town getCapital() {
         return capital;
     }
 
-    public List<Town> getTowns() {
-        return towns;
+    public boolean setCapital(Town newcapital) {
+        if (!newcapital.belongsToProvince()) return false;
+        if (newcapital.province.belonging != this) return false;
+        capital = newcapital;
+        return true;
     }
 
-    public Regime getRegime() {
-        return regime;
+    public List<Province> getProvinces() {
+        return provinces;
     }
 
     public LivingEntity getRuler() {
