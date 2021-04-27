@@ -5,6 +5,7 @@ import me.Jakubok.nations.administration.TeritorryClaimer;
 import me.Jakubok.nations.collections.ChunkBinaryTree;
 import me.Jakubok.nations.terrain.ModChunkPos;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
+import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -20,6 +21,7 @@ import java.util.Random;
 
 public class DebugItemBase extends Item {
 
+    protected static int id = 0;
     ChunkBinaryTree chunks = new ChunkBinaryTree();
     public DebugItemBase() {
         super(new FabricItemSettings()
@@ -32,14 +34,18 @@ public class DebugItemBase extends Item {
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
 
         BlockPos pos = user.getBlockPos();
-        user.sendMessage(Text.of("Your co-ordinates: " + Integer.toString(pos.getX()) + " " + Integer.toString(pos.getY()) + " " + Integer.toString(pos.getZ())), false);
         Chunk chunk = world.getChunk(pos);
         ChunkPos chunkPos = chunk.getPos();
-        user.sendMessage(Text.of("Your chunk: " + Integer.toString(chunkPos.x) + " " + Integer.toString(chunkPos.z)), false);
 
         ModChunkPos modChunkPos = new ModChunkPos(chunkPos, new TeritorryClaimer(world));
         if (!chunks.contains(modChunkPos)) chunks.add(modChunkPos);
         modChunkPos = chunks.get(modChunkPos);
+
+        if (user.hasStatusEffect(StatusEffect.byRawId(32))) {
+            user.sendMessage(Text.of("Removing chunk..."), true);
+            chunks.remove(modChunkPos);
+            return TypedActionResult.success(user.getStackInHand(hand));
+        }
 
         if (modChunkPos.isBelonging(pos)) {
             user.sendMessage(Text.of("This block was belonging"), true);

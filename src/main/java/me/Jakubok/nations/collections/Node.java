@@ -1,11 +1,11 @@
 package me.Jakubok.nations.collections;
 
-public class Leaf<T> {
+public class Node<T> {
     public T value;
-    protected Leaf<T> left;
-    protected Leaf<T> right;
+    protected Node<T> left;
+    protected Node<T> right;
 
-    Leaf(T value) {
+    Node(T value) {
         this.value = value;
         left = null;
         right = null;
