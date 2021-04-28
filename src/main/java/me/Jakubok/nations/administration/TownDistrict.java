@@ -38,7 +38,7 @@ public class TownDistrict extends TeritorryClaimer {
             if (chunk.getOwner(element) != null)
                 chunk.markAsNotBelonging(element);
         }
-        return false;
+        return true;
     }
 
     @Override
@@ -51,5 +51,10 @@ public class TownDistrict extends TeritorryClaimer {
         town.removeDistrict(this);
         town = null;
         center = null;
+
+        List<ModChunkPos> temp = chunks.treeToList();
+        for (ModChunkPos element : temp)
+            element.abandon(this);
+        chunks.clear();
     }
 }

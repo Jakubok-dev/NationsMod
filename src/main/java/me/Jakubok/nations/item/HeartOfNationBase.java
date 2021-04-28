@@ -2,29 +2,25 @@ package me.Jakubok.nations.item;
 
 import me.Jakubok.nations.Nations;
 import me.Jakubok.nations.collections.ChunkBinaryTree;
-import me.Jakubok.nations.collections.TreeIterator;
+import me.Jakubok.nations.collections.Node;
 import me.Jakubok.nations.terrain.ModChunkPos;
-import me.Jakubok.nations.util.GlobalChunkRegistry;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
-import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.text.*;
+import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 public class HeartOfNationBase extends Item {
 
     protected int chargeLevel = 0;
-    protected ChunkBinaryTree tree = new ChunkBinaryTree();
+    //protected ChunkBinaryTree tree = new ChunkBinaryTree();
 
     public HeartOfNationBase() {
         super(new FabricItemSettings()
@@ -33,25 +29,37 @@ public class HeartOfNationBase extends Item {
         );
     }
 
-    @Override
-    public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-
-        if (world.isClient) return super.use(world, user, hand);
-        if (user.hasStatusEffect(StatusEffect.byRawId(32))) {
-            TreeIterator<ModChunkPos> itr = tree.getIterator();
-            int inc = 0;
-            while (itr != null) {
-                ModChunkPos pos = itr.value.value;
-                user.sendMessage(Text.of(pos.x + " " + pos.z), false);
-                itr = itr.next();
-                inc++;
-            }
-            user.sendMessage(Text.of(""+inc), true);
-            return TypedActionResult.success(user.getStackInHand(hand));
-        }
-
-        ModChunkPos pos = new ModChunkPos(new ChunkPos(user.getBlockPos()));
-        if (!tree.contains(pos)) tree.add(pos);
-        return TypedActionResult.success(user.getStackInHand(hand));
-    }
+    // For tree debugging
+//    @Override
+//    public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
+//        if (world.isClient) return super.use(world, user, hand);
+//
+//        ModChunkPos pos = new ModChunkPos(new ChunkPos(user.getBlockPos()));
+//        if (!tree.contains(pos)) {
+//            user.sendMessage(Text.of("Creating chunk"), true);
+//            tree.add(pos);
+//        }
+//        pos = tree.get(pos);
+//
+//        if (user.hasStatusEffect(StatusEffect.byRawId(32))) {
+//            List<ModChunkPos> list = tree.treeToList();
+//            for (ModChunkPos elem : list) {
+//                user.sendMessage(Text.of(elem.x + " " + elem.z), false);
+//            }
+//            return TypedActionResult.success(user.getStackInHand(hand));
+//        }
+//
+//        Node<ModChunkPos> leaf = tree.getNode(pos);
+//        user.sendMessage(Text.of("Node: " + leaf.value.x + " " + leaf.value.z), false);
+//        Node<ModChunkPos> left = leaf.left;
+//        Node<ModChunkPos> right = leaf.right;
+//        if (left == null)
+//            left = new Node<ModChunkPos>(new ModChunkPos(new ChunkPos(2137, 2137)));
+//        if (right == null)
+//            right = new Node<ModChunkPos>(new ModChunkPos(new ChunkPos(2137, 2137)));
+//        user.sendMessage(Text.of("Left child: " + left.value.x + " " + left.value.z), false);
+//        user.sendMessage(Text.of("Right child: " + right.value.x + " " + right.value.z), false);
+//
+//        return TypedActionResult.success(user.getStackInHand(hand));
+//    }
 }

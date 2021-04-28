@@ -3,6 +3,11 @@ package me.Jakubok.nations.collections;
 import me.Jakubok.nations.terrain.ModChunkPos;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+
 public class ChunkBinaryTree {
 
     public Node<ModChunkPos> root;
@@ -13,19 +18,20 @@ public class ChunkBinaryTree {
             current = new Node<>(value);
         }
 
-        if (current.value.x > value.x) {
-            current.right = addRecursive(current.right, value);
+        if (value.x < current.value.x) {
+            current.left = addRecursive(current.left, value);
         }
         else if (current.value.x == value.x) {
-            if (current.value.z > value.z) {
-                current.right = addRecursive(current.right, value);
-            }
-            else if (current.value.z < value.z) {
+            if (value.z < current.value.z) {
                 current.left = addRecursive(current.left, value);
+            }
+            else if (value.z > current.value.z) {
+                current.right = addRecursive(current.right, value);
             }
             return current;
         }
-        current.left = addRecursive(current.left, value);
+        else
+            current.right = addRecursive(current.right, value);
 
         return current;
     }
@@ -38,19 +44,19 @@ public class ChunkBinaryTree {
     protected Node<ModChunkPos> getRecursive(Node<ModChunkPos> current, int x, int z) {
         if (current == null) return null;
 
-        if (current.value.x > x) {
-            return getRecursive(current.right, x, z);
+        if (x < current.value.x) {
+            return getRecursive(current.left, x, z);
         }
         else if (current.value.x == x) {
-            if (current.value.z > z) {
-                return getRecursive(current.right, x, z);
-            }
-            if (current.value.z < z) {
+            if (z < current.value.z) {
                 return getRecursive(current.left, x, z);
+            }
+            if (z > current.value.z) {
+                return getRecursive(current.right, x, z);
             }
             return current;
         }
-        return getRecursive(current.left, x, z);
+        return getRecursive(current.right, x, z);
     }
 
     @Nullable
@@ -72,6 +78,14 @@ public class ChunkBinaryTree {
         return null;
     }
 
+    @Nullable
+    public Node<ModChunkPos> getNode(ModChunkPos pos) {
+        int x = pos.x;
+        int z = pos.z;
+        Node<ModChunkPos> res = getRecursive(root, x, z);
+        return res;
+    }
+
     public boolean contains(int x, int z) {
         return get(x, z) != null;
     }
@@ -82,7 +96,22 @@ public class ChunkBinaryTree {
         return get(x, z) != null;
     }
 
-    public TreeIterator<ModChunkPos> getIterator() {
-        return new TreeIterator<>(root, null);
+    public List<ModChunkPos> treeToList() {
+        List<ModChunkPos> arr = new ArrayList<>();
+        Queue<Node<ModChunkPos>> q = new LinkedList<>();
+        q.add(root);
+
+        while (!q.isEmpty()) {
+            Node<ModChunkPos> temp = q.remove();
+            arr.add(temp.value);
+            if (temp.left != null) q.add(temp.left);
+            if (temp.right != null) q.add(temp.right);
+        }
+
+        return arr;
+    }
+
+    public void clear() {
+        root = null;
     }
 }

@@ -74,6 +74,7 @@ public abstract class TeritorryClaimer {
         if (GlobalChunkRegistry.contains(chunk, world)) {
             if (chunks.contains(chunk)) return false;
             chunks.add(GlobalChunkRegistry.get(world, chunk));
+            return true;
         }
         GlobalChunkRegistry.register(chunk, world);
         if (chunks.contains(chunk)) return false;
