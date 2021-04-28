@@ -1,7 +1,10 @@
 package me.Jakubok.nations.administration;
 
+import me.Jakubok.nations.terrain.ModChunkPos;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import java.util.List;
 
 public class TownDistrict extends TeritorryClaimer {
 
@@ -27,12 +30,26 @@ public class TownDistrict extends TeritorryClaimer {
     }
 
     @Override
-    protected boolean expand() {
+    protected boolean expand(ModChunkPos chunk) {
+        createChunk(chunk);
+        chunk = chunks.get(chunk);
+        List<BlockPos> blocks = chunk.getAllChunkBlocks();
+        for (BlockPos element : blocks) {
+            if (chunk.getOwner(element) != null)
+                chunk.markAsNotBelonging(element);
+        }
+        return false;
+    }
+
+    @Override
+    protected boolean expand(BlockPos pos) {
         return false;
     }
 
     @Override
     protected void abandon() {
-
+        town.removeDistrict(this);
+        town = null;
+        center = null;
     }
 }

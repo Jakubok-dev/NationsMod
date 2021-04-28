@@ -81,4 +81,8 @@ public class ChunkBinaryTree {
         int z = pos.z;
         return get(x, z) != null;
     }
+
+    public TreeIterator<ModChunkPos> getIterator() {
+        return new TreeIterator<>(root, null);
+    }
 }

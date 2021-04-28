@@ -1,5 +1,7 @@
 package me.Jakubok.nations.administration;
 
+import me.Jakubok.nations.terrain.ModChunkPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
@@ -17,7 +19,12 @@ public class Province extends TeritorryClaimer {
     }
 
     @Override
-    protected boolean expand() {
+    protected boolean expand(ModChunkPos chunk) {
+        return false;
+    }
+
+    @Override
+    protected boolean expand(BlockPos pos) {
         return false;
     }
 

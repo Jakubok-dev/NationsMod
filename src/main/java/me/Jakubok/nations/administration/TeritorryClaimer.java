@@ -17,7 +17,7 @@ public abstract class TeritorryClaimer {
 
     public boolean isBlockBelonging(BlockPos pos) {
         Chunk chunkpos = world.getChunk(pos);
-        ModChunkPos modChunkPos = new ModChunkPos(chunkpos.getPos(), this);
+        ModChunkPos modChunkPos = new ModChunkPos(chunkpos.getPos());
         modChunkPos = chunks.get(modChunkPos);
         if (modChunkPos == null) return false;
 
@@ -26,7 +26,7 @@ public abstract class TeritorryClaimer {
 
     public boolean isBlockBelonging(int x, int z) {
         Chunk chunkpos = world.getChunk(x, z);
-        ModChunkPos modChunkPos = new ModChunkPos(chunkpos.getPos(), this);
+        ModChunkPos modChunkPos = new ModChunkPos(chunkpos.getPos());
 
         modChunkPos = chunks.get(modChunkPos);
         if (modChunkPos == null) return false;
@@ -36,7 +36,7 @@ public abstract class TeritorryClaimer {
 
     protected void markBlock(BlockPos pos) {
         Chunk chunkpos = world.getChunk(pos);
-        ModChunkPos modChunkPos = new ModChunkPos(chunkpos.getPos(), this);
+        ModChunkPos modChunkPos = new ModChunkPos(chunkpos.getPos());
         if (!chunks.contains(modChunkPos)) createChunk(modChunkPos);
         modChunkPos = chunks.get(modChunkPos);
 
@@ -45,7 +45,7 @@ public abstract class TeritorryClaimer {
 
     protected void markBlock(int x, int z) {
         Chunk chunkpos = world.getChunk(x, z);
-        ModChunkPos modChunkPos = new ModChunkPos(chunkpos.getPos(), this);
+        ModChunkPos modChunkPos = new ModChunkPos(chunkpos.getPos());
         if (!chunks.contains(modChunkPos)) createChunk(modChunkPos);
         modChunkPos = chunks.get(modChunkPos);
 
@@ -54,7 +54,7 @@ public abstract class TeritorryClaimer {
 
     protected void unmarkBlock(BlockPos pos) {
         Chunk chunkpos = world.getChunk(pos);
-        ModChunkPos modChunkPos = new ModChunkPos(chunkpos.getPos(), this);
+        ModChunkPos modChunkPos = new ModChunkPos(chunkpos.getPos());
         if (!chunks.contains(modChunkPos)) createChunk(modChunkPos);
         modChunkPos = chunks.get(modChunkPos);
 
@@ -63,7 +63,7 @@ public abstract class TeritorryClaimer {
 
     protected void unmarkBlock(int x, int z) {
         Chunk chunkpos = world.getChunk(x, z);
-        ModChunkPos modChunkPos = new ModChunkPos(chunkpos.getPos(), this);
+        ModChunkPos modChunkPos = new ModChunkPos(chunkpos.getPos());
         if (!chunks.contains(modChunkPos)) createChunk(modChunkPos);
         modChunkPos = chunks.get(modChunkPos);
 
@@ -82,6 +82,7 @@ public abstract class TeritorryClaimer {
         return true;
     }
 
-    protected abstract boolean expand();
+    protected abstract boolean expand(ModChunkPos chunk);
+    protected abstract boolean expand(BlockPos pos);
     protected abstract void abandon();
 }
