@@ -1,9 +1,10 @@
 package me.Jakubok.nations.item;
 
 import me.Jakubok.nations.Nations;
-import me.Jakubok.nations.collections.ChunkBinaryTree;
-import me.Jakubok.nations.collections.Node;
+import me.Jakubok.nations.administration.Town;
+import me.Jakubok.nations.administration.TownDistrict;
 import me.Jakubok.nations.terrain.ModChunkPos;
+import me.Jakubok.nations.util.GlobalChunkRegistry;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.player.PlayerEntity;
@@ -27,6 +28,37 @@ public class HeartOfNationBase extends Item {
                 .group(Nations.nations_tab)
                 .maxCount(1)
         );
+    }
+
+    @Override
+    public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
+        if (world.isClient) return super.use(world, user, hand);
+
+        ModChunkPos pos = new ModChunkPos(new ChunkPos(user.getBlockPos()));
+
+        if (user.hasStatusEffect(StatusEffect.byRawId(32))) {
+            List<ModChunkPos> list = GlobalChunkRegistry.toList(world);
+            for (ModChunkPos elem : list) {
+                user.sendMessage(Text.of(elem.x + " " + elem.z), false);
+            }
+            return TypedActionResult.success(user.getStackInHand(hand));
+        }
+
+        if (!GlobalChunkRegistry.contains(pos, world)) {
+            user.sendMessage(Text.of("Nobody"), false);
+            return TypedActionResult.success(user.getStackInHand(hand));
+        }
+
+        if (GlobalChunkRegistry.get(world, pos).getOwner(user.getBlockPos()) == null) {
+            user.sendMessage(Text.of("Nobody"), false);
+            return TypedActionResult.success(user.getStackInHand(hand));
+        }
+        else if (GlobalChunkRegistry.get(world, pos).getOwner(user.getBlockPos()) instanceof TownDistrict) {
+            TownDistrict dist = (TownDistrict)GlobalChunkRegistry.get(world, pos).getOwner(user.getBlockPos());
+            user.sendMessage(Text.of(dist.name), false);
+            user.sendMessage(Text.of(dist.town.name), false);
+        }
+        return TypedActionResult.success(user.getStackInHand(hand));
     }
 
     // For tree debugging

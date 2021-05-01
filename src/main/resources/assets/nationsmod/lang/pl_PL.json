@@ -9,5 +9,8 @@
   "block.nationsmod.nation_pillar.lore.3": "Poziom 3",
   "block.nationsmod.nation_pillar.lore.4": "Poziom 4",
   "block.nationsmod.nation_pillar.lore.5": "Poziom 5",
-  "block.nationsmod.nation_pillar.lore.no_heart": "Nie włożono serca"
+  "block.nationsmod.nation_pillar.lore.no_heart": "Nie włożono serca",
+  "nationsmod.town_creation_gui.title": "Tworzenie Miasta",
+  "nationsmod.town_creation_gui.name_label": "Nazwa: ",
+  "nationsmod.town_creation_gui.submit": "Stwórz"
 }

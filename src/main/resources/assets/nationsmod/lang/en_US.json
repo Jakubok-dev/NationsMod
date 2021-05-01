@@ -9,5 +9,8 @@
   "block.nationsmod.nation_pillar.lore.3": "Level 3",
   "block.nationsmod.nation_pillar.lore.4": "Level 4",
   "block.nationsmod.nation_pillar.lore.5": "Level 5",
-  "block.nationsmod.nation_pillar.lore.no_heart": "No heart has been inserted"
+  "block.nationsmod.nation_pillar.lore.no_heart": "No heart has been inserted",
+  "nationsmod.town_creation_gui.title": "Town Creation",
+  "nationsmod.town_creation_gui.name_label": "Name: ",
+  "nationsmod.town_creation_gui.submit": "Create"
 }

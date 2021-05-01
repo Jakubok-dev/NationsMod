@@ -7,11 +7,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 
-public abstract class TeritorryClaimer {
+public abstract class TerritoryClaimer {
     protected ChunkBinaryTree chunks = new ChunkBinaryTree();
     protected World world;
 
-    public TeritorryClaimer(World world) {
+    public TerritoryClaimer(World world) {
         this.world = world;
     }
 

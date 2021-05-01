@@ -6,7 +6,7 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-public class TownDistrict extends TeritorryClaimer {
+public class TownDistrict extends TerritoryClaimer {
 
     public Town town;
     public String name;

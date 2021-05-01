@@ -20,6 +20,9 @@
   "entrypoints": {
     "main": [
       "me.Jakubok.nations.Nations"
+    ],
+    "client": [
+      "me.Jakubok.nations.NationsClient"
     ]
   },
   "mixins": [

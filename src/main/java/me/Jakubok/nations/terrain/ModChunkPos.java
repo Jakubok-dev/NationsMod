@@ -1,6 +1,6 @@
 package me.Jakubok.nations.terrain;
 
-import me.Jakubok.nations.administration.TeritorryClaimer;
+import me.Jakubok.nations.administration.TerritoryClaimer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import org.jetbrains.annotations.Nullable;
@@ -12,33 +12,33 @@ import java.util.Map;
 
 public class ModChunkPos extends ChunkPos {
 
-    protected Map<BlockPos, TeritorryClaimer> belongingBlocks = new HashMap<>();
+    protected Map<BlockPos, TerritoryClaimer> belongingBlocks = new HashMap<>();
 
     public ModChunkPos(ChunkPos chunkPos) {
         super(chunkPos.x, chunkPos.z);
     }
 
-    public boolean isBelonging(BlockPos pos, TeritorryClaimer claimer) {
+    public boolean isBelonging(BlockPos pos, TerritoryClaimer claimer) {
         BlockPos fixedPos = new BlockPos(pos.getX(), 64, pos.getZ());
 
         if (!belongingBlocks.containsKey(fixedPos)) return false;
         return belongingBlocks.get(fixedPos) == claimer;
     }
 
-    public boolean isBelonging(int x, int z, TeritorryClaimer claimer) {
+    public boolean isBelonging(int x, int z, TerritoryClaimer claimer) {
         BlockPos pos = new BlockPos(x, 64, z);
 
         if (!belongingBlocks.containsKey(pos)) return false;
         return belongingBlocks.get(pos) == claimer;
     }
 
-    public void markAsBelonging(BlockPos pos, TeritorryClaimer claimer) {
+    public void markAsBelonging(BlockPos pos, TerritoryClaimer claimer) {
         ChunkPos chpos = new ChunkPos(pos);
         if (chpos.x != x || chpos.z != z) return;
         belongingBlocks.put(new BlockPos(pos.getX(), 64, pos.getZ()), claimer);
     }
 
-    public void markAsBelonging(int x, int z, TeritorryClaimer claimer) {
+    public void markAsBelonging(int x, int z, TerritoryClaimer claimer) {
         ChunkPos chpos = new ChunkPos(x, z);
         if (chpos.x != x || chpos.z != z) return;
         belongingBlocks.put(new BlockPos(x, 64, z), claimer);
@@ -67,13 +67,13 @@ public class ModChunkPos extends ChunkPos {
     }
 
     @Nullable
-    public TeritorryClaimer getOwner(BlockPos pos) {
+    public TerritoryClaimer getOwner(BlockPos pos) {
         BlockPos fixedPos = new BlockPos(pos.getX(), 64, pos.getZ());
         return belongingBlocks.get(fixedPos);
     }
 
     @Nullable
-    public TeritorryClaimer getOwner(int x, int z) {
+    public TerritoryClaimer getOwner(int x, int z) {
         BlockPos pos = new BlockPos(x, 64, z);
         return belongingBlocks.get(pos);
     }
@@ -82,7 +82,7 @@ public class ModChunkPos extends ChunkPos {
         belongingBlocks.clear();
     }
 
-    public void abandon(TeritorryClaimer claimer) {
+    public void abandon(TerritoryClaimer claimer) {
         belongingBlocks.forEach((b, c) -> {
             if (c == claimer) belongingBlocks.remove(b);
         });

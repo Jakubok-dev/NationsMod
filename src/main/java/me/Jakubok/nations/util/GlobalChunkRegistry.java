@@ -6,6 +6,7 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
+import java.util.List;
 
 public class GlobalChunkRegistry {
     protected static HashMap<World, ChunkBinaryTree> GLOBAL_CHUNKS = new HashMap<>();
@@ -41,5 +42,9 @@ public class GlobalChunkRegistry {
         if (!GLOBAL_CHUNKS.containsKey(world))
             GLOBAL_CHUNKS.put(world, new ChunkBinaryTree());
         return GLOBAL_CHUNKS.get(world).get(chunk);
+    }
+
+    public static List<ModChunkPos> toList(World world) {
+        return GLOBAL_CHUNKS.get(world).treeToList();
     }
 }

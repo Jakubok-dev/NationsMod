@@ -2,15 +2,12 @@ package me.Jakubok.nations.block;
 
 import me.Jakubok.nations.util.Items;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockEntityProvider;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Material;
+import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
+import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.Properties;
@@ -23,7 +20,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
-public class NationPillarBase extends Block implements BlockEntityProvider {
+public class NationPillarBase extends BlockWithEntity {
 
     public NationPillarBase() {
         super(FabricBlockSettings.of(Material.STONE)
@@ -48,27 +45,32 @@ public class NationPillarBase extends Block implements BlockEntityProvider {
     }
 
     @Override
+    public BlockRenderType getRenderType(BlockState state) {
+        //With inheriting from BlockWithEntity this defaults to INVISIBLE, so we need to change that!
+        return BlockRenderType.MODEL;
+    }
+
+    @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
 
+        // Casting
         if (!(world.getBlockEntity(pos) instanceof NationPillarEntity)) return super.onUse(state, world, pos, player, hand, hit);
         NationPillarEntity nationPillarEntity = (NationPillarEntity) world.getBlockEntity(pos);
 
-        if (player.getStackInHand(hand).isItemEqual(new ItemStack(Items.HEART_OF_NATION)) && !nationPillarEntity.health_inserted) {
-            player.clearActiveItem();
-            nationPillarEntity.health_inserted = true;
-            return ActionResult.CONSUME;
-        }
-
-        if (!nationPillarEntity.health_inserted) {
-            player.sendMessage(new TranslatableText("block.nationsmod.nation_pillar.lore.no_heart"), true);
-            return ActionResult.SUCCESS;
-        }
-
+        // Charging
         if (player.hasStatusEffect(StatusEffect.byRawId(32))) {
             if (nationPillarEntity.charge_level + (player.getStatusEffect(StatusEffect.byRawId(32)).getAmplifier()+1) < 6) {
                 nationPillarEntity.charge_level += (player.getStatusEffect(StatusEffect.byRawId(32)).getAmplifier()+1);
                 player.removeStatusEffect(StatusEffect.byRawId(32));
                 return ActionResult.SUCCESS;
+            }
+        }
+
+        // Activating
+        if (player.getStackInHand(hand).getItem() == Items.HEART_OF_NATION) {
+            // Creating a town
+            if (nationPillarEntity.charge_level > 1 && nationPillarEntity.institutions.town == null) {
+                player.openHandledScreen(state.createScreenHandlerFactory(world, pos));
             }
         }
 

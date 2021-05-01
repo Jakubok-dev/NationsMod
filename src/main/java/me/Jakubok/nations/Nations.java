@@ -1,6 +1,7 @@
 package me.Jakubok.nations;
 
 import me.Jakubok.nations.util.Blocks;
+import me.Jakubok.nations.util.GUIs;
 import me.Jakubok.nations.util.Items;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
@@ -21,5 +22,6 @@ public class Nations implements ModInitializer {
 		System.out.println("Nations mod initializing!");
 		Blocks.init();
 		Items.init();
+		GUIs.init();
 	}
 }

@@ -7,7 +7,7 @@ import net.minecraft.world.World;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Province extends TeritorryClaimer {
+public class Province extends TerritoryClaimer {
 
     public String name;
     public Country belonging;
