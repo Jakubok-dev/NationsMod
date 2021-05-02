@@ -1,25 +1,29 @@
 package me.Jakubok.nations.gui;
 
 import io.github.cottonmc.cotton.gui.SyncedGuiDescription;
-import io.github.cottonmc.cotton.gui.widget.WButton;
-import io.github.cottonmc.cotton.gui.widget.WGridPanel;
-import io.github.cottonmc.cotton.gui.widget.WLabel;
-import io.github.cottonmc.cotton.gui.widget.WTextField;
+import io.github.cottonmc.cotton.gui.widget.*;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 import io.github.cottonmc.cotton.gui.widget.data.VerticalAlignment;
+import me.Jakubok.nations.Nations;
 import me.Jakubok.nations.administration.Town;
 import me.Jakubok.nations.block.NationPillarEntity;
-import me.Jakubok.nations.util.Blocks;
 import me.Jakubok.nations.util.GUIs;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class TownCreationDescription extends SyncedGuiDescription {
-    public TownCreationDescription(int syncId, PlayerInventory playerInventory, ScreenHandlerContext context, World world, BlockPos pos) {
+    public TownCreationDescription(int syncId, PlayerInventory playerInventory, ScreenHandlerContext context) {
         super(GUIs.TOWN_CREATION, syncId, playerInventory, getBlockInventory(context, 1), getBlockPropertyDelegate(context));
 
         WGridPanel root = new WGridPanel();
@@ -36,35 +40,47 @@ public class TownCreationDescription extends SyncedGuiDescription {
         WTextField nameField = new WTextField();
 
         WButton submit = new WButton(new TranslatableText("nationsmod.town_creation_gui.submit"));
-        if (world != null && pos != null) {
-            submit.setOnClick(new Runnable() {
-                @Override
-                public void run() {
-                    if (!(world.getBlockEntity(pos) instanceof NationPillarEntity)) {
-                        close(playerInventory.player);
-                        return;
-                    }
-                    NationPillarEntity entity = (NationPillarEntity)world.getBlockEntity(pos);
+        submit.setOnClick(() -> {
+            World world = playerInventory.player.getEntityWorld();
+            BlockPos pos = getPos(playerInventory);
 
-                    if (nameField.getText() == "") {
-                        close(playerInventory.player);
-                        return;
-                    }
+            if (world == null || pos == null) {
+                close(playerInventory.player);
+                return;
+            }
 
-                    if (entity.institutions.town == null) {
-                        entity.institutions.town = new Town(nameField.getText(), pos, playerInventory.player, null, world);
-                        playerInventory.player.sendMessage(Text.of("Created town " + entity.institutions.town.name), false);
-                    }
+            if (!(world.getBlockEntity(pos) instanceof NationPillarEntity)) {
+                close(playerInventory.player);
+                return;
+            }
+            NationPillarEntity entity = (NationPillarEntity)world.getBlockEntity(pos);
 
-                    close(playerInventory.player);
-                }
-            });
-        }
+            if (nameField.getText() == "") {
+                close(playerInventory.player);
+                return;
+            }
+
+            if (entity.institutions.town == null) {
+                entity.institutions.town = new Town(nameField.getText(), pos, playerInventory.player, null, world);
+                playerInventory.player.sendMessage(Text.of("Created town " + entity.institutions.town.name), false);
+            }
+
+            close(playerInventory.player);
+        });
 
         root.add(title, 3, 0);
         root.add(name, 0, 2);
         root.add(nameField, 2, 2, 6, 5);
         root.add(submit, 0, 4, 8, 5);
         root.validate(this);
+    }
+
+    protected static BlockPos getPos(PlayerInventory inv) {
+        MinecraftClient client = MinecraftClient.getInstance();
+        HitResult hit = client.crosshairTarget;
+
+        if (hit.getType() != HitResult.Type.BLOCK) return null;
+        BlockHitResult blockHit = (BlockHitResult) hit;
+        return blockHit.getBlockPos();
     }
 }

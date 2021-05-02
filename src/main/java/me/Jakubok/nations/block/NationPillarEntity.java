@@ -47,6 +47,6 @@ public class NationPillarEntity extends BlockEntity implements NamedScreenHandle
     @Nullable
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-        return new TownCreationDescription(syncId, player.inventory, ScreenHandlerContext.create(world, pos), world, pos);
+        return new TownCreationDescription(syncId, player.inventory, ScreenHandlerContext.create(world, pos));
     }
 }

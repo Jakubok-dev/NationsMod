@@ -12,6 +12,6 @@ public class GUIs {
     public static ScreenHandlerType TOWN_CREATION;
 
     public static void init() {
-        TOWN_CREATION = ScreenHandlerRegistry.registerSimple(new Identifier(Nations.MOD_ID, "town_creation_gui"), (syncId, inventory) -> new TownCreationDescription(syncId, inventory, ScreenHandlerContext.EMPTY, null, null));
+        TOWN_CREATION = ScreenHandlerRegistry.registerSimple(new Identifier(Nations.MOD_ID, "town_creation_gui"), (syncId, inventory) -> new TownCreationDescription(syncId, inventory, ScreenHandlerContext.EMPTY));
     }
 }

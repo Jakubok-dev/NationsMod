@@ -7,6 +7,7 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Town {
@@ -15,7 +16,7 @@ public class Town {
     protected BlockPos center;
     public LivingEntity ruler;
     protected Province province;
-    protected List<TownDistrict> districts;
+    protected List<TownDistrict> districts = new ArrayList<>();
     protected long wealth;
 
     public Town(String name, BlockPos center, LivingEntity ruler, @Nullable Province province, World world) {
@@ -26,14 +27,14 @@ public class Town {
 
         TownDistrict dist = createDistrict("Center", this.center, world);
         ModChunkPos pos = new ModChunkPos(new ChunkPos(center));
-        dist.expand(pos); pos = new ModChunkPos(new ChunkPos(pos.getEndX()+1, pos.getStartZ()));
-        dist.expand(pos); pos = new ModChunkPos(new ChunkPos(pos.getStartX()-1, pos.getStartZ()));
-        dist.expand(pos); pos = new ModChunkPos(new ChunkPos(pos.getStartX(),pos.getEndZ()+1));
-        dist.expand(pos); pos = new ModChunkPos(new ChunkPos(pos.getStartX(),pos.getStartZ()-1));
-        dist.expand(pos); pos = new ModChunkPos(new ChunkPos(pos.getStartX()-1,pos.getStartZ()-1));
-        dist.expand(pos); pos = new ModChunkPos(new ChunkPos(pos.getEndX()+1,pos.getStartZ()-1));
-        dist.expand(pos); pos = new ModChunkPos(new ChunkPos(pos.getStartX()-1,pos.getEndZ()+1));
-        dist.expand(pos); pos = new ModChunkPos(new ChunkPos(pos.getEndX()+1,pos.getEndZ()+1));
+        dist.expand(pos); pos = new ModChunkPos(new ChunkPos(new BlockPos(pos.getEndX()+1,64, pos.getStartZ())));
+        dist.expand(pos); pos = new ModChunkPos(new ChunkPos(new BlockPos(pos.getStartX()-1,64, pos.getStartZ())));
+        dist.expand(pos); pos = new ModChunkPos(new ChunkPos(new BlockPos(pos.getStartX(),64,pos.getEndZ()+1)));
+        dist.expand(pos); pos = new ModChunkPos(new ChunkPos(new BlockPos(pos.getStartX(),64,pos.getStartZ()-1)));
+        dist.expand(pos); pos = new ModChunkPos(new ChunkPos(new BlockPos(pos.getStartX()-1,64,pos.getStartZ()-1)));
+        dist.expand(pos); pos = new ModChunkPos(new ChunkPos(new BlockPos(pos.getEndX()+1,64,pos.getStartZ()-1)));
+        dist.expand(pos); pos = new ModChunkPos(new ChunkPos(new BlockPos(pos.getStartX()-1,64,pos.getEndZ()+1)));
+        dist.expand(pos); pos = new ModChunkPos(new ChunkPos(new BlockPos(pos.getEndX()+1,64,pos.getEndZ()+1)));
     }
 
     public boolean belongsToProvince() {

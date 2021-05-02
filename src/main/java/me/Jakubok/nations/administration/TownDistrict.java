@@ -35,8 +35,8 @@ public class TownDistrict extends TerritoryClaimer {
         chunk = chunks.get(chunk);
         List<BlockPos> blocks = chunk.getAllChunkBlocks();
         for (BlockPos element : blocks) {
-            if (chunk.getOwner(element) != null)
-                chunk.markAsNotBelonging(element);
+            if (chunk.getOwner(element) == null)
+                chunk.markAsBelonging(element, this);
         }
         return true;
     }

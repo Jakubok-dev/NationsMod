@@ -32,7 +32,9 @@ public class HeartOfNationBase extends Item {
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        if (world.isClient) return super.use(world, user, hand);
+        if (world.isClient)
+            user.sendMessage(Text.of("Client"), false);
+        else user.sendMessage(Text.of("Server"), false);
 
         ModChunkPos pos = new ModChunkPos(new ChunkPos(user.getBlockPos()));
 
