@@ -5,16 +5,16 @@ import io.github.cottonmc.cotton.gui.widget.*;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
 import io.github.cottonmc.cotton.gui.widget.data.VerticalAlignment;
 import me.Jakubok.nations.Nations;
-import me.Jakubok.nations.administration.Town;
 import me.Jakubok.nations.block.NationPillarEntity;
 import me.Jakubok.nations.util.GUIs;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandlerContext;
-import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
@@ -61,8 +61,12 @@ public class TownCreationDescription extends SyncedGuiDescription {
             }
 
             if (entity.institutions.town == null) {
-                entity.institutions.town = new Town(nameField.getText(), pos, playerInventory.player, null, world);
-                playerInventory.player.sendMessage(Text.of("Created town " + entity.institutions.town.name), false);
+                PacketByteBuf buf = PacketByteBufs.create();
+                buf.writeBlockPos(getPos(playerInventory));
+                CompoundTag tag = new CompoundTag();
+                tag.putString("title", nameField.getText());
+                buf.writeCompoundTag(tag);
+                ClientPlayNetworking.send(new Identifier(Nations.MOD_ID, "create_nation_by_player"), buf);
             }
 
             close(playerInventory.player);
