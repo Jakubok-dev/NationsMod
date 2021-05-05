@@ -1,6 +1,12 @@
 package me.Jakubok.nations.collections;
 
+import me.Jakubok.nations.administration.TerritoryClaimer;
+import me.Jakubok.nations.terrain.ConstantModChunkPos;
 import me.Jakubok.nations.terrain.ModChunkPos;
+import me.Jakubok.nations.util.GlobalChunkRegistry;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.math.ChunkPos;
+import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -9,6 +15,36 @@ import java.util.List;
 import java.util.Queue;
 
 public class ChunkBinaryTree {
+
+    public ChunkBinaryTree() {}
+    public ChunkBinaryTree(CompoundTag tag, TerritoryClaimer claimer, boolean register, World world) {
+        int count = tag.getInt("chunksCount");
+        if (register) {
+            for (int i = 0; i < count; i++) {
+                CompoundTag subTag = (CompoundTag)tag.get("chunk" + i);
+                ConstantModChunkPos constModChunkPos = new ConstantModChunkPos(subTag, claimer);
+
+                ModChunkPos modChunkPos = new ModChunkPos(new ChunkPos(constModChunkPos.x, constModChunkPos.z));
+                modChunkPos.addConstant(constModChunkPos);
+
+                GlobalChunkRegistry.register(modChunkPos, world);
+                modChunkPos = GlobalChunkRegistry.get(world, modChunkPos);
+
+                add(modChunkPos);
+            }
+        }
+        else {
+            for (int i = 0; i < count; i++) {
+                CompoundTag subTag = (CompoundTag)tag.get("chunk" + i);
+                ConstantModChunkPos constModChunkPos = new ConstantModChunkPos(subTag, claimer);
+
+                ModChunkPos modChunkPos = new ModChunkPos(new ChunkPos(constModChunkPos.x, constModChunkPos.z));
+                modChunkPos.addConstant(constModChunkPos);
+
+                add(modChunkPos);
+            }
+        }
+    }
 
     public Node<ModChunkPos> root;
 
@@ -113,5 +149,18 @@ public class ChunkBinaryTree {
 
     public void clear() {
         root = null;
+    }
+
+    public CompoundTag saveToTag(CompoundTag tag, TerritoryClaimer claimer) {
+        List<ModChunkPos> temp = treeToList();
+        List<ConstantModChunkPos> constTemp = new ArrayList<>();
+        temp.forEach(chunkPos -> constTemp.add(new ConstantModChunkPos(chunkPos, claimer)));
+        for (int i = 0; i < constTemp.size(); i++) {
+            CompoundTag subTag = new CompoundTag();
+            constTemp.get(i).saveToTag(subTag);
+            tag.put("chunk" + i, subTag);
+        }
+        tag.putInt("chunksCount", constTemp.size());
+        return tag;
     }
 }

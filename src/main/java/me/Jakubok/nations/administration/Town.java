@@ -2,6 +2,7 @@ package me.Jakubok.nations.administration;
 
 import me.Jakubok.nations.terrain.ModChunkPos;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
@@ -37,6 +38,15 @@ public class Town {
         dist.expand(pos); pos = new ModChunkPos(new ChunkPos(new BlockPos(pos.getEndX()+1,64,pos.getEndZ()+1)));
     }
 
+    public Town(CompoundTag tag, World world) {
+        if (tag.getBoolean("belongsToProvince")) return;
+        for (int i = 0; i < tag.getInt("districtsCount"); i++)
+            districts.add(new TownDistrict((CompoundTag)tag.get("district" + i), this, world));
+        name = tag.getString("name");
+        int[] arr = tag.getIntArray("center");
+        center = new BlockPos(arr[0], arr[1], arr[2]);
+    }
+
     public boolean belongsToProvince() {
         return !(province == null);
     }
@@ -63,5 +73,18 @@ public class Town {
     public boolean removeDistrict(TownDistrict dist) {
         if (!districts.contains(dist)) return false;
         districts.remove(dist); return true;
+    }
+
+    public CompoundTag saveToTag(CompoundTag tag) {
+        for (int i = 0; i < districts.size(); i++) {
+            CompoundTag subTag = new CompoundTag();
+            districts.get(i).saveToTag(subTag);
+            tag.put("district" + i, subTag);
+        }
+        tag.putInt("districtsCount", districts.size());
+        tag.putString("name", name);
+        tag.putIntArray("center", new int[] {center.getX(), center.getY(), center.getZ()});
+        tag.putBoolean("belongsToProvince", belongsToProvince());
+        return tag;
     }
 }

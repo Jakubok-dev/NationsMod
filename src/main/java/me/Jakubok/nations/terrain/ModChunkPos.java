@@ -87,4 +87,11 @@ public class ModChunkPos extends ChunkPos {
             if (c == claimer) belongingBlocks.remove(b);
         });
     }
+
+    public boolean addConstant(ConstantModChunkPos chunk) {
+        if (chunk == null) return false;
+        if (chunk.x != x || chunk.z != z) return false;
+        chunk.blocks.forEach(blockPos -> markAsBelonging(blockPos, chunk.claimer));
+        return true;
+    }
 }

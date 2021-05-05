@@ -3,6 +3,7 @@ package me.Jakubok.nations.administration;
 import me.Jakubok.nations.collections.ChunkBinaryTree;
 import me.Jakubok.nations.terrain.ModChunkPos;
 import me.Jakubok.nations.util.GlobalChunkRegistry;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
@@ -13,6 +14,10 @@ public abstract class TerritoryClaimer {
 
     public TerritoryClaimer(World world) {
         this.world = world;
+    }
+    public TerritoryClaimer(CompoundTag tag, World world) {
+        this.world = world;
+        chunks = new ChunkBinaryTree(tag, this, true, world);
     }
 
     public boolean isBlockBelonging(BlockPos pos) {
@@ -86,4 +91,9 @@ public abstract class TerritoryClaimer {
     protected abstract boolean expand(ModChunkPos chunk);
     protected abstract boolean expand(BlockPos pos);
     protected abstract void abandon();
+
+    public CompoundTag saveToTag(CompoundTag tag) {
+        chunks.saveToTag(tag, this);
+        return tag;
+    }
 }
