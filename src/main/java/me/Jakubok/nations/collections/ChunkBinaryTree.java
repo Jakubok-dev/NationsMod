@@ -25,9 +25,9 @@ public class ChunkBinaryTree {
                 ConstantModChunkPos constModChunkPos = new ConstantModChunkPos(subTag, claimer);
 
                 ModChunkPos modChunkPos = new ModChunkPos(new ChunkPos(constModChunkPos.x, constModChunkPos.z));
-                modChunkPos.addConstant(constModChunkPos);
 
                 GlobalChunkRegistry.register(modChunkPos, world);
+                GlobalChunkRegistry.get(world, modChunkPos).addConstant(constModChunkPos);
                 modChunkPos = GlobalChunkRegistry.get(world, modChunkPos);
 
                 add(modChunkPos);

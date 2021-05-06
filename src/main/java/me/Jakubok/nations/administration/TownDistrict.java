@@ -56,7 +56,7 @@ public class TownDistrict extends TerritoryClaimer {
     }
 
     @Override
-    protected void abandon() {
+    public void abandon() {
         town.removeDistrict(this);
         town = null;
         center = null;

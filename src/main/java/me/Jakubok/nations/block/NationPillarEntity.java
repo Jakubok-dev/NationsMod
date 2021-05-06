@@ -19,6 +19,7 @@ public class NationPillarEntity extends BlockEntity implements NamedScreenHandle
 
     public int charge_level = 0;
     public InstitutionsHandler institutions = new InstitutionsHandler();
+    protected CompoundTag tempTag = null;
 
     public NationPillarEntity() {
         super(Blocks.NATION_PILLAR_ENTITY);
@@ -27,14 +28,20 @@ public class NationPillarEntity extends BlockEntity implements NamedScreenHandle
     @Override
     public CompoundTag toTag(CompoundTag tag) {
         tag.putInt("charge_level", charge_level);
+        tag.put("institutions", institutions.saveToTag(new CompoundTag()));
         super.toTag(tag);
         return tag;
     }
 
     @Override
     public void fromTag(BlockState state, CompoundTag tag) {
-        charge_level = tag.getInt("charge_level");
         super.fromTag(state, tag);
+        charge_level = tag.getInt("charge_level");
+        if (!hasWorld()) {
+            tempTag = tag;
+            return;
+        }
+        institutions = new InstitutionsHandler((CompoundTag) tag.get("institutions"), world);
     }
 
     @Override
@@ -47,5 +54,15 @@ public class NationPillarEntity extends BlockEntity implements NamedScreenHandle
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
         return new TownCreationDescription(syncId, player.inventory, ScreenHandlerContext.create(world, pos));
+    }
+
+    protected boolean institutionsImported() {
+        return tempTag == null;
+    }
+
+    public void importInstitutions() {
+        if (institutionsImported()) return;
+        institutions = new InstitutionsHandler((CompoundTag) tempTag.get("institutions"), world);
+        tempTag = null;
     }
 }

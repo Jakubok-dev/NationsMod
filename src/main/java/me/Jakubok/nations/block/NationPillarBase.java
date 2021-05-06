@@ -1,5 +1,6 @@
 package me.Jakubok.nations.block;
 
+import me.Jakubok.nations.administration.TownDistrict;
 import me.Jakubok.nations.util.Items;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
@@ -19,6 +20,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+
+import java.util.List;
 
 public class NationPillarBase extends BlockWithEntity {
 
@@ -56,6 +59,7 @@ public class NationPillarBase extends BlockWithEntity {
         // Casting
         if (!(world.getBlockEntity(pos) instanceof NationPillarEntity)) return super.onUse(state, world, pos, player, hand, hit);
         NationPillarEntity nationPillarEntity = (NationPillarEntity) world.getBlockEntity(pos);
+        nationPillarEntity.importInstitutions();
 
         // Charging
         if (player.hasStatusEffect(StatusEffect.byRawId(32))) {
