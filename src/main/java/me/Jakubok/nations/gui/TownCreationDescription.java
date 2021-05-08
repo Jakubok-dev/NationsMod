@@ -7,10 +7,10 @@ import io.github.cottonmc.cotton.gui.widget.data.VerticalAlignment;
 import me.Jakubok.nations.Nations;
 import me.Jakubok.nations.block.NationPillarEntity;
 import me.Jakubok.nations.util.GUIs;
+import me.Jakubok.nations.util.Items;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.PacketByteBuf;
@@ -69,6 +69,8 @@ public class TownCreationDescription extends SyncedGuiDescription {
                 districtNameField.setText("Center");
             }
 
+            if (playerInventory.player.getMainHandStack().getItem() != Items.HEART_OF_NATION) return;
+
             if (entity.institutions.town == null) {
                 PacketByteBuf buf = PacketByteBufs.create();
                 buf.writeBlockPos(getPos(playerInventory));
@@ -77,6 +79,7 @@ public class TownCreationDescription extends SyncedGuiDescription {
                 tag.putString("districtName", districtNameField.getText());
                 buf.writeCompoundTag(tag);
                 ClientPlayNetworking.send(new Identifier(Nations.MOD_ID, "create_nation_by_player"), buf);
+                submit.setEnabled(false);
             }
 
             close(playerInventory.player);

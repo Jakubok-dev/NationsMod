@@ -52,10 +52,11 @@ public class NationPillarBase extends BlockWithEntity {
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
 
+        if (world.isClient) return super.onUse(state, world, pos, player, hand, hit);
+
         // Casting
         if (!(world.getBlockEntity(pos) instanceof NationPillarEntity)) return super.onUse(state, world, pos, player, hand, hit);
         NationPillarEntity nationPillarEntity = (NationPillarEntity) world.getBlockEntity(pos);
-        nationPillarEntity.importInstitutions();
 
         // Charging
         if (player.hasStatusEffect(StatusEffect.byRawId(32))) {

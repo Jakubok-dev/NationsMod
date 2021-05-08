@@ -27,6 +27,7 @@ public class NationPillarEntity extends BlockEntity implements NamedScreenHandle
 
     @Override
     public CompoundTag toTag(CompoundTag tag) {
+        importInstitutions();
         tag.putInt("charge_level", charge_level);
         tag.put("institutions", institutions.saveToTag(new CompoundTag()));
         super.toTag(tag);
