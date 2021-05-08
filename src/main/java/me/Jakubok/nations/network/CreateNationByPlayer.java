@@ -19,12 +19,13 @@ public class CreateNationByPlayer {
             World world = player.getEntityWorld();
             CompoundTag tag = buf.readCompoundTag();
             String title = tag.getString("title");
+            String districtName = tag.getString("districtName");
 
             server.execute(() -> {
                 if (!(world.getBlockEntity(center) instanceof NationPillarEntity)) return;
                 NationPillarEntity blockEntity = (NationPillarEntity) world.getBlockEntity(center);
                 if (blockEntity.institutions.town != null) return;
-                blockEntity.institutions.town = new Town(title, center, player, null, world);
+                blockEntity.institutions.town = new Town(title, center, player, districtName, null, world);
             });
         });
     }

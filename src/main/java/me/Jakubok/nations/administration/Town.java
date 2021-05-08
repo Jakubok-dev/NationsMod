@@ -20,22 +20,24 @@ public class Town {
     protected List<TownDistrict> districts = new ArrayList<>();
     protected long wealth;
 
-    public Town(String name, BlockPos center, LivingEntity ruler, @Nullable Province province, World world) {
+    public Town(String name, BlockPos center, LivingEntity ruler, String districtName, @Nullable Province province, World world) {
         this.name = name;
         this.center = center;
         this.ruler = ruler;
         this.province = province;
 
-        TownDistrict dist = createDistrict("Center", this.center, world);
+        TownDistrict dist = createDistrict(districtName  , this.center, world);
+        final ModChunkPos template = new ModChunkPos(new ChunkPos(center));
         ModChunkPos pos = new ModChunkPos(new ChunkPos(center));
-        dist.expand(pos); pos = new ModChunkPos(new ChunkPos(new BlockPos(pos.getEndX()+1,64, pos.getStartZ())));
-        dist.expand(pos); pos = new ModChunkPos(new ChunkPos(new BlockPos(pos.getStartX()-1,64, pos.getStartZ())));
-        dist.expand(pos); pos = new ModChunkPos(new ChunkPos(new BlockPos(pos.getStartX(),64,pos.getEndZ()+1)));
-        dist.expand(pos); pos = new ModChunkPos(new ChunkPos(new BlockPos(pos.getStartX(),64,pos.getStartZ()-1)));
-        dist.expand(pos); pos = new ModChunkPos(new ChunkPos(new BlockPos(pos.getStartX()-1,64,pos.getStartZ()-1)));
-        dist.expand(pos); pos = new ModChunkPos(new ChunkPos(new BlockPos(pos.getEndX()+1,64,pos.getStartZ()-1)));
-        dist.expand(pos); pos = new ModChunkPos(new ChunkPos(new BlockPos(pos.getStartX()-1,64,pos.getEndZ()+1)));
-        dist.expand(pos); pos = new ModChunkPos(new ChunkPos(new BlockPos(pos.getEndX()+1,64,pos.getEndZ()+1)));
+        dist.expand(pos); pos = new ModChunkPos(new ChunkPos(template.x-1, template.z));
+        dist.expand(pos); pos = new ModChunkPos(new ChunkPos(template.x+1, template.z));
+        dist.expand(pos); pos = new ModChunkPos(new ChunkPos(template.x, template.z-1));
+        dist.expand(pos); pos = new ModChunkPos(new ChunkPos(template.x, template.z+1));
+        dist.expand(pos); pos = new ModChunkPos(new ChunkPos(template.x-1, template.z-1));
+        dist.expand(pos); pos = new ModChunkPos(new ChunkPos(template.x+1, template.z+1));
+        dist.expand(pos); pos = new ModChunkPos(new ChunkPos(template.x-1, template.z+1));
+        dist.expand(pos); pos = new ModChunkPos(new ChunkPos(template.x+1, template.z-1));
+        dist.expand(pos);
     }
 
     public Town(CompoundTag tag, World world) {

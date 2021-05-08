@@ -1,6 +1,5 @@
 package me.Jakubok.nations.block;
 
-import me.Jakubok.nations.administration.TownDistrict;
 import me.Jakubok.nations.util.Items;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
@@ -8,7 +7,6 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.Properties;
@@ -20,8 +18,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-
-import java.util.List;
 
 public class NationPillarBase extends BlockWithEntity {
 

@@ -12,5 +12,7 @@
   "block.nationsmod.nation_pillar.lore.no_heart": "No heart has been inserted",
   "nationsmod.town_creation_gui.title": "Town Creation",
   "nationsmod.town_creation_gui.name_label": "Name: ",
-  "nationsmod.town_creation_gui.submit": "Create"
+  "nationsmod.town_creation_gui.submit": "Create",
+  "nationsmod.town_creation_gui.district_name_label": "District name: ",
+  "nationsmod.terrain.wilderness": "Wilderness"
 }

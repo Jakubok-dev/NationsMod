@@ -28,16 +28,22 @@ public class TownCreationDescription extends SyncedGuiDescription {
 
         WGridPanel root = new WGridPanel();
         setRootPanel(root);
-        root.setSize(100, 100);
+        root.setSize(140, 115);
 
         WLabel title = new WLabel(new TranslatableText("nationsmod.town_creation_gui.title"));
         title.setHorizontalAlignment(HorizontalAlignment.CENTER);
-        title.setSize(5, 6);
+        //title.setVerticalAlignment(VerticalAlignment.CENTER);
 
         WLabel name = new WLabel(new TranslatableText("nationsmod.town_creation_gui.name_label"));
         name.setVerticalAlignment(VerticalAlignment.CENTER);
 
         WTextField nameField = new WTextField();
+
+        WLabel districtName = new WLabel(new TranslatableText("nationsmod.town_creation_gui.district_name_label"));
+        districtName.setVerticalAlignment(VerticalAlignment.CENTER);
+
+        WTextField districtNameField = new WTextField();
+        districtNameField.setText("Center");
 
         WButton submit = new WButton(new TranslatableText("nationsmod.town_creation_gui.submit"));
         submit.setOnClick(() -> {
@@ -55,9 +61,12 @@ public class TownCreationDescription extends SyncedGuiDescription {
             }
             NationPillarEntity entity = (NationPillarEntity)world.getBlockEntity(pos);
 
-            if (nameField.getText() == "") {
+            if (nameField.getText().equals("")) {
                 close(playerInventory.player);
                 return;
+            }
+            if (districtNameField.getText().equals("")) {
+                districtNameField.setText("Center");
             }
 
             if (entity.institutions.town == null) {
@@ -65,6 +74,7 @@ public class TownCreationDescription extends SyncedGuiDescription {
                 buf.writeBlockPos(getPos(playerInventory));
                 CompoundTag tag = new CompoundTag();
                 tag.putString("title", nameField.getText());
+                tag.putString("districtName", districtNameField.getText());
                 buf.writeCompoundTag(tag);
                 ClientPlayNetworking.send(new Identifier(Nations.MOD_ID, "create_nation_by_player"), buf);
             }
@@ -72,10 +82,12 @@ public class TownCreationDescription extends SyncedGuiDescription {
             close(playerInventory.player);
         });
 
-        root.add(title, 3, 0);
+        root.add(title, 5, 0, 2, 4);
         root.add(name, 0, 2);
-        root.add(nameField, 2, 2, 6, 5);
-        root.add(submit, 0, 4, 8, 5);
+        root.add(nameField, 5, 2, 7, 4);
+        root.add(districtName, 0, 3);
+        root.add(districtNameField, 5, 3, 7, 4);
+        root.add(submit, 0, 5, 12, 5);
         root.validate(this);
     }
 
