@@ -19,6 +19,7 @@ public class NationPillarEntity extends BlockEntity implements NamedScreenHandle
 
     public int charge_level = 0;
     public InstitutionsHandler institutions = new InstitutionsHandler();
+
     protected CompoundTag tempTag = null;
 
     public NationPillarEntity() {
@@ -57,11 +58,11 @@ public class NationPillarEntity extends BlockEntity implements NamedScreenHandle
         return new TownCreationDescription(syncId, player.inventory, ScreenHandlerContext.create(world, pos));
     }
 
-    protected boolean institutionsImported() {
+    public boolean institutionsImported() {
         return tempTag == null;
     }
 
-    public void importInstitutions() {
+    protected void importInstitutions() {
         if (institutionsImported()) return;
         institutions = new InstitutionsHandler((CompoundTag) tempTag.get("institutions"), world);
         tempTag = null;

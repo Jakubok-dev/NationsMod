@@ -14,5 +14,6 @@
   "nationsmod.town_creation_gui.name_label": "Nazwa: ",
   "nationsmod.town_creation_gui.submit": "Stwórz",
   "nationsmod.town_creation_gui.district_name_label": "Nazwa dzielnicy: ",
-  "nationsmod.terrain.wilderness": "Dzicz"
+  "nationsmod.terrain.wilderness": "Dzicz",
+  "nationsmod.town_panel_gui.title": "Panel Miasta "
 }

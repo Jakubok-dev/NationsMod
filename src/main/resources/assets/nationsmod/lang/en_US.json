@@ -14,5 +14,6 @@
   "nationsmod.town_creation_gui.name_label": "Name: ",
   "nationsmod.town_creation_gui.submit": "Create",
   "nationsmod.town_creation_gui.district_name_label": "District name: ",
-  "nationsmod.terrain.wilderness": "Wilderness"
+  "nationsmod.terrain.wilderness": "Wilderness",
+  "nationsmod.town_panel_gui.title": "Town Panel of "
 }

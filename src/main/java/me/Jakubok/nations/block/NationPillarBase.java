@@ -1,9 +1,12 @@
 package me.Jakubok.nations.block;
 
+import me.Jakubok.nations.gui.TownPanelDescription;
+import me.Jakubok.nations.gui.TownPanelScreen;
 import me.Jakubok.nations.util.Items;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
@@ -72,7 +75,13 @@ public class NationPillarBase extends BlockWithEntity {
             // Creating a town
             if (nationPillarEntity.charge_level > 1 && nationPillarEntity.institutions.town == null) {
                 player.openHandledScreen(state.createScreenHandlerFactory(world, pos));
+                return ActionResult.SUCCESS;
             }
+        }
+
+        if (nationPillarEntity.institutions.town != null) {
+            MinecraftClient.getInstance().openScreen(new TownPanelScreen(new TownPanelDescription(nationPillarEntity.institutions.town, player)));
+            return ActionResult.SUCCESS;
         }
 
         player.sendMessage(new TranslatableText("block.nationsmod.nation_pillar.lore." + Integer.toString(nationPillarEntity.charge_level)), true);
