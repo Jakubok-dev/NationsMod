@@ -5,7 +5,7 @@ import me.Jakubok.nations.administration.Town;
 import me.Jakubok.nations.block.NationPillarEntity;
 import me.Jakubok.nations.util.Items;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
@@ -18,7 +18,7 @@ public class CreateNationByPlayer {
         ServerPlayNetworking.registerGlobalReceiver(new Identifier(Nations.MOD_ID, "create_nation_by_player"), (server, player, networkHandler, buf, packetSender) -> {
             BlockPos center = buf.readBlockPos();
             World world = player.getEntityWorld();
-            CompoundTag tag = buf.readCompoundTag();
+            NbtCompound tag = buf.readNbt();
             String title = tag.getString("title");
             String districtName = tag.getString("districtName");
 

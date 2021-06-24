@@ -21,6 +21,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
 public class NationPillarBase extends BlockWithEntity {
 
@@ -42,8 +43,8 @@ public class NationPillarBase extends BlockWithEntity {
     }
 
     @Override
-    public BlockEntity createBlockEntity(BlockView world) {
-        return new NationPillarEntity();
+    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        return new NationPillarEntity(pos, state);
     }
 
     @Override
@@ -87,4 +88,5 @@ public class NationPillarBase extends BlockWithEntity {
         player.sendMessage(new TranslatableText("block.nationsmod.nation_pillar.lore." + Integer.toString(nationPillarEntity.charge_level)), true);
         return ActionResult.SUCCESS;
     }
+
 }

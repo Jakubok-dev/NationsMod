@@ -4,7 +4,7 @@ import me.Jakubok.nations.administration.TerritoryClaimer;
 import me.Jakubok.nations.terrain.ConstantModChunkPos;
 import me.Jakubok.nations.terrain.ModChunkPos;
 import me.Jakubok.nations.util.GlobalChunkRegistry;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -17,11 +17,11 @@ import java.util.Queue;
 public class ChunkBinaryTree {
 
     public ChunkBinaryTree() {}
-    public ChunkBinaryTree(CompoundTag tag, TerritoryClaimer claimer, boolean register, World world) {
+    public ChunkBinaryTree(NbtCompound tag, TerritoryClaimer claimer, boolean register, World world) {
         int count = tag.getInt("chunksCount");
         if (register) {
             for (int i = 0; i < count; i++) {
-                CompoundTag subTag = (CompoundTag)tag.get("chunk" + i);
+                NbtCompound subTag = (NbtCompound)tag.get("chunk" + i);
                 ConstantModChunkPos constModChunkPos = new ConstantModChunkPos(subTag, claimer);
 
                 ModChunkPos modChunkPos = new ModChunkPos(new ChunkPos(constModChunkPos.x, constModChunkPos.z));
@@ -35,7 +35,7 @@ public class ChunkBinaryTree {
         }
         else {
             for (int i = 0; i < count; i++) {
-                CompoundTag subTag = (CompoundTag)tag.get("chunk" + i);
+                NbtCompound subTag = (NbtCompound)tag.get("chunk" + i);
                 ConstantModChunkPos constModChunkPos = new ConstantModChunkPos(subTag, claimer);
 
                 ModChunkPos modChunkPos = new ModChunkPos(new ChunkPos(constModChunkPos.x, constModChunkPos.z));
@@ -151,12 +151,12 @@ public class ChunkBinaryTree {
         root = null;
     }
 
-    public CompoundTag saveToTag(CompoundTag tag, TerritoryClaimer claimer) {
+    public NbtCompound saveToTag(NbtCompound tag, TerritoryClaimer claimer) {
         List<ModChunkPos> temp = treeToList();
         List<ConstantModChunkPos> constTemp = new ArrayList<>();
         temp.forEach(chunkPos -> constTemp.add(new ConstantModChunkPos(chunkPos, claimer)));
         for (int i = 0; i < constTemp.size(); i++) {
-            CompoundTag subTag = new CompoundTag();
+            NbtCompound subTag = new NbtCompound();
             constTemp.get(i).saveToTag(subTag);
             tag.put("chunk" + i, subTag);
         }

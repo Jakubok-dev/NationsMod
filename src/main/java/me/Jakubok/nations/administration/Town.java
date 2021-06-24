@@ -2,7 +2,7 @@ package me.Jakubok.nations.administration;
 
 import me.Jakubok.nations.terrain.ModChunkPos;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
@@ -40,10 +40,10 @@ public class Town {
         dist.expand(pos);
     }
 
-    public Town(CompoundTag tag, World world) {
+    public Town(NbtCompound tag, World world) {
         if (tag.getBoolean("belongsToProvince")) return;
         for (int i = 0; i < tag.getInt("districtsCount"); i++)
-            districts.add(new TownDistrict((CompoundTag)tag.get("district" + i), this, world));
+            districts.add(new TownDistrict((NbtCompound)tag.get("district" + i), this, world));
         name = tag.getString("name");
         int[] arr = tag.getIntArray("center");
         center = new BlockPos(arr[0], arr[1], arr[2]);
@@ -77,9 +77,9 @@ public class Town {
         districts.remove(dist); return true;
     }
 
-    public CompoundTag saveToTag(CompoundTag tag) {
+    public NbtCompound saveToTag(NbtCompound tag) {
         for (int i = 0; i < districts.size(); i++) {
-            CompoundTag subTag = new CompoundTag();
+            NbtCompound subTag = new NbtCompound();
             districts.get(i).saveToTag(subTag);
             tag.put("district" + i, subTag);
         }

@@ -1,7 +1,7 @@
 package me.Jakubok.nations.administration;
 
 import me.Jakubok.nations.terrain.ModChunkPos;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -20,7 +20,7 @@ public class TownDistrict extends TerritoryClaimer {
         this.center = center;
     }
 
-    public TownDistrict(CompoundTag tag, Town town, World world) {
+    public TownDistrict(NbtCompound tag, Town town, World world) {
         super(tag, world);
         this.town = town;
         name = tag.getString("name");
@@ -68,7 +68,7 @@ public class TownDistrict extends TerritoryClaimer {
     }
 
     @Override
-    public CompoundTag saveToTag(CompoundTag tag) {
+    public NbtCompound saveToTag(NbtCompound tag) {
         super.saveToTag(tag);
         tag.putString("name", name);
         tag.putIntArray("center", new int[] {center.getX(), center.getY(), center.getZ()});

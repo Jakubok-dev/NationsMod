@@ -12,7 +12,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.text.TranslatableText;
@@ -74,10 +74,10 @@ public class TownCreationDescription extends SyncedGuiDescription {
             if (entity.institutions.town == null) {
                 PacketByteBuf buf = PacketByteBufs.create();
                 buf.writeBlockPos(getPos(playerInventory));
-                CompoundTag tag = new CompoundTag();
+                NbtCompound tag = new NbtCompound();
                 tag.putString("title", nameField.getText());
                 tag.putString("districtName", districtNameField.getText());
-                buf.writeCompoundTag(tag);
+                buf.writeNbt(tag);
                 ClientPlayNetworking.send(new Identifier(Nations.MOD_ID, "create_nation_by_player"), buf);
                 submit.setEnabled(false);
             }

@@ -1,7 +1,7 @@
 package me.Jakubok.nations.terrain;
 
 import me.Jakubok.nations.administration.TerritoryClaimer;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ public class ConstantModChunkPos {
         this.z = chunk.z;
     }
 
-    public ConstantModChunkPos(CompoundTag tag, TerritoryClaimer claimer) {
+    public ConstantModChunkPos(NbtCompound tag, TerritoryClaimer claimer) {
         this.x = tag.getInt("chunkX");
         this.z = tag.getInt("chunkZ");
         this.claimer = claimer;
@@ -49,7 +49,7 @@ public class ConstantModChunkPos {
         return new BlockPos(pos[0], 64, pos[1]);
     }
 
-    public CompoundTag saveToTag(CompoundTag tag) {
+    public NbtCompound saveToTag(NbtCompound tag) {
         tag.putInt("blocksCount", blocksCount);
         tag.putInt("chunkX", x);
         tag.putInt("chunkZ", z);

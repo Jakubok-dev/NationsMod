@@ -3,6 +3,7 @@ package me.Jakubok.nations.util;
 import me.Jakubok.nations.Nations;
 import me.Jakubok.nations.block.NationPillarBase;
 import me.Jakubok.nations.block.NationPillarEntity;
+import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.util.Identifier;
@@ -17,6 +18,6 @@ public class Blocks {
 
     public static void init() {
         Registry.register(Registry.BLOCK, new Identifier(Nations.MOD_ID, "nation_pillar"), NATION_PILLAR);
-        NATION_PILLAR_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Nations.MOD_ID, "nation_pillar_entity"), BlockEntityType.Builder.create(NationPillarEntity::new, NATION_PILLAR).build(null));
+        NATION_PILLAR_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Nations.MOD_ID, "nation_pillar_entity"), FabricBlockEntityTypeBuilder.create(NationPillarEntity::new, NATION_PILLAR).build(null));
     }
 }

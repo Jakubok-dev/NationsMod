@@ -7,12 +7,13 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
+import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.Nullable;
 
 public class NationPillarEntity extends BlockEntity implements NamedScreenHandlerFactory {
@@ -20,30 +21,30 @@ public class NationPillarEntity extends BlockEntity implements NamedScreenHandle
     public int charge_level = 0;
     public InstitutionsHandler institutions = new InstitutionsHandler();
 
-    protected CompoundTag tempTag = null;
+    protected NbtCompound tempTag = null;
 
-    public NationPillarEntity() {
-        super(Blocks.NATION_PILLAR_ENTITY);
+    public NationPillarEntity(BlockPos pos, BlockState state) {
+        super(Blocks.NATION_PILLAR_ENTITY, pos, state);
     }
 
     @Override
-    public CompoundTag toTag(CompoundTag tag) {
+    public NbtCompound writeNbt(NbtCompound tag) {
         importInstitutions();
         tag.putInt("charge_level", charge_level);
-        tag.put("institutions", institutions.saveToTag(new CompoundTag()));
-        super.toTag(tag);
+        tag.put("institutions", institutions.saveToTag(new NbtCompound()));
+        super.writeNbt(tag);
         return tag;
     }
 
     @Override
-    public void fromTag(BlockState state, CompoundTag tag) {
-        super.fromTag(state, tag);
+    public void readNbt(NbtCompound tag) {
+        super.readNbt(tag);
         charge_level = tag.getInt("charge_level");
         if (!hasWorld()) {
             tempTag = tag;
             return;
         }
-        institutions = new InstitutionsHandler((CompoundTag) tag.get("institutions"), world);
+        institutions = new InstitutionsHandler((NbtCompound) tag.get("institutions"), world);
     }
 
     @Override
@@ -55,7 +56,7 @@ public class NationPillarEntity extends BlockEntity implements NamedScreenHandle
     @Nullable
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-        return new TownCreationDescription(syncId, player.inventory, ScreenHandlerContext.create(world, pos));
+        return new TownCreationDescription(syncId, player.getInventory(), ScreenHandlerContext.create(world, pos));
     }
 
     public boolean institutionsImported() {
@@ -64,7 +65,7 @@ public class NationPillarEntity extends BlockEntity implements NamedScreenHandle
 
     protected void importInstitutions() {
         if (institutionsImported()) return;
-        institutions = new InstitutionsHandler((CompoundTag) tempTag.get("institutions"), world);
+        institutions = new InstitutionsHandler((NbtCompound) tempTag.get("institutions"), world);
         tempTag = null;
     }
 }
