@@ -1,0 +1,6 @@
+{
+    "parent": "item/generated",
+    "textures": {
+      "layer0": "nationsmod:item/nation_independence_declaration"
+    }
+}
