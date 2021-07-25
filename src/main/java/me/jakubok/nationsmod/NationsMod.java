@@ -1,16 +1,14 @@
-package me.Jakubok.nations;
+package me.jakubok.nationsmod;
 
 import net.fabricmc.api.ModInitializer;
 
-public class Nations implements ModInitializer {
-
-	public static final String MOD_ID = "nationsmod";
+public class NationsMod implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		// This code runs as soon as Minecraft is in a mod-load-ready state.
 		// However, some things (like resources) may still be uninitialized.
 		// Proceed with mild caution.
 
-		System.out.println("Nations mod initializing!");
+		System.out.println("Hello Fabric world!");
 	}
 }
