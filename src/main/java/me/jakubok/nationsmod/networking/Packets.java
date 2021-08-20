@@ -1,0 +1,8 @@
+package me.jakubok.nationsmod.networking;
+
+import me.jakubok.nationsmod.NationsMod;
+import net.minecraft.util.Identifier;
+
+public class Packets {
+    public static final Identifier OPEN_TOWN_CREATION_SCREEN_PACKET = new Identifier(NationsMod.MOD_ID, "open_town_creation_screen_packet");
+}

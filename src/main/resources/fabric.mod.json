@@ -19,6 +19,9 @@
   "entrypoints": {
     "main": [
       "me.jakubok.nationsmod.NationsMod"
+    ],
+    "client": [
+      "me.jakubok.nationsmod.NationsClient"
     ]
   },
   "mixins": [

@@ -1,5 +1,6 @@
 package me.jakubok.nationsmod;
 
+import me.jakubok.nationsmod.networking.Packets;
 import me.jakubok.nationsmod.registries.ItemRegistry;
 import net.fabricmc.api.ModInitializer;
 
