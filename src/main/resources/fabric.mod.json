@@ -22,6 +22,9 @@
     ],
     "client": [
       "me.jakubok.nationsmod.NationsClient"
+    ],
+    "cardinal-components": [
+      "me.jakubok.nationsmod.registries.ComponentsRegistry"
     ]
   },
   "mixins": [
@@ -34,5 +37,13 @@
     "minecraft": "1.17.x",
     "java": ">=16"
   },
-  "suggests": { }
+  "suggests": { },
+
+  "custom": {
+    "cardinal-components": [
+      "nationsmod:towns_registry",
+      "nationsmod:territory_claimers_registry",
+      "nationsmod:chunk_claim_registry"
+    ]
+}
 }

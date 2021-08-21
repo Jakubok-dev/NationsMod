@@ -3,20 +3,29 @@ package me.jakubok.nationsmod.chunk;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 
+import dev.onyxstudios.cca.api.v3.component.ComponentV3;
 import me.jakubok.nationsmod.administration.TerritoryClaimer;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
 
-public class ChunkClaimRegistry extends ChunkPos {
+public class ChunkClaimRegistry implements ComponentV3 {
 
     private Map<BlockPos, UUID> claims = new HashMap<>();
+    private int x, z;
 
     public ChunkClaimRegistry(BlockPos pos) {
-        super(pos);
+        this.x = pos.getX();
+        this.z = pos.getZ();
     }
     public ChunkClaimRegistry(int x, int z) {
-        super(x, z);
+        this.x = x;
+        this.z = z;
+    }
+    // Only for readonly chunks!
+    public ChunkClaimRegistry() {
+
     }
 
     public Map<BlockPos, UUID> getClaims() {
@@ -93,5 +102,34 @@ public class ChunkClaimRegistry extends ChunkPos {
     }
     public boolean isBelonging(BlockPos pos) {
         return isBelonging(pos.getX(), pos.getZ());
+    }
+    @Override
+    public void readFromNbt(NbtCompound tag) {
+        this.x = tag.getInt("x");
+        this.z = tag.getInt("z");
+
+        for (int i = 1; i <= tag.getInt("size"); i++) {
+            NbtCompound claimCompound = (NbtCompound)tag.get("claim" + i);
+            claims.put(
+                new BlockPos(claimCompound.getInt("x"), 64, claimCompound.getInt("z")),
+                claimCompound.getUuid("claimer")
+            );
+        }
+    }
+
+    @Override
+    public void writeToNbt(NbtCompound tag) {
+        tag.putInt("x", this.x);
+        tag.putInt("z", this.z);
+
+        AtomicInteger size = new AtomicInteger(0);
+        claims.forEach((pos, claimerid) -> {
+            NbtCompound claim = new NbtCompound();
+            claim.putInt("x", pos.getX());
+            claim.putInt("z", pos.getZ());
+            claim.putUuid("claimer", claimerid);
+            tag.put("claim" + size.incrementAndGet(), claim);
+        });
+        tag.putInt("size", size.get());
     }
 }

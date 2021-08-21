@@ -2,24 +2,24 @@ package me.jakubok.nationsmod.administration;
 
 import java.util.UUID;
 
-import me.jakubok.nationsmod.registries.TerritoryClaimersRegistry;
-import me.jakubok.nationsmod.registries.TownsRegistry;
+import me.jakubok.nationsmod.registries.ComponentsRegistry;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.world.WorldProperties;
 
-public class District implements TerritoryClaimer {
+public class District extends TerritoryClaimer {
 
     private String name;
-    private final UUID id = UUID.randomUUID();
     private UUID townId;
 
-    public District(String name, Town town) {
+    public District(String name, Town town, WorldProperties props) {
+        super(props);
         this.name = name;
         this.townId = town.getId();
-        TerritoryClaimersRegistry.registerClaimer(this);
+        ComponentsRegistry.TERRITORY_CLAIMERS_REGISTRY.get(props).registerClaimer(this);
     }
-
-    @Override
-    public UUID getId() {
-        return id;
+    public District(NbtCompound tag, WorldProperties props) {
+        super(props);
+        readFromNbt(tag);
     }
 
     public String getName() {
@@ -30,6 +30,21 @@ public class District implements TerritoryClaimer {
     }
 
     public Town getTown() {
-        return TownsRegistry.getTown(townId);
+        return ComponentsRegistry.TOWNS_REGISTRY.get(props).getTown(townId);
+    }
+
+    @Override
+    public void readFromNbt(NbtCompound tag) {
+        super.readFromNbt(tag);
+        name = tag.getString("name");
+        townId = tag.getUuid("town_id");
+    }
+
+    @Override
+    public void writeToNbt(NbtCompound tag) {
+        super.writeToNbt(tag);
+        tag.putString("name", name);
+        tag.putUuid("town_id", townId);
+        tag.putBoolean("district", true);
     }
 }
