@@ -3,11 +3,16 @@ package me.jakubok.nationsmod.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 
+import me.jakubok.nationsmod.networking.Packets;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 
@@ -15,6 +20,7 @@ public class TownCreationScreen extends Screen {
 
     protected TextFieldWidget townName;
     protected TextFieldWidget mainDistrictName;
+    protected ButtonWidget submit;
 
     protected final int windowLeft = 128;
     protected final int windowRight = windowLeft + 248;
@@ -77,7 +83,7 @@ public class TownCreationScreen extends Screen {
 	protected void init() {
         super.init();
         
-        townName = new TextFieldWidget(
+        this.townName = new TextFieldWidget(
             textRenderer,
             windowCenterHorizontal,
             windowCenterVertical - 25,
@@ -87,7 +93,7 @@ public class TownCreationScreen extends Screen {
         );
         this.addDrawableChild(townName);
 
-        mainDistrictName = new TextFieldWidget(
+        this.mainDistrictName = new TextFieldWidget(
             textRenderer, 
             windowCenterHorizontal, 
             windowCenterVertical,
@@ -97,18 +103,31 @@ public class TownCreationScreen extends Screen {
         );
         this.addDrawableChild(mainDistrictName);
 
-        this.addDrawableChild(
-            new ButtonWidget(
-                windowCenterHorizontal - 64, 
-                windowBottom - 25, 
-                128, 
-                20, 
-                new TranslatableText("gui.nationsmod.town_creation_screen.submit"), 
-                b -> {
-                    b.active = false;
-                    this.client.setScreen(null);
-                }
-            )
+        this.submit = new ButtonWidget(
+            windowCenterHorizontal - 64, 
+            windowBottom - 25, 
+            128, 
+            20, 
+            new TranslatableText("gui.nationsmod.town_creation_screen.submit"), 
+            b -> {
+
+                if (this.mainDistrictName.getText().length() <= 0 || this.townName.getText().length() <= 0)
+                    return;
+
+                PacketByteBuf buf = PacketByteBufs.create();
+
+                NbtCompound compound = new NbtCompound();
+                compound.putString("town_name", this.townName.getText());
+                compound.putString("district_name", this.mainDistrictName.getText());
+
+                buf.writeNbt(compound);
+
+                ClientPlayNetworking.send(Packets.CREATE_A_TOWN_PACKET, buf);
+
+                b.active = false;
+                this.client.setScreen(null);
+            }
         );
+        this.addDrawableChild(this.submit);
     }
 }

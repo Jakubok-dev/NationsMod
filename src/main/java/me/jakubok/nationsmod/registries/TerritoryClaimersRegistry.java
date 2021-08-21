@@ -25,7 +25,7 @@ public class TerritoryClaimersRegistry implements ComponentV3 {
 
     public TerritoryClaimer getClaimer(UUID id) {
         for (TerritoryClaimer claimer : claimers) {
-            if (claimer.getId().toString() == id.toString())
+            if (claimer.getId().toString().equals(id.toString()))
                 return claimer;
         }
         return null;
@@ -33,7 +33,7 @@ public class TerritoryClaimersRegistry implements ComponentV3 {
 
     public boolean registerClaimer(TerritoryClaimer claimer) {
         for (TerritoryClaimer it : claimers) {
-            if (it.getId().toString() == claimer.getId().toString())
+            if (it.getId().toString().equals(claimer.getId().toString()))
                 return false;
         }
         claimers.add(claimer);
@@ -42,7 +42,7 @@ public class TerritoryClaimersRegistry implements ComponentV3 {
 
     public TerritoryClaimer removeClaimer(UUID id) {
         for (TerritoryClaimer claimer : claimers) {
-            if (claimer.getId().toString() == id.toString()) {
+            if (claimer.getId().toString().equals(id.toString())) {
                 claimers.remove(claimer);
                 return claimer;
             }

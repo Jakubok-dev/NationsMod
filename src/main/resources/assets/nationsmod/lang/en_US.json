@@ -6,5 +6,7 @@
     "gui.nationsmod.town_creation_screen.title": "Town creation screen",
     "gui.nationsmod.town_creation_screen.town_name": "Town name:",
     "gui.nationsmod.town_creation_screen.district_name": "District name:",
-    "gui.nationsmod.town_creation_screen.submit": "Submit"
+    "gui.nationsmod.town_creation_screen.submit": "Submit",
+    "gui.nationsmod.town_creation_screen.town_name_not_unique": "The town name isn't unique",
+    "nationsmod.wilderness": "Wilderness"
 }

@@ -8,6 +8,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import dev.onyxstudios.cca.api.v3.component.ComponentV3;
 import me.jakubok.nationsmod.registries.ComponentsRegistry;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.util.math.ChunkPos;
+import net.minecraft.world.World;
 import net.minecraft.world.WorldProperties;
 
 
@@ -17,10 +19,24 @@ public class Town implements ComponentV3 {
     private List<UUID> districtsIDs = new ArrayList<>();
     public final WorldProperties props;
 
-    public Town(String name, WorldProperties props) {
+    public Town(String name, String districtName, ChunkPos pos, World world) {
         this.name = name;
-        this.props = props;
+        this.props = world.getLevelProperties();
         ComponentsRegistry.TOWNS_REGISTRY.get(this.props).registerTown(this);
+
+        District mainDistrict = new District(districtName, this, props);
+
+        mainDistrict.claim(pos, world);
+        mainDistrict.claim(new ChunkPos(pos.x-1, pos.z), world);
+        mainDistrict.claim(new ChunkPos(pos.x-1, pos.z-1), world);
+        mainDistrict.claim(new ChunkPos(pos.x+1, pos.z), world);
+        mainDistrict.claim(new ChunkPos(pos.x+1, pos.z+1), world);
+        mainDistrict.claim(new ChunkPos(pos.x, pos.z-1), world);
+        mainDistrict.claim(new ChunkPos(pos.x, pos.z+1), world);
+        mainDistrict.claim(new ChunkPos(pos.x-1, pos.z+1), world);
+        mainDistrict.claim(new ChunkPos(pos.x+1, pos.z-1), world);
+
+        districtsIDs.add(mainDistrict.getId());
     }
     public Town(NbtCompound tag, WorldProperties props) {
         readFromNbt(tag);

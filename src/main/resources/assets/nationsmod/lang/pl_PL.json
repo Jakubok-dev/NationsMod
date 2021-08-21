@@ -6,5 +6,7 @@
     "gui.nationsmod.town_creation_screen.title": "Panel tworzenia miasta",
     "gui.nationsmod.town_creation_screen.town_name": "Nazwa miasta:",
     "gui.nationsmod.town_creation_screen.district_name": "Nazwa dzielnicy:",
-    "gui.nationsmod.town_creation_screen.submit": "Stwórz"
+    "gui.nationsmod.town_creation_screen.submit": "Stwórz",
+    "gui.nationsmod.town_creation_screen.town_name_not_unique": "Nazwa miasta nie jest unikatowa",
+    "nationsmod.wilderness": "Dzicz"
 }

@@ -25,7 +25,7 @@ public class TownsRegistry implements ComponentV3 {
 
     public Town getTown(UUID id) {
         for (Town town : towns) {
-            if (town.getId().toString() == id.toString())
+            if (town.getId().toString().equals(id.toString()))
                 return town;
         }
         return null;
@@ -33,7 +33,7 @@ public class TownsRegistry implements ComponentV3 {
 
     public boolean registerTown(Town town) {
         for (Town it : towns) {
-            if (it.getId().toString() == town.getId().toString())
+            if (it.getId().toString().equals(town.getId().toString()))
                 return false;
         }
         towns.add(town);
@@ -42,7 +42,7 @@ public class TownsRegistry implements ComponentV3 {
 
     public Town removeTown(UUID id) {
         for (Town town : towns) {
-            if (town.getId().toString() == id.toString()) {
+            if (town.getId().toString().equals(id.toString())) {
                 towns.remove(town);
                 return town;
             }
