@@ -1,5 +1,6 @@
 package me.jakubok.nationsmod.items;
 
+import me.jakubok.nationsmod.NationsMod;
 import me.jakubok.nationsmod.networking.Packets;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -20,6 +21,7 @@ public class TownIndependenceDeclaration extends Item implements Declaration {
         super(
             new FabricItemSettings()
             .rarity(Rarity.RARE)
+            .group(NationsMod.ITEM_GROUP)
         );
     }
 
