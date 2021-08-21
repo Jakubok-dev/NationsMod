@@ -1,5 +1,9 @@
 {
     "item.nationsmod.constitution": "Constitution",
     "item.nationsmod.town_independence_declaration": "Town independence declaration",
-    "item.nationsmod.nation_independence_declaration": "Nation independence declaration"
+    "item.nationsmod.nation_independence_declaration": "Nation independence declaration",
+    "gui.nationsmod.town_creation_screen.title": "Town creation screen",
+    "gui.nationsmod.town_creation_screen.town_name": "Town name:",
+    "gui.nationsmod.town_creation_screen.district_name": "District name:",
+    "gui.nationsmod.town_creation_screen.submit": "Submit"
 }
