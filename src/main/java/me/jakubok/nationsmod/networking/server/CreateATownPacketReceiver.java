@@ -1,6 +1,5 @@
 package me.jakubok.nationsmod.networking.server;
 
-import me.jakubok.nationsmod.administration.District;
 import me.jakubok.nationsmod.administration.Town;
 import me.jakubok.nationsmod.registries.ComponentsRegistry;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;

@@ -31,7 +31,12 @@ public abstract class ServerPlayerMixin extends PlayerEntity {
 
     @Inject(at = @At("RETURN"), method = "tick")
     private void claimCheck(CallbackInfo info) {
-        ChunkClaimRegistry chunkClaimRegistry = ComponentsRegistry.CHUNK_CLAIM_REGISTRY.get(this.getEntityWorld().getChunk(this.getBlockPos()));
+        ChunkClaimRegistry chunkClaimRegistry = ComponentsRegistry.CHUNK_BINARY_TREE.get(this.getEntityWorld().getLevelProperties()).get(this.getBlockPos());
+
+        if (chunkClaimRegistry == null) {
+            wilderness();
+            return;
+        }
 
         if (chunkClaimRegistry.claimBelonging(this.getBlockPos()) != null) {
             if (!inAWilderness)
@@ -48,6 +53,10 @@ public abstract class ServerPlayerMixin extends PlayerEntity {
             }
             return;
         }
+        wilderness();
+    }
+
+    private void wilderness() {
         if (inAWilderness)
             return;
         inAWilderness = true;

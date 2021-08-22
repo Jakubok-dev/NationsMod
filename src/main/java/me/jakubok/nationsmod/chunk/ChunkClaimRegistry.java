@@ -23,9 +23,16 @@ public class ChunkClaimRegistry implements ComponentV3 {
         this.x = x;
         this.z = z;
     }
-    // Only for readonly chunks!
     public ChunkClaimRegistry() {
 
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getZ() {
+        return z;
     }
 
     public Map<BlockPos, UUID> getClaims() {
@@ -105,6 +112,7 @@ public class ChunkClaimRegistry implements ComponentV3 {
     }
     @Override
     public void readFromNbt(NbtCompound tag) {
+        claims.clear();
         this.x = tag.getInt("x");
         this.z = tag.getInt("z");
 

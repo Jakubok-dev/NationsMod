@@ -31,7 +31,7 @@ public abstract class TerritoryClaimer implements ComponentV3 {
 
     public int claim(BlockPos pos, World world) {
         
-        ChunkClaimRegistry chunkClaimRegistry = ComponentsRegistry.CHUNK_CLAIM_REGISTRY.get(world.getChunk(pos));
+        ChunkClaimRegistry chunkClaimRegistry = ComponentsRegistry.CHUNK_BINARY_TREE.get(world.getLevelProperties()).getOrCreate(pos);
 
         if(chunkClaimRegistry.isBelonging(pos))
             return 0;
@@ -51,7 +51,7 @@ public abstract class TerritoryClaimer implements ComponentV3 {
     }
 
     public int unclaim(BlockPos pos, World world) {
-        ChunkClaimRegistry chunkClaimRegistry = ComponentsRegistry.CHUNK_CLAIM_REGISTRY.get(world.getChunk(pos));
+        ChunkClaimRegistry chunkClaimRegistry = ComponentsRegistry.CHUNK_BINARY_TREE.get(world.getLevelProperties()).getOrCreate(pos);
 
         if (!chunkClaimRegistry.isBelonging(pos))
             return 0;

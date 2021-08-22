@@ -43,7 +43,7 @@
     "cardinal-components": [
       "nationsmod:towns_registry",
       "nationsmod:territory_claimers_registry",
-      "nationsmod:chunk_claim_registry"
+      "nationsmod:chunk_binary_tree"
     ]
 }
 }
