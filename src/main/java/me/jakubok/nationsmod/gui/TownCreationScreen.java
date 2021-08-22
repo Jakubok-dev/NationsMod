@@ -22,7 +22,7 @@ public class TownCreationScreen extends Screen {
     protected TextFieldWidget mainDistrictName;
     protected ButtonWidget submit;
 
-    protected final int windowLeft = 128;
+    protected final int windowLeft = 120;
     protected final int windowRight = windowLeft + 248;
     
     protected final int windowTop = 50;
@@ -44,7 +44,7 @@ public class TownCreationScreen extends Screen {
 
         RenderSystem.setShaderTexture(0, new Identifier("minecraft", "textures/gui/demo_background.png"));
 
-        drawTexture(matrices, 128, 50, 0, 0, 256, 256, 256, 256);
+        drawTexture(matrices, 120, 50, 0, 0, 256, 256, 256, 256);
 
         // Town creation screen
         drawCenteredText(

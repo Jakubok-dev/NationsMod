@@ -13,5 +13,6 @@
     "keybindingcategory.nationsmod": "Nations",
     "gui.nationsmod.main_screen.title": "Nations Mod's Main Screen",
     "gui.nationsmod.main_screen.towns_button": "Towns",
-    "gui.nationsmod.main_screen.nations_button": "Nations"
+    "gui.nationsmod.main_screen.nations_button": "Nations",
+    "gui.nationsmod.towns_screen.title": "Towns"
 }

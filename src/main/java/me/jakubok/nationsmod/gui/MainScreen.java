@@ -1,5 +1,8 @@
 package me.jakubok.nationsmod.gui;
 
+import me.jakubok.nationsmod.networking.Packets;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
@@ -45,7 +48,7 @@ public class MainScreen extends Screen {
             200, 
             20, 
             new TranslatableText("gui.nationsmod.main_screen.towns_button"), 
-            b -> {}
+            b -> ClientPlayNetworking.send(Packets.OPEN_TOWNS_SCREEN_PACKET, PacketByteBufs.create())
         ));
 
         this.addDrawableChild(new ButtonWidget(
