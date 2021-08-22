@@ -12,6 +12,7 @@ public class NationIndependenceDeclaration extends Item implements Declaration {
             new FabricItemSettings()
             .rarity(Rarity.RARE)
             .group(NationsMod.ITEM_GROUP)
+            .maxCount(1)
         );
     }
 
