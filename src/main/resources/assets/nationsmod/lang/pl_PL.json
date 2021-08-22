@@ -8,5 +8,9 @@
     "gui.nationsmod.town_creation_screen.district_name": "Nazwa dzielnicy:",
     "gui.nationsmod.town_creation_screen.submit": "Stwórz",
     "gui.nationsmod.town_creation_screen.town_name_not_unique": "Nazwa miasta nie jest unikatowa",
-    "nationsmod.wilderness": "Dzicz"
+    "nationsmod.wilderness": "Dzicz",
+    "keybinding.nationsmod.open_main_screen": "Otwórz ekran głowny",
+    "gui.nationsmod.main_screen.title": "Ekran Główny Modyfikacji \"Nacje\"",
+    "gui.nationsmod.main_screen.towns_button": "Miasta",
+    "gui.nationsmod.main_screen.nations_button": "Nacje"
 }
