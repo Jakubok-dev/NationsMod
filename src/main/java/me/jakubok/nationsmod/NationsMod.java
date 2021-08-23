@@ -2,7 +2,6 @@ package me.jakubok.nationsmod;
 
 import me.jakubok.nationsmod.networking.ServerNetworking;
 import me.jakubok.nationsmod.registries.ItemRegistry;
-import me.jakubok.nationsmod.registries.ModScreenHandlerRegistry;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.minecraft.item.ItemGroup;
@@ -26,6 +25,5 @@ public class NationsMod implements ModInitializer {
 		System.out.println("The nations mod is initialising...");
 		ItemRegistry.init();
 		ServerNetworking.register();
-		ModScreenHandlerRegistry.init();
 	}
 }

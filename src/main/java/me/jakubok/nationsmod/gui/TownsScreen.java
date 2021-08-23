@@ -1,18 +1,25 @@
 package me.jakubok.nationsmod.gui;
 
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
 import com.mojang.blaze3d.systems.RenderSystem;
 
-import net.minecraft.client.gui.screen.GameModeSelectionScreen.ButtonWidget;
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 
-public class TownsScreen extends HandledScreen<TownsScreenHandler> {
+public class TownsScreen extends Screen {
 
-    protected ButtonWidget left;
-    protected ButtonWidget right;
+    protected ButtonWidget left, right;
 
     protected final int windowLeft = 120;
     protected final int windowRight = windowLeft + 248;
@@ -23,17 +30,27 @@ public class TownsScreen extends HandledScreen<TownsScreenHandler> {
     protected final int windowCenterHorizontal = (windowLeft + windowRight) / 2;
     protected final int windowCenterVertical = (windowTop + windowBottom) / 2;
 
-    public TownsScreen(TownsScreenHandler handler, PlayerInventory inventory) {
-        super(handler, inventory, new TranslatableText("gui.nationsmod.towns_screen.title"));
+    protected Map<String, UUID> towns = new HashMap<>();
+    protected List<String> townsNames = new ArrayList<>();
+    protected List<ButtonWidget> townButtons = new ArrayList<>();
+
+    protected int page = 0;
+    protected boolean isPageAtLeft() { return page > 0;  }
+    protected boolean isPageAtRight() { return (page+1)*4 < townsNames.size(); }
+    
+    public TownsScreen(Map<String, UUID> towns) {
+        super(new TranslatableText("gui.nationsmod.towns_screen.title"));
+        this.towns = towns;
+        townsNames.addAll(towns.keySet());
+        Collections.sort(townsNames);
     }
 
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        super.render(matrices, mouseX, mouseY, delta);
-
         renderBackground(matrices);
 
         RenderSystem.setShaderTexture(0, new Identifier("minecraft", "textures/gui/demo_background.png"));
+
         drawTexture(matrices, 120, 50, 0, 0, 256, 256, 256, 256);
 
         // Towns
@@ -45,13 +62,62 @@ public class TownsScreen extends HandledScreen<TownsScreenHandler> {
             windowTop + 10,
             0xffffff
         );
+
+        super.render(matrices, mouseX, mouseY, delta);
+    }
+
+    protected void drawTowns() {
+        this.left.active = isPageAtLeft();
+        this.right.active = isPageAtRight();
+
+        townButtons.forEach(el -> {
+            this.remove(el);
+        });
+        townButtons.clear();
+
+        for (int i = 1; i <= 4 && (page*4)+i <= townsNames.size(); i++) {
+            townButtons.add(new ButtonWidget(
+                this.windowCenterHorizontal - 72,
+                this.windowTop + 30 + 30*(i-1),
+                150,
+                20,
+                Text.of(townsNames.get((page*4) + i - 1)),
+                b -> {}
+            ));
+            this.addDrawableChild(townButtons.get(i-1));
+        }
     }
 
     @Override
-    protected void init() {
+	protected void init() {
         super.init();
-    }
+        
+        this.left = new ButtonWidget(
+            this.windowLeft + 5,
+            this.windowCenterVertical - 10, 
+            20, 
+            20, 
+            Text.of("<"), 
+            b -> {
+                page--;
+                this.drawTowns();
+            }
+        );
+        this.addDrawableChild(this.left);
 
-    @Override
-    protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {}
+        this.right = new ButtonWidget(
+            this.windowRight - 25,
+            this.windowCenterVertical - 10, 
+            20, 
+            20, 
+            Text.of(">"), 
+            b -> {
+                page++;
+                this.drawTowns();
+            }
+        );
+        this.addDrawableChild(this.right);
+
+        this.drawTowns();
+    }
 }
