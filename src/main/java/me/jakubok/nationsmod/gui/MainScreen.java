@@ -11,10 +11,10 @@ import net.minecraft.text.TranslatableText;
 public class MainScreen extends Screen {
 
     protected final int windowLeft = 0;
-    protected final int windowRight = windowLeft + 475;
+    protected final int windowRight = windowLeft + 480;
     
     protected final int windowTop = 0;
-    protected final int windowBottom = windowTop + 200;
+    protected final int windowBottom = windowTop + 255;
 
     protected final int windowCenterHorizontal = (windowLeft + windowRight) / 2;
     protected final int windowCenterVertical = (windowTop + windowBottom) / 2;
@@ -33,7 +33,7 @@ public class MainScreen extends Screen {
             this.textRenderer, 
             this.title, 
             windowCenterHorizontal, 
-            windowTop + 25,
+            windowCenterVertical - 50,
             0xffffff
         );
     }
@@ -42,8 +42,11 @@ public class MainScreen extends Screen {
     protected void init() {
         super.init();
 
+        // windowCenterHorizontal - 100, 
+        // windowCenterVertical - 12,
+
         this.addDrawableChild(new ButtonWidget(
-            windowCenterHorizontal - 100, 
+            this.windowCenterHorizontal - 100, 
             windowCenterVertical - 12, 
             200, 
             20, 
