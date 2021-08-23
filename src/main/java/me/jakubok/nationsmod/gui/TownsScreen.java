@@ -6,11 +6,10 @@ import net.minecraft.client.gui.screen.GameModeSelectionScreen.ButtonWidget;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 
-public class TownsScreen extends HandledScreen<ScreenHandler> {
+public class TownsScreen extends HandledScreen<TownsScreenHandler> {
 
     protected ButtonWidget left;
     protected ButtonWidget right;
@@ -24,7 +23,7 @@ public class TownsScreen extends HandledScreen<ScreenHandler> {
     protected final int windowCenterHorizontal = (windowLeft + windowRight) / 2;
     protected final int windowCenterVertical = (windowTop + windowBottom) / 2;
 
-    public TownsScreen(ScreenHandler handler, PlayerInventory inventory) {
+    public TownsScreen(TownsScreenHandler handler, PlayerInventory inventory) {
         super(handler, inventory, new TranslatableText("gui.nationsmod.towns_screen.title"));
     }
 
