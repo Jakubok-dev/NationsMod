@@ -79,7 +79,7 @@ public class TownCreationScreen extends SimpleWindow {
             windowBottom - 25, 
             128, 
             20, 
-            new TranslatableText("gui.nationsmod.town_creation_screen.submit"), 
+            new TranslatableText("gui.nationsmod.submit"), 
             b -> {
 
                 if (this.mainDistrictName.getText().length() <= 0 || this.townName.getText().length() <= 0)

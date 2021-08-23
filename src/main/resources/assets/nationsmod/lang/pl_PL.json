@@ -6,12 +6,16 @@
     "gui.nationsmod.town_creation_screen.title": "Panel tworzenia miasta",
     "gui.nationsmod.town_creation_screen.town_name": "Nazwa miasta:",
     "gui.nationsmod.town_creation_screen.district_name": "Nazwa dzielnicy:",
-    "gui.nationsmod.town_creation_screen.submit": "Stwórz",
+    "gui.nationsmod.submit": "Stwórz",
     "gui.nationsmod.town_creation_screen.town_name_not_unique": "Nazwa miasta nie jest unikatowa",
     "nationsmod.wilderness": "Dzicz",
     "keybinding.nationsmod.open_main_screen": "Otwórz ekran głowny",
     "gui.nationsmod.main_screen.title": "Nacje: Ekran Główny",
     "gui.nationsmod.main_screen.towns_button": "Miasta",
     "gui.nationsmod.main_screen.nations_button": "Nacje",
-    "gui.nationsmod.towns_screen.title": "Miasta"
+    "gui.nationsmod.towns_screen.title": "Miasta",
+    "gui.nationsmod.nation_creation_screen.title": "Panel tworzenia nacji",
+    "gui.nationsmod.nation_creation_screen.nation_name": "Nazwa nacji:",
+    "gui.nationsmod.nation_creation_screen.province_name": "Nazwa prowincji:",
+    "gui.nationsmod.nation_creation_screen.not_in_a_town": "Musisz być w mieście by stworzyć nację"
 }

@@ -6,7 +6,7 @@
     "gui.nationsmod.town_creation_screen.title": "Town creation screen",
     "gui.nationsmod.town_creation_screen.town_name": "Town name:",
     "gui.nationsmod.town_creation_screen.district_name": "District name:",
-    "gui.nationsmod.town_creation_screen.submit": "Submit",
+    "gui.nationsmod.submit": "Submit",
     "gui.nationsmod.town_creation_screen.town_name_not_unique": "The town name isn't unique",
     "nationsmod.wilderness": "Wilderness",
     "keybinding.nationsmod.open_main_screen": "Open the main screen",
@@ -14,5 +14,9 @@
     "gui.nationsmod.main_screen.title": "Nations Mod's Main Screen",
     "gui.nationsmod.main_screen.towns_button": "Towns",
     "gui.nationsmod.main_screen.nations_button": "Nations",
-    "gui.nationsmod.towns_screen.title": "Towns"
+    "gui.nationsmod.towns_screen.title": "Towns",
+    "gui.nationsmod.nation_creation_screen.title": "Nation creation screen",
+    "gui.nationsmod.nation_creation_screen.nation_name": "Nation name:",
+    "gui.nationsmod.nation_creation_screen.province_name": "Province name:",
+    "gui.nationsmod.nation_creation_screen.not_in_a_town": "You must be in a town to create a nation"
 }
