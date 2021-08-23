@@ -48,10 +48,8 @@ public class MainScreen extends Screen {
             200, 
             20, 
             new TranslatableText("gui.nationsmod.main_screen.towns_button"), 
-            b -> {
-                this.client.setScreen(null);
-                ClientPlayNetworking.send(Packets.PREPARE_TOWNS_SCREEN_PACKET, PacketByteBufs.create());
-            }
+            b ->
+                 ClientPlayNetworking.send(Packets.PREPARE_TOWNS_SCREEN_PACKET, PacketByteBufs.create())
         ));
 
         this.addDrawableChild(new ButtonWidget(
