@@ -8,29 +8,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Identifier;
 
-public class TownsScreen extends Screen {
+public class TownsScreen extends SimpleWindow {
 
     protected ButtonWidget left, right;
     protected TextFieldWidget searchBox;
-
-    protected final int windowLeft = 120;
-    protected final int windowRight = windowLeft + 248;
-    
-    protected final int windowTop = 50;
-    protected final int windowBottom = windowTop + 165;
-
-    protected final int windowCenterHorizontal = (windowLeft + windowRight) / 2;
-    protected final int windowCenterVertical = (windowTop + windowBottom) / 2;
 
     protected Map<String, UUID> towns = new HashMap<>();
     protected List<String> townsNames = new ArrayList<>();
@@ -47,27 +33,6 @@ public class TownsScreen extends Screen {
         townsNames.addAll(towns.keySet());
         Collections.sort(townsNames);
         this.filteredTownsNames = townsNames;
-    }
-
-    @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        renderBackground(matrices);
-
-        RenderSystem.setShaderTexture(0, new Identifier("minecraft", "textures/gui/demo_background.png"));
-
-        drawTexture(matrices, 120, 50, 0, 0, 256, 256, 256, 256);
-
-        // Towns
-        drawCenteredText(
-            matrices, 
-            this.textRenderer, 
-            this.title, 
-            windowCenterHorizontal, 
-            windowTop + 10,
-            0xffffff
-        );
-
-        super.render(matrices, mouseX, mouseY, delta);
     }
 
     protected void drawTowns() {

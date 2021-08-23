@@ -10,7 +10,7 @@ public class ClientNetworking {
 
     @Environment(EnvType.CLIENT)
     public static void register() {
-        ClientPlayNetworking.registerGlobalReceiver(Packets.OPEN_TOWN_CREATION_SCREEN_PACKET, TownCreationScreenPacketReceiver::handle);
-        ClientPlayNetworking.registerGlobalReceiver(Packets.OPEN_TOWNS_SCREEN_PACKET, OpenTownsScreenPacketReceiver::handle);
+        ClientPlayNetworking.registerGlobalReceiver(Packets.OPEN_TOWN_CREATION_SCREEN_PACKET, new TownCreationScreenPacketReceiver());
+        ClientPlayNetworking.registerGlobalReceiver(Packets.OPEN_TOWNS_SCREEN_PACKET, new OpenTownsScreenPacketReceiver());
     }
 }

@@ -1,35 +1,22 @@
 package me.jakubok.nationsmod.gui;
 
 
-import com.mojang.blaze3d.systems.RenderSystem;
-
 import me.jakubok.nationsmod.networking.Packets;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Identifier;
 
-public class TownCreationScreen extends Screen {
+public class TownCreationScreen extends SimpleWindow {
 
     protected TextFieldWidget townName;
     protected TextFieldWidget mainDistrictName;
     protected ButtonWidget submit;
-
-    protected final int windowLeft = 120;
-    protected final int windowRight = windowLeft + 248;
-    
-    protected final int windowTop = 50;
-    protected final int windowBottom = windowTop + 165;
-
-    protected final int windowCenterHorizontal = (windowLeft + windowRight) / 2;
-    protected final int windowCenterVertical = (windowTop + windowBottom) / 2;
 
     protected MinecraftClient client;
 
@@ -40,21 +27,7 @@ public class TownCreationScreen extends Screen {
 
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        renderBackground(matrices);
-
-        RenderSystem.setShaderTexture(0, new Identifier("minecraft", "textures/gui/demo_background.png"));
-
-        drawTexture(matrices, 120, 50, 0, 0, 256, 256, 256, 256);
-
-        // Town creation screen
-        drawCenteredText(
-            matrices, 
-            this.textRenderer, 
-            this.title, 
-            windowCenterHorizontal, 
-            windowTop + 10,
-            0xffffff
-        );
+        super.render(matrices, mouseX, mouseY, delta);
 
         // Town name:
         drawCenteredText(
@@ -75,8 +48,6 @@ public class TownCreationScreen extends Screen {
             windowCenterVertical + 5, 
             0xffffff
         );
-
-        super.render(matrices, mouseX, mouseY, delta);
     }
 
     @Override

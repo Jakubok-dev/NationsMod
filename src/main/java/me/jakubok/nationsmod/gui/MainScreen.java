@@ -27,7 +27,6 @@ public class MainScreen extends Screen {
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         this.renderBackground(matrices);
 
-        super.render(matrices, mouseX, mouseY, delta);
         drawCenteredText(
             matrices, 
             this.textRenderer, 
@@ -36,6 +35,8 @@ public class MainScreen extends Screen {
             windowCenterVertical - 50,
             0xffffff
         );
+        
+        super.render(matrices, mouseX, mouseY, delta);
     }
 
     @Override
