@@ -7,6 +7,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import dev.onyxstudios.cca.api.v3.component.ComponentV3;
 import me.jakubok.nationsmod.administration.District;
+import me.jakubok.nationsmod.administration.Province;
 import me.jakubok.nationsmod.administration.TerritoryClaimer;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.world.WorldProperties;
@@ -56,6 +57,8 @@ public class TerritoryClaimersRegistry implements ComponentV3 {
             NbtCompound claimerCompound = (NbtCompound)tag.get("claimer" + i);
             if (claimerCompound.getBoolean("district"))
                 claimers.add(new District(claimerCompound, props));
+            if (claimerCompound.getBoolean("province"))
+                claimers.add(new Province(tag, props));
         } 
     }
 

@@ -18,6 +18,8 @@ public class ComponentsRegistry implements LevelComponentInitializer, EntityComp
 
     public static final ComponentKey<TownsRegistry> TOWNS_REGISTRY = ComponentRegistry.getOrCreate(new Identifier(NationsMod.MOD_ID, "towns_registry"), TownsRegistry.class);
 
+    public static final ComponentKey<NationsRegistry> NATIONS_REGISTRY = ComponentRegistry.getOrCreate(new Identifier(NationsMod.MOD_ID, "nations_registry"), NationsRegistry.class);
+
     public static final ComponentKey<ChunkBinaryTree> CHUNK_BINARY_TREE = ComponentRegistry.getOrCreate(new Identifier(NationsMod.MOD_ID, "chunk_binary_tree"), ChunkBinaryTree.class);
 
     public static final ComponentKey<PlayerInfo> PLAYER_INFO = ComponentRegistry.getOrCreate(new Identifier(NationsMod.MOD_ID, "player_info"), PlayerInfo.class);
@@ -27,6 +29,7 @@ public class ComponentsRegistry implements LevelComponentInitializer, EntityComp
         registry.register(TERRITORY_CLAIMERS_REGISTRY, t -> new TerritoryClaimersRegistry(t));
         registry.register(TOWNS_REGISTRY, t -> new TownsRegistry(t));
         registry.register(CHUNK_BINARY_TREE, t -> new ChunkBinaryTree());
+        registry.register(NATIONS_REGISTRY, t -> new NationsRegistry(t));
     }
 
     @Override

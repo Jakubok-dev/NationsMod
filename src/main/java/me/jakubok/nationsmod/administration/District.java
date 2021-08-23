@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import me.jakubok.nationsmod.registries.ComponentsRegistry;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.world.World;
 import net.minecraft.world.WorldProperties;
 
 public class District extends TerritoryClaimer {
@@ -46,5 +47,10 @@ public class District extends TerritoryClaimer {
         tag.putString("name", name);
         tag.putUuid("town_id", townId);
         tag.putBoolean("district", true);
+        tag.putBoolean("province", false);
+    }
+
+    public static District fromUUID(UUID id, World world) {
+        return (District)ComponentsRegistry.TERRITORY_CLAIMERS_REGISTRY.get(world.getLevelProperties()).getClaimer(id);
     }
 }
