@@ -8,8 +8,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import me.jakubok.nationsmod.networking.Packets;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 
@@ -45,13 +49,20 @@ public class TownsScreen extends SimpleWindow {
         townButtons.clear();
 
         for (int i = 1; i <= 4 && (page*4)+i <= this.filteredTownsNames.size(); i++) {
+            final int temp = i;
+
             townButtons.add(new ButtonWidget(
                 this.windowCenterHorizontal - 73,
                 this.windowTop + 28*i,
                 150,
                 20,
                 Text.of(filteredTownsNames.get((page*4) + i - 1)),
-                b -> {}
+                b -> {
+                    PacketByteBuf buf = PacketByteBufs.create();
+                    buf.writeUuid(towns.get(filteredTownsNames.get((page*4) + temp - 1)));
+
+                    ClientPlayNetworking.send(Packets.PREPARE_TOWN_SCREEN_PACKET, buf);
+                }
             ));
             this.addDrawableChild(townButtons.get(i-1));
         }

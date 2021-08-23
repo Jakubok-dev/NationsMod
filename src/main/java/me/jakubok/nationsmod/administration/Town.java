@@ -72,6 +72,10 @@ public class Town implements ComponentV3 {
 
     @Override
     public void writeToNbt(NbtCompound tag) {
+        this.writeToNbtAndReturn(tag);
+    }
+
+    public NbtCompound writeToNbtAndReturn(NbtCompound tag) {
         tag.putString("name", this.name);
         tag.putUuid("id", this.id);
         
@@ -79,5 +83,10 @@ public class Town implements ComponentV3 {
         for (UUID districtID : districtsIDs)
             tag.putUuid("districtId" + districtsSize.incrementAndGet(), districtID);
         tag.putInt("districtsSize", districtsSize.get());
+        return tag;
+    }
+
+    public static Town fromUUID(UUID id, World world) {
+        return ComponentsRegistry.TOWNS_REGISTRY.get(world.getLevelProperties()).getTown(id);
     }
 }

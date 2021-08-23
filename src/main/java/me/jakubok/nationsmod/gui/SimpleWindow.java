@@ -18,7 +18,7 @@ public abstract class SimpleWindow extends Screen {
     protected final int windowCenterHorizontal = (windowLeft + windowRight) / 2;
     protected final int windowCenterVertical = (windowTop + windowBottom) / 2;
 
-    protected SimpleWindow(Text title) {
+    public SimpleWindow(Text title) {
         super(title);
     }
     
