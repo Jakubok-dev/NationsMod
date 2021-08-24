@@ -1,8 +1,13 @@
 package me.jakubok.nationsmod.gui;
 
+import me.jakubok.nationsmod.networking.Packets;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.TranslatableText;
 
 public class NationCreationScreen extends SimpleWindow {
@@ -69,7 +74,23 @@ public class NationCreationScreen extends SimpleWindow {
             128, 
             20, 
             new TranslatableText("gui.nationsmod.submit"),
-            b -> {}
+            b -> {
+                if (this.provinceName.getText().length() <= 0 || this.nationName.getText().length() <= 0)
+                    return;
+
+                PacketByteBuf buf = PacketByteBufs.create();
+
+                NbtCompound compound = new NbtCompound();
+                compound.putString("nation_name", this.nationName.getText());
+                compound.putString("province_name", this.provinceName.getText());
+
+                buf.writeNbt(compound);
+
+                ClientPlayNetworking.send(Packets.CREATE_A_NATION_PACKET, buf);
+
+                b.active = false;
+                this.client.setScreen(null);
+            }
         );
         this.addDrawableChild(this.submit);
     }

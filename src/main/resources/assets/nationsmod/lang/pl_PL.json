@@ -18,5 +18,6 @@
     "gui.nationsmod.nation_creation_screen.title": "Panel tworzenia nacji",
     "gui.nationsmod.nation_creation_screen.nation_name": "Nazwa nacji:",
     "gui.nationsmod.nation_creation_screen.province_name": "Nazwa prowincji:",
-    "gui.nationsmod.nation_creation_screen.not_in_a_town": "Musisz być w mieście by stworzyć nację"
+    "gui.nationsmod.nation_creation_screen.not_in_a_town": "Musisz być w mieście by stworzyć nację",
+    "gui.nationsmod.nation_creation_screen.nation_name_not_unique": "Nazwa nacji nie jest unikatowa"
 }

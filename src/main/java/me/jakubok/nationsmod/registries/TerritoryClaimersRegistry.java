@@ -58,7 +58,7 @@ public class TerritoryClaimersRegistry implements ComponentV3 {
             if (claimerCompound.getBoolean("district"))
                 claimers.add(new District(claimerCompound, props));
             if (claimerCompound.getBoolean("province"))
-                claimers.add(new Province(tag, props));
+                claimers.add(new Province(claimerCompound, props));
         } 
     }
 

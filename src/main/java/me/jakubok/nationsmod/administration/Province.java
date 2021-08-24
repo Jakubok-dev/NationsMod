@@ -12,7 +12,6 @@ import net.minecraft.world.WorldProperties;
 
 public class Province extends TerritoryClaimer {
 
-    private UUID id = UUID.randomUUID();
     private String name;
     private UUID nationsId;
     private List<UUID> townsIds = new ArrayList<>();
@@ -23,10 +22,13 @@ public class Province extends TerritoryClaimer {
         this.name = name;
         this.nationsId = nation.getId();
         this.capitalsId = capital.getId();
+        capital.setProvince(this);
+
+        ComponentsRegistry.TERRITORY_CLAIMERS_REGISTRY.get(this.props).registerClaimer(this);
     }
     public Province(NbtCompound tag, WorldProperties props) {
         super(props);
-        this.readFromNbt(tag);
+        readFromNbt(tag);
     }
 
     public String getName() {
@@ -46,6 +48,10 @@ public class Province extends TerritoryClaimer {
         .toList();
     }
 
+    public Nation getNation() {
+        return Nation.fromUUID(nationsId, this.props);
+    }
+
     public static Province fromUUID(UUID id, WorldProperties props) {
         return (Province)ComponentsRegistry.TERRITORY_CLAIMERS_REGISTRY.get(props).getClaimer(id);
     }
@@ -56,7 +62,6 @@ public class Province extends TerritoryClaimer {
     @Override
     public void readFromNbt(NbtCompound tag) {
         super.readFromNbt(tag);
-        this.id = tag.getUuid("id");
         this.name = tag.getString("name");
         this.nationsId = tag.getUuid("nations_id");
         this.capitalsId = tag.getUuid("capitals_id");
@@ -68,7 +73,6 @@ public class Province extends TerritoryClaimer {
     @Override
     public void writeToNbt(NbtCompound tag) {
         super.writeToNbt(tag);
-        tag.putUuid("id", this.id);
         tag.putString("name", this.name);
         tag.putUuid("nations_id", this.nationsId);
         tag.putUuid("capitals_id", this.capitalsId);

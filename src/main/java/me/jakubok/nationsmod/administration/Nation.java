@@ -6,7 +6,9 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import dev.onyxstudios.cca.api.v3.component.ComponentV3;
+import me.jakubok.nationsmod.registries.ComponentsRegistry;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.world.World;
 import net.minecraft.world.WorldProperties;
 
 public class Nation implements ComponentV3 {
@@ -17,10 +19,15 @@ public class Nation implements ComponentV3 {
     private UUID capitalsId;
     private List<UUID> provincesIDs = new ArrayList<>();
     
-    public Nation(String name, WorldProperties props, Town capital) {
+    public Nation(String name, WorldProperties props, String provinceName, Town capital) {
         this.name = name;
         this.props = props;
         this.capitalsId = capital.getId();
+
+        Province mainProvince = new Province(provinceName, capital, this, props);
+        provincesIDs.add(mainProvince.getId());
+
+        ComponentsRegistry.NATIONS_REGISTRY.get(this.props).registerNation(this);
     }
     public Nation(NbtCompound tag, WorldProperties props) {
         this.props = props;
@@ -69,4 +76,10 @@ public class Nation implements ComponentV3 {
         tag.putInt("provinces_ids_size", provincesIdsSize.get());
     }
     
+    public static Nation fromUUID(UUID id, WorldProperties props) {
+        return ComponentsRegistry.NATIONS_REGISTRY.get(props).getNation(id);
+    }
+    public static Nation fromUUID(UUID id, World world) {
+        return fromUUID(id, world.getLevelProperties());
+    }
 }

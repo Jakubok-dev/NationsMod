@@ -70,6 +70,12 @@ public class Town implements ComponentV3 {
     public Province getProvince() {
         return Province.fromUUID(provincesID, props);
     }
+    public void setProvince(Province province) {
+        this.provincesID = province.getId();
+    }
+    public boolean hasProvince() {
+        return provincesID != null;
+    }
 
     @Override
     public void readFromNbt(NbtCompound tag) {
