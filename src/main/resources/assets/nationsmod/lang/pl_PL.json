@@ -3,6 +3,7 @@
     "item.nationsmod.constitution": "Konstytucja",
     "item.nationsmod.town_independence_declaration": "Deklaracja niepodległości miasta",
     "item.nationsmod.nation_independence_declaration": "Deklaracja niepodległości państwa",
+    "block.nationsmod.border_sign": "Znak graniczny",
     "gui.nationsmod.town_creation_screen.title": "Panel tworzenia miasta",
     "gui.nationsmod.town_creation_screen.town_name": "Nazwa miasta:",
     "gui.nationsmod.town_creation_screen.district_name": "Nazwa dzielnicy:",
