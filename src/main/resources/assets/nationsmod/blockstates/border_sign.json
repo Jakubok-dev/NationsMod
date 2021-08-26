@@ -1,5 +1,48 @@
 {
-    "variants": {
-      "": { "model": "nationsmod:block/border_sign" }
+  "multipart": [
+    {
+      "apply": {
+        "model": "nationsmod:block/border_sign"
+      }
+    },
+    {
+      "when": {
+        "face": "true"
+      },
+      "apply": {
+        "model": "nationsmod:block/border_sign2",
+        "y": 270,
+        "uvlock": true
+      }
+    },
+    {
+      "when": {
+        "back": "true"
+      },
+      "apply": {
+        "model": "nationsmod:block/border_sign2",
+        "y": 90,
+        "uvlock": true
+      }
+    },
+    {
+      "when": {
+        "left": "true"
+      },
+      "apply": {
+        "model": "nationsmod:block/border_sign2",
+        "uvlock": true
+      }
+    },
+    {
+      "when": {
+        "right": "true"
+      },
+      "apply": {
+        "model": "nationsmod:block/border_sign2",
+        "y": 180,
+        "uvlock": true
+      }
     }
+  ]
 }

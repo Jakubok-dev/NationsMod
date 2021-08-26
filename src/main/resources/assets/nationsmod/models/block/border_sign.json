@@ -1,8 +1,11 @@
 {
-    "parent": "nationsmod:block/side",
+    "parent": "nationsmod:block/border_sign_side",
     "textures": {
       "bottom": "nationsmod:block/border_sign_top",
       "top": "nationsmod:block/border_sign_top",
-      "side": "minecraft:block/smooth_stone"
+      "face": "minecraft:block/smooth_stone",
+      "back": "minecraft:block/smooth_stone",
+      "left": "minecraft:block/smooth_stone",
+      "right": "minecraft:block/smooth_stone"
     }
 }

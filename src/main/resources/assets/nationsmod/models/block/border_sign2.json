@@ -1,0 +1,6 @@
+{
+    "parent": "nationsmod:block/border_sign2_side",
+    "textures": {
+      "side": "minecraft:block/cyan_terracotta"
+    }
+}

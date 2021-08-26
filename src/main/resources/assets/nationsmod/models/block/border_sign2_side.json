@@ -3,11 +3,11 @@
         "particle": "#side"
     },
     "elements": [
-        {   "from": [ 4, 0, 4 ],
-            "to": [  12, 16, 12 ],
+        {   "from": [ 7, 11, 12 ],
+            "to": [  9, 13, 13 ],
             "faces": {
-                "down":  { "texture": "#bottom", "cullface": "down" },
-                "up":    { "texture": "#top",    "cullface": "up" },
+                "down":  { "texture": "#side", "cullface": "down" },
+                "up":    { "texture": "#side",    "cullface": "up" },
                 "north": { "texture": "#side",   "cullface": "north" },
                 "south": { "texture": "#side",   "cullface": "south" },
                 "west":  { "texture": "#side",   "cullface": "west" },
