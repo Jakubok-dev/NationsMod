@@ -7,10 +7,11 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Material;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -56,6 +57,24 @@ public class BorderSign extends Block implements BlockEntityProvider {
         return new BorderSignEntity(pos, state);
     }
 
+    private void update(World world, BlockPos pos) {
+        if (world.isClient)
+            return;
+        if (world.getBlockEntity(pos) == null)
+            return;
+        
+        BorderSignEntity entity = (BorderSignEntity)world.getBlockEntity(pos);
+
+        if (entity.haveSearchedForBorderSigns)
+            return;
+
+        if (entity.getWorld() == null) {
+            entity.setWorld(world);
+        }
+
+        entity.searchForBorderSigns();
+    }
+
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
             BlockHitResult hit) {
@@ -63,19 +82,15 @@ public class BorderSign extends Block implements BlockEntityProvider {
         if (world.isClient)
             return super.onUse(state, world, pos, player, hand, hit);
         
-        BorderSignEntity entity = (BorderSignEntity)world.getBlockEntity(pos);
-
-        if (entity.getWorld() == null) {
-            entity.setWorld(world);
-        }
-        entity.searchForBorderSigns();
-
-        player.sendMessage(Text.of("Face: " + (entity.face.entity != null)), false);
-        player.sendMessage(Text.of("Back: " + (entity.back.entity != null)), false);
-        player.sendMessage(Text.of("Left: " + (entity.left.entity != null)), false);
-        player.sendMessage(Text.of("Right: " + (entity.right.entity != null)), false);
+        this.update(world, pos);
 
         return super.onUse(state, world, pos, player, hand, hit);
+    }
+
+    @Override
+    public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack itemStack) {
+        super.onPlaced(world, pos, state, placer, itemStack);
+        this.update(world, pos);
     }
 
     @Override
@@ -85,7 +100,8 @@ public class BorderSign extends Block implements BlockEntityProvider {
             super.onBreak(world, pos, state, player);
             return;
         }
-
+        
+        this.update(world, pos);
         ((BorderSignEntity)world.getBlockEntity(pos)).delete(world);
 
         super.onBreak(world, pos, state, player);

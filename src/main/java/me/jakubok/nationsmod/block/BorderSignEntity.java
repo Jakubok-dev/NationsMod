@@ -99,7 +99,7 @@ public class BorderSignEntity extends BlockEntity {
         }
     }
 
-    private boolean haveSearchedForBorderSigns = false;
+    public boolean haveSearchedForBorderSigns = false;
 
     public void searchForBorderSigns() {
         if (haveSearchedForBorderSigns)
@@ -114,6 +114,9 @@ public class BorderSignEntity extends BlockEntity {
     }
 
     private void search(Direction direction) {
+        if (this.getConnection(direction).entity != null)
+            return;
+        
         for (int y = this.getPos().getY() + 5; y > this.getPos().getY() - 6; y--) {
             for (int i = 1; i < 6; i++) {
                 if (this.getWorld().isClient())
@@ -145,6 +148,7 @@ public class BorderSignEntity extends BlockEntity {
         entity.getConnection(direction).entity = this;
         world.setBlockState(entity.getPos(), entity.getCachedState().with(this.directionToProperty(direction), true));
 
+        this.searchForBorderSigns();
         return true;
     }
 
