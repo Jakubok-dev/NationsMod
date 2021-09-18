@@ -6,12 +6,16 @@ import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Material;
 import net.minecraft.block.ShapeContext;
+import net.minecraft.block.Waterloggable;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -21,7 +25,7 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
-public class BorderSign extends Block implements BlockEntityProvider {
+public class BorderSign extends Block implements BlockEntityProvider, Waterloggable {
 
     public static final BooleanProperty FACE = BooleanProperty.of("face");
     public static final BooleanProperty BACK = BooleanProperty.of("back");
@@ -35,6 +39,7 @@ public class BorderSign extends Block implements BlockEntityProvider {
             .with(BACK, false)
             .with(LEFT, false)
             .with(RIGHT, false)
+            .with(Properties.WATERLOGGED, false)
         );
     }
 
@@ -45,11 +50,16 @@ public class BorderSign extends Block implements BlockEntityProvider {
         builder.add(BACK);
         builder.add(LEFT);
         builder.add(RIGHT);
+        builder.add(Properties.WATERLOGGED);
     }
     
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         return VoxelShapes.cuboid(0.25f, 0f, 0.25f, 0.75f, 1f, 0.75f);
+    }
+
+    public FluidState getFluidState(BlockState state) {
+        return (Boolean)state.get(Properties.WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
     }
 
     @Override
