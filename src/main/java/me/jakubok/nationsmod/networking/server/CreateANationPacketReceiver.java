@@ -55,7 +55,7 @@ public class CreateANationPacketReceiver implements PlayChannelHandler {
     }
 
     private Town getTown(World world, ServerPlayerEntity player) {
-        ChunkClaimRegistry registry = ComponentsRegistry.CHUNK_BINARY_TREE.get(world.getLevelProperties()).get(player.getBlockPos());
+        ChunkClaimRegistry registry = ComponentsRegistry.CHUNK_BINARY_TREE.get(world).get(player.getBlockPos());
 
         if (registry == null)
             return null;

@@ -38,7 +38,7 @@ public class NationIndependenceDeclaration extends Item implements Declaration {
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         if (!world.isClient) {
-            ChunkClaimRegistry registry = ComponentsRegistry.CHUNK_BINARY_TREE.get(world.getLevelProperties()).get(user.getBlockPos());
+            ChunkClaimRegistry registry = ComponentsRegistry.CHUNK_BINARY_TREE.get(world).get(user.getBlockPos());
 
             if (registry == null) {
                 user.sendMessage(new TranslatableText("gui.nationsmod.nation_creation_screen.not_in_a_town"), false);

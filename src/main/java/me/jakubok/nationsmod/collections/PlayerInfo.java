@@ -24,7 +24,7 @@ public class PlayerInfo implements ComponentV3 {
 
     public Text getToolBarText(PlayerEntity player) {
 
-        ChunkClaimRegistry registry = ComponentsRegistry.CHUNK_BINARY_TREE.get(player.getEntityWorld().getLevelProperties()).get(player.getBlockPos());
+        ChunkClaimRegistry registry = ComponentsRegistry.CHUNK_BINARY_TREE.get(player.getEntityWorld()).get(player.getBlockPos());
 
         if (registry == null)
             return wilderness();

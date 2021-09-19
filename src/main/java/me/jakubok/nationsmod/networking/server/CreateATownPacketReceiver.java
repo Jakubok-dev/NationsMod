@@ -37,7 +37,7 @@ public class CreateATownPacketReceiver implements PlayChannelHandler {
 
             if (!player.isCreative()) player.getMainHandStack().setCount(player.getMainHandStack().getCount()-1);
 
-            new Town(townName, districtName, player.getChunkPos(), server.getOverworld());
+            new Town(townName, districtName, player.getChunkPos(), player.getEntityWorld());
         });
     }
 }

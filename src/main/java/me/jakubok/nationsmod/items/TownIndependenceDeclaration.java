@@ -40,7 +40,7 @@ public class TownIndependenceDeclaration extends Item implements Declaration {
         
         if (!world.isClient) {
 
-            ChunkClaimRegistry registry = ComponentsRegistry.CHUNK_BINARY_TREE.get(world.getLevelProperties()).get(user.getBlockPos());
+            ChunkClaimRegistry registry = ComponentsRegistry.CHUNK_BINARY_TREE.get(world).get(user.getBlockPos());
 
             if (registry != null) {
                 if (registry.isBelonging(user.getBlockPos())) {

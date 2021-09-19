@@ -7,12 +7,14 @@ import dev.onyxstudios.cca.api.v3.entity.EntityComponentInitializer;
 import dev.onyxstudios.cca.api.v3.entity.RespawnCopyStrategy;
 import dev.onyxstudios.cca.api.v3.level.LevelComponentFactoryRegistry;
 import dev.onyxstudios.cca.api.v3.level.LevelComponentInitializer;
+import dev.onyxstudios.cca.api.v3.world.WorldComponentFactoryRegistry;
+import dev.onyxstudios.cca.api.v3.world.WorldComponentInitializer;
 import me.jakubok.nationsmod.NationsMod;
 import me.jakubok.nationsmod.collections.ChunkBinaryTree;
 import me.jakubok.nationsmod.collections.PlayerInfo;
 import net.minecraft.util.Identifier;
 
-public class ComponentsRegistry implements LevelComponentInitializer, EntityComponentInitializer {
+public class ComponentsRegistry implements LevelComponentInitializer, EntityComponentInitializer, WorldComponentInitializer {
 
     public static final ComponentKey<TerritoryClaimersRegistry> TERRITORY_CLAIMERS_REGISTRY = ComponentRegistry.getOrCreate(new Identifier(NationsMod.MOD_ID, "territory_claimers_registry"), TerritoryClaimersRegistry.class);
 
@@ -28,12 +30,16 @@ public class ComponentsRegistry implements LevelComponentInitializer, EntityComp
     public void registerLevelComponentFactories(LevelComponentFactoryRegistry registry) {
         registry.register(TERRITORY_CLAIMERS_REGISTRY, t -> new TerritoryClaimersRegistry(t));
         registry.register(TOWNS_REGISTRY, t -> new TownsRegistry(t));
-        registry.register(CHUNK_BINARY_TREE, t -> new ChunkBinaryTree());
         registry.register(NATIONS_REGISTRY, t -> new NationsRegistry(t));
     }
 
     @Override
     public void registerEntityComponentFactories(EntityComponentFactoryRegistry registry) {
         registry.registerForPlayers(PLAYER_INFO, p -> new PlayerInfo(), RespawnCopyStrategy.ALWAYS_COPY);        
+    }
+
+    @Override
+    public void registerWorldComponentFactories(WorldComponentFactoryRegistry registry) {
+        registry.register(CHUNK_BINARY_TREE, t -> new ChunkBinaryTree());
     }
 }
