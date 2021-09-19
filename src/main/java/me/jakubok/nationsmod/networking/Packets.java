@@ -19,4 +19,6 @@ public class Packets {
     public static final Identifier OPEN_NATION_CREATION_SCREEN_PACKET = new Identifier(NationsMod.MOD_ID, "open_nation_creation_screen_packet");
 
     public static final Identifier CREATE_A_NATION_PACKET = new Identifier(NationsMod.MOD_ID, "create_a_nation_packet");
+
+    public static final Identifier OPEN_BORDER_REGISTRATOR_SCREEN_PACKET = new Identifier(NationsMod.MOD_ID, "open_border_registrator_screen");
 }

@@ -1,5 +1,6 @@
 package me.jakubok.nationsmod.networking;
 
+import me.jakubok.nationsmod.networking.client.OpenBorderRegistratorScreenPacketReceiver;
 import me.jakubok.nationsmod.networking.client.OpenNationCreationScreenPacketReceiver;
 import me.jakubok.nationsmod.networking.client.OpenTownScreenPacketReceiver;
 import me.jakubok.nationsmod.networking.client.OpenTownsScreenPacketReceiver;
@@ -16,5 +17,6 @@ public class ClientNetworking {
         ClientPlayNetworking.registerGlobalReceiver(Packets.OPEN_TOWNS_SCREEN_PACKET, new OpenTownsScreenPacketReceiver());
         ClientPlayNetworking.registerGlobalReceiver(Packets.OPEN_TOWN_SCREEN_PACKET, new OpenTownScreenPacketReceiver());
         ClientPlayNetworking.registerGlobalReceiver(Packets.OPEN_NATION_CREATION_SCREEN_PACKET, new OpenNationCreationScreenPacketReceiver());
+        ClientPlayNetworking.registerGlobalReceiver(Packets.OPEN_BORDER_REGISTRATOR_SCREEN_PACKET, new OpenBorderRegistratorScreenPacketReceiver());
     }
 }
