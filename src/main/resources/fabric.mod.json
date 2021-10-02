@@ -45,7 +45,8 @@
       "nationsmod:territory_claimers_registry",
       "nationsmod:chunk_binary_tree",
       "nationsmod:player_info",
-      "nationsmod:nations_registry"
+      "nationsmod:nations_registry",
+      "nationsmod:border_slots"
     ]
 }
 }

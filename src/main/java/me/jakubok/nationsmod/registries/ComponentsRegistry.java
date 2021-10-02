@@ -10,6 +10,7 @@ import dev.onyxstudios.cca.api.v3.level.LevelComponentInitializer;
 import dev.onyxstudios.cca.api.v3.world.WorldComponentFactoryRegistry;
 import dev.onyxstudios.cca.api.v3.world.WorldComponentInitializer;
 import me.jakubok.nationsmod.NationsMod;
+import me.jakubok.nationsmod.collections.BorderSlots;
 import me.jakubok.nationsmod.collections.ChunkBinaryTree;
 import me.jakubok.nationsmod.collections.PlayerInfo;
 import net.minecraft.util.Identifier;
@@ -26,6 +27,8 @@ public class ComponentsRegistry implements LevelComponentInitializer, EntityComp
 
     public static final ComponentKey<PlayerInfo> PLAYER_INFO = ComponentRegistry.getOrCreate(new Identifier(NationsMod.MOD_ID, "player_info"), PlayerInfo.class);
 
+    public static final ComponentKey<BorderSlots> BORDER_SLOTS = ComponentRegistry.getOrCreate(new Identifier(NationsMod.MOD_ID, "border_slots"), BorderSlots.class);
+
     @Override
     public void registerLevelComponentFactories(LevelComponentFactoryRegistry registry) {
         registry.register(TERRITORY_CLAIMERS_REGISTRY, t -> new TerritoryClaimersRegistry(t));
@@ -35,7 +38,8 @@ public class ComponentsRegistry implements LevelComponentInitializer, EntityComp
 
     @Override
     public void registerEntityComponentFactories(EntityComponentFactoryRegistry registry) {
-        registry.registerForPlayers(PLAYER_INFO, p -> new PlayerInfo(), RespawnCopyStrategy.ALWAYS_COPY);        
+        registry.registerForPlayers(PLAYER_INFO, p -> new PlayerInfo(), RespawnCopyStrategy.ALWAYS_COPY);
+        registry.registerForPlayers(BORDER_SLOTS, p -> new BorderSlots(), RespawnCopyStrategy.ALWAYS_COPY);  
     }
 
     @Override
