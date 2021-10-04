@@ -6,11 +6,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import me.jakubok.nationsmod.networking.Packets;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 
 public class BorderRegistratorScreen extends SimpleWindow {
 
@@ -27,7 +30,7 @@ public class BorderRegistratorScreen extends SimpleWindow {
     List<ButtonWidget> slotsButtons = new ArrayList<>();
 
     public BorderRegistratorScreen(Map<String, Integer> slots) {
-        super(Text.of("Border slots"));
+        super(new TranslatableText("gui.nationsmod.border_registrator_screen.title"));
         this.slots = slots;
         this.slotsNames.addAll(this.slots.keySet());
         Collections.sort(this.slotsNames);
@@ -60,7 +63,7 @@ public class BorderRegistratorScreen extends SimpleWindow {
                     PacketByteBuf buf = PacketByteBufs.create();
                     buf.writeInt(this.slots.get(this.filteredSlotsNames.get((page*4) + temp - 1)));
                     
-                    //ClientPlayNetworking.send(Packets.PREPARE_TOWN_SCREEN_PACKET, buf);
+                    ClientPlayNetworking.send(Packets.PREPARE_BORDER_SLOT_SCREEN_PACKET, buf);
                 }
             ));
             this.addDrawableChild(this.slotsButtons.get(i-1));

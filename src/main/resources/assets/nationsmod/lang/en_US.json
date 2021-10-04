@@ -22,5 +22,9 @@
     "gui.nationsmod.nation_creation_screen.nation_name": "Nation name:",
     "gui.nationsmod.nation_creation_screen.province_name": "Province name:",
     "gui.nationsmod.nation_creation_screen.not_in_a_town": "You must be in a town to create a nation",
-    "gui.nationsmod.nation_creation_screen.nation_name_not_unique": "The nation name isn't unique"
+    "gui.nationsmod.nation_creation_screen.nation_name_not_unique": "The nation's name isn't unique",
+    "gui.nationsmod.border_registrator_screen.title": "Border slots",
+    "gui.nationsmod.border_slot_creator_screen.title": "Border slot creation",
+    "gui.nationsmod.border_slot_creator_screen.name": "Name:",
+    "gui.nationsmod.border_slot_creator_screen.name_not_unique": "The border slot's name isn't unique."
 }

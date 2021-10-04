@@ -21,5 +21,9 @@
     "gui.nationsmod.nation_creation_screen.nation_name": "Nazwa nacji:",
     "gui.nationsmod.nation_creation_screen.province_name": "Nazwa prowincji:",
     "gui.nationsmod.nation_creation_screen.not_in_a_town": "Musisz być w mieście by stworzyć nację",
-    "gui.nationsmod.nation_creation_screen.nation_name_not_unique": "Nazwa nacji nie jest unikatowa"
+    "gui.nationsmod.nation_creation_screen.nation_name_not_unique": "Nazwa nacji nie jest unikatowa",
+    "gui.nationsmod.border_registrator_screen.title": "Sloty granic",
+    "gui.nationsmod.border_slot_creator_screen.title": "Tworzenie slotu granicy",
+    "gui.nationsmod.border_slot_creator_screen.name": "Nazwa:",
+    "gui.nationsmod.border_slot_creator_screen.name_not_unique": "Nazwa slotu granicy nie jest unikatowa."
 }

@@ -34,8 +34,8 @@ public class BorderRegistrator extends Item {
         NbtCompound tag = new NbtCompound();
         tag.putInt("size", playersSlots.slots.size());
         for (int i = 0; i < playersSlots.slots.size(); i++) {
-            tag.putString("name" + i + 1, playersSlots.slots.get(i).name);
-            tag.putInt("index" + i + 1, i);
+            tag.putString("name" + (i + 1), playersSlots.slots.get(i).name);
+            tag.putInt("index" + (i + 1), i);
         }
 
         buffer.writeNbt(tag);
