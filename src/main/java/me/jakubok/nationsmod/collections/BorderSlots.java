@@ -9,7 +9,12 @@ import net.minecraft.nbt.NbtCompound;
 
 public class BorderSlots implements ComponentV3 {
 
-    public List<BorderGroup> slots = new ArrayList<>();                              
+    public List<BorderGroup> slots = new ArrayList<>();
+    
+    public int selectedSlot = -1;
+    public boolean isSelected(int index) {
+        return index == selectedSlot;
+    }
 
     @Override
     public void readFromNbt(NbtCompound tag) {

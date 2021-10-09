@@ -31,4 +31,5 @@ public class Packets {
 
     public static final Identifier CREATE_A_BORDER_SLOT_PACKET = new Identifier(NationsMod.MOD_ID, "create_a_border_slot_packet");
     public static final Identifier DELETE_A_BORDER_SLOT_PACKET = new Identifier(NationsMod.MOD_ID, "delete_a_border_slot_packet");
+    public static final Identifier SELECT_A_BORDER_SLOT_PACKET = new Identifier(NationsMod.MOD_ID, "select_a_border_slot_packet");
 }

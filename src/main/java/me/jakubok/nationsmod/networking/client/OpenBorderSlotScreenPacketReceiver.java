@@ -14,9 +14,10 @@ public class OpenBorderSlotScreenPacketReceiver implements PlayChannelHandler {
     public void receive(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf,
             PacketSender responseSender) {
         BorderGroup slot = new BorderGroup(buf.readNbt());
+        boolean selected = buf.readBoolean();
 
         client.execute(() -> {
-            client.setScreen(new BorderSlotScreen(slot));
+            client.setScreen(new BorderSlotScreen(slot, selected));
         });
     }
     

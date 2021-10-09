@@ -34,6 +34,7 @@ public class PrepareBorderSlotScreenPacketReceiver implements PlayChannelHandler
             slot.writeToNbt(compound);
             PacketByteBuf buffer = PacketByteBufs.create();
             buffer.writeNbt(compound);
+            buffer.writeBoolean(slots.isSelected(slots.slots.indexOf(slot)));
             
 
             ServerPlayNetworking.send(player, Packets.OPEN_BORDER_SLOT_SCREEN_PACKET, buffer);
