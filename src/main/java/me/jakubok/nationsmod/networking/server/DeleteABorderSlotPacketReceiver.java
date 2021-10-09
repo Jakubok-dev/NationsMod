@@ -34,6 +34,9 @@ public class DeleteABorderSlotPacketReceiver implements PlayChannelHandler {
                 return;
             }
 
+            if (slotIndex == slots.selectedSlot)
+                slots.selectedSlot = -1;
+
             slots.slots.remove(slotIndex);
         });
     }
