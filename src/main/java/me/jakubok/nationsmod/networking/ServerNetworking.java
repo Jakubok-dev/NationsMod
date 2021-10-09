@@ -3,6 +3,7 @@ package me.jakubok.nationsmod.networking;
 import me.jakubok.nationsmod.networking.server.CheckPositionPacketReceiver;
 import me.jakubok.nationsmod.networking.server.CreateANationPacketReceiver;
 import me.jakubok.nationsmod.networking.server.CreateATownPacketReceiver;
+import me.jakubok.nationsmod.networking.server.DeleteABorderSlotPacketReceiver;
 import me.jakubok.nationsmod.networking.server.CreateABorderSlotPacketReceiver;
 import me.jakubok.nationsmod.networking.server.PrepareBorderSlotScreenPacketReceiver;
 import me.jakubok.nationsmod.networking.server.PrepareTownScreenPacketReceiver;
@@ -18,5 +19,6 @@ public class ServerNetworking {
         ServerPlayNetworking.registerGlobalReceiver(Packets.CREATE_A_NATION_PACKET, new CreateANationPacketReceiver());
         ServerPlayNetworking.registerGlobalReceiver(Packets.PREPARE_BORDER_SLOT_SCREEN_PACKET, new PrepareBorderSlotScreenPacketReceiver());
         ServerPlayNetworking.registerGlobalReceiver(Packets.CREATE_A_BORDER_SLOT_PACKET, new CreateABorderSlotPacketReceiver());
+        ServerPlayNetworking.registerGlobalReceiver(Packets.DELETE_A_BORDER_SLOT_PACKET, new DeleteABorderSlotPacketReceiver());
     }
 }

@@ -4,6 +4,9 @@ import me.jakubok.nationsmod.NationsMod;
 import net.minecraft.util.Identifier;
 
 public class Packets {
+
+    // Yes, it hurts my eyes too :)
+
     public static final Identifier OPEN_TOWNS_SCREEN_PACKET = new Identifier(NationsMod.MOD_ID, "open_towns_screen_packet");
     public static final Identifier PREPARE_TOWNS_SCREEN_PACKET = new Identifier(NationsMod.MOD_ID, "prepare_towns_screen_packet");
 
@@ -23,7 +26,9 @@ public class Packets {
     public static final Identifier OPEN_BORDER_REGISTRATOR_SCREEN_PACKET = new Identifier(NationsMod.MOD_ID, "open_border_registrator_screen");
     
     public static final Identifier PREPARE_BORDER_SLOT_SCREEN_PACKET = new Identifier(NationsMod.MOD_ID, "prepare_border_slot_screen");
+    public static final Identifier OPEN_BORDER_SLOT_SCREEN_PACKET = new Identifier(NationsMod.MOD_ID, "open_border_slot_screen");
     public static final Identifier OPEN_BORDER_SLOT_CREATOR_SCREEN_PACKET = new Identifier(NationsMod.MOD_ID, "open_border_slot_creator_screen");
 
     public static final Identifier CREATE_A_BORDER_SLOT_PACKET = new Identifier(NationsMod.MOD_ID, "create_a_border_slot_packet");
+    public static final Identifier DELETE_A_BORDER_SLOT_PACKET = new Identifier(NationsMod.MOD_ID, "delete_a_border_slot_packet");
 }

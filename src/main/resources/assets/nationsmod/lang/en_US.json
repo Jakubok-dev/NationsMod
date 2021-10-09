@@ -26,5 +26,12 @@
     "gui.nationsmod.border_registrator_screen.title": "Border slots",
     "gui.nationsmod.border_slot_creator_screen.title": "Border slot creation",
     "gui.nationsmod.border_slot_creator_screen.name": "Name:",
-    "gui.nationsmod.border_slot_creator_screen.name_not_unique": "The border slot's name isn't unique."
+    "gui.nationsmod.border_slot_creator_screen.name_not_unique": "The border slot's name isn't unique.",
+    "gui.nationsmod.border_slot_screen.close": "Close",
+    "gui.nationsmod.border_slot_screen.select": "Select",
+    "gui.nationsmod.border_slot_screen.remove": "Delete",
+    "gui.nationsmod.yes": "Yes",
+    "gui.nationsmod.no": "No",
+    "gui.nationsmod.delete_a_border_slot_screen.1": "Are you sure to delete this slot?",
+    "gui.nationsmod.delete_a_border_slot_screen.2": "It will be gone forever."
 }
