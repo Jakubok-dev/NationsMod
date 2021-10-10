@@ -23,8 +23,13 @@ public class BorderSlotScreen extends SimpleWindow {
     }
 
     private void makeSelected() {
-        this.select.active = false;
-        this.select.setMessage(new TranslatableText("gui.nationsmod.border_slot_screen.selected"));
+        this.selected = true;
+        this.select.setMessage(new TranslatableText("gui.nationsmod.border_slot_screen.unselect"));
+    }
+
+    private void makeUnselected() {
+        this.selected = false;
+        this.select.setMessage(new TranslatableText("gui.nationsmod.border_slot_screen.select"));
     }
 
     @Override
@@ -61,6 +66,14 @@ public class BorderSlotScreen extends SimpleWindow {
             20,
             new TranslatableText("gui.nationsmod.border_slot_screen.select"), 
             t -> {
+                if (this.selected) {
+
+                    ClientPlayNetworking.send(Packets.UNSELECT_A_BORDER_SLOT_PACKET, PacketByteBufs.create());
+
+                    this.makeUnselected();
+                    return;
+                }
+
                 PacketByteBuf buffer = PacketByteBufs.create();
                 buffer.writeString(slot.name);
 

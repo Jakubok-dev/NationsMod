@@ -29,7 +29,7 @@
     "gui.nationsmod.border_slot_creator_screen.name_not_unique": "The border slot's name isn't unique.",
     "gui.nationsmod.border_slot_screen.close": "Close",
     "gui.nationsmod.border_slot_screen.select": "Select",
-    "gui.nationsmod.border_slot_screen.selected": "Selected",
+    "gui.nationsmod.border_slot_screen.unselect": "Unselect",
     "gui.nationsmod.border_slot_screen.remove": "Delete",
     "gui.nationsmod.yes": "Yes",
     "gui.nationsmod.no": "No",

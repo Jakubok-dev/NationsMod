@@ -28,7 +28,7 @@
     "gui.nationsmod.border_slot_creator_screen.name_not_unique": "Nazwa slotu granicy nie jest unikatowa.",
     "gui.nationsmod.border_slot_screen.close": "Zamknij",
     "gui.nationsmod.border_slot_screen.select": "Zaznacz",
-    "gui.nationsmod.border_slot_screen.selected": "Zaznaczono",
+    "gui.nationsmod.border_slot_screen.unselect": "Odznacz",
     "gui.nationsmod.border_slot_screen.remove": "Usuń",
     "gui.nationsmod.yes": "Tak",
     "gui.nationsmod.no": "Nie",

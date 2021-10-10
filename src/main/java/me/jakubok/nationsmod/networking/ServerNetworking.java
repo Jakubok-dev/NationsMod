@@ -9,6 +9,7 @@ import me.jakubok.nationsmod.networking.server.PrepareBorderSlotScreenPacketRece
 import me.jakubok.nationsmod.networking.server.PrepareTownScreenPacketReceiver;
 import me.jakubok.nationsmod.networking.server.PrepareTownsScreenPacketReceiver;
 import me.jakubok.nationsmod.networking.server.SelectABorderSlotPacketReceiver;
+import me.jakubok.nationsmod.networking.server.UnselectABorderSlotPacketReceiver;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 
 public class ServerNetworking {
@@ -31,5 +32,6 @@ public class ServerNetworking {
 
         ServerPlayNetworking.registerGlobalReceiver(Packets.SELECT_A_BORDER_SLOT_PACKET, new SelectABorderSlotPacketReceiver());
         
+        ServerPlayNetworking.registerGlobalReceiver(Packets.UNSELECT_A_BORDER_SLOT_PACKET, new UnselectABorderSlotPacketReceiver());
     }
 }
