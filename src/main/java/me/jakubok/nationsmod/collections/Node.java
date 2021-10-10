@@ -55,4 +55,15 @@ public class Node<T extends ComponentV3> implements ComponentV3 {
         }
         tag.putBoolean("is_right_null", right == null);
     }
+
+    public int getChildsCount() {
+        int count = 0;
+
+        if (this.left != null)
+            count++;
+        if (this.right != null)
+            count++;
+
+        return count;
+    }
 }

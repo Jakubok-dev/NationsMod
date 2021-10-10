@@ -33,5 +33,12 @@
     "gui.nationsmod.yes": "Tak",
     "gui.nationsmod.no": "Nie",
     "gui.nationsmod.delete_a_border_slot_screen.1": "Czy na pewno chcesz usunąć ten slot?",
-    "gui.nationsmod.delete_a_border_slot_screen.2": "Zaginie on na zawsze."
+    "gui.nationsmod.delete_a_border_slot_screen.2": "Zaginie on na zawsze.",
+    "gui.nationsmod.border_registrator.mark.1": "Blok o kordynatach",
+    "gui.nationsmod.border_registrator.mark.2": "został zaznaczony na slocie o nazwie",
+    "gui.nationsmod.border_registrator.mark.3": "",
+    "gui.nationsmod.border_registrator.unmark.1": "Blok o kordynatach",
+    "gui.nationsmod.border_registrator.unmark.2": "został odznaczony na slocie o nazwie",
+    "gui.nationsmod.border_registrator.unmark.3": "",
+    "gui.nationsmod.border_registrator.select_a_slot": "Zaznacz slot"
 }

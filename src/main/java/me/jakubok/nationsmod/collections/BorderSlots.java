@@ -16,6 +16,11 @@ public class BorderSlots implements ComponentV3 {
         return index == selectedSlot;
     }
 
+    public BorderGroup getSelectedSlot() {
+        if (selectedSlot == -1) return null;
+        return slots.get(selectedSlot);
+    }
+
     @Override
     public void readFromNbt(NbtCompound tag) {
         this.slots.clear();

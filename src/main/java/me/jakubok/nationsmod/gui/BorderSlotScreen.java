@@ -5,6 +5,7 @@ import me.jakubok.nationsmod.networking.Packets;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -24,6 +25,29 @@ public class BorderSlotScreen extends SimpleWindow {
     private void makeSelected() {
         this.select.active = false;
         this.select.setMessage(new TranslatableText("gui.nationsmod.border_slot_screen.selected"));
+    }
+
+    @Override
+    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        super.render(matrices, mouseX, mouseY, delta);
+
+        drawCenteredText(
+            matrices, 
+            textRenderer, 
+            Text.of("Blocks:"), 
+            this.windowCenterHorizontal - this.windowCenterHorizontal / 4,
+            (this.windowCenterVertical - this.windowTop) / 2 + this.windowTop,
+            0xffffff
+        );
+
+        drawCenteredText(
+            matrices, 
+            textRenderer, 
+            Text.of(this.slot.getBorderSize() + ""), 
+            this.windowCenterHorizontal + this.windowCenterHorizontal / 4,
+            (this.windowCenterVertical - this.windowTop) / 2 + this.windowTop,
+            0xffffff
+        );
     }
 
     @Override

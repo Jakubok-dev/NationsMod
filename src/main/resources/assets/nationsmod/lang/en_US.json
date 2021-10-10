@@ -34,5 +34,12 @@
     "gui.nationsmod.yes": "Yes",
     "gui.nationsmod.no": "No",
     "gui.nationsmod.delete_a_border_slot_screen.1": "Are you sure to delete this slot?",
-    "gui.nationsmod.delete_a_border_slot_screen.2": "It will be gone forever."
+    "gui.nationsmod.delete_a_border_slot_screen.2": "It will be gone forever.",
+    "gui.nationsmod.border_registrator.mark.1": "The block at",
+    "gui.nationsmod.border_registrator.mark.2": "has been marked in the",
+    "gui.nationsmod.border_registrator.mark.3": "slot",
+    "gui.nationsmod.border_registrator.unmark.1": "The block at",
+    "gui.nationsmod.border_registrator.unmark.2": "has been unmarked from the",
+    "gui.nationsmod.border_registrator.unmark.3": "slot",
+    "gui.nationsmod.border_registrator.select_a_slot": "Please select a slot"
 }
