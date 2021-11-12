@@ -1,9 +1,13 @@
 package me.jakubok.nationsmod.networking.server;
 
+import me.jakubok.nationsmod.collections.Border;
 import me.jakubok.nationsmod.collections.BorderGroup;
 import me.jakubok.nationsmod.collections.BorderSlots;
+import me.jakubok.nationsmod.networking.Packets;
 import me.jakubok.nationsmod.registries.ComponentsRegistry;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking.PlayChannelHandler;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
@@ -23,6 +27,14 @@ public class SelectABorderSlotPacketReceiver implements PlayChannelHandler {
             for (BorderGroup slot : slots.slots) {
                 if (slot.name.toLowerCase().equals(slotName.toLowerCase())) {
                     slots.selectedSlot = slots.slots.indexOf(slot);
+
+                    for (Border block : slot.toList()) {
+                        PacketByteBuf buffer = PacketByteBufs.create();
+                        buffer.writeBlockPos(block.position);
+
+                        ServerPlayNetworking.send(player, Packets.HIGHLIGHT_A_BLOCK_PACKET, buffer);
+                    }
+
                     return;
                 }
             }

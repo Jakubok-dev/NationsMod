@@ -3,7 +3,6 @@ package me.jakubok.nationsmod.gui;
 import me.jakubok.nationsmod.networking.Packets;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.network.PacketByteBuf;
@@ -12,11 +11,11 @@ import net.minecraft.text.TranslatableText;
 
 public class BorderSlotDeletionScreen extends SimpleWindow {
 
-    protected Screen parent;
+    protected BorderSlotScreen parent;
     protected ButtonWidget yes, no;
     String borderSlotName;
 
-    public BorderSlotDeletionScreen(Screen parent, String borderSlotName) {
+    public BorderSlotDeletionScreen(BorderSlotScreen parent, String borderSlotName) {
         super(Text.of(""));
         this.parent = parent;
         this.borderSlotName = borderSlotName;
@@ -56,6 +55,9 @@ public class BorderSlotDeletionScreen extends SimpleWindow {
             20,
             new TranslatableText("gui.nationsmod.yes"), 
             t -> {
+                if (this.parent.isSelected())
+                    this.parent.makeUnselected();
+
                 PacketByteBuf buffer = PacketByteBufs.create();
                 buffer.writeString(this.borderSlotName);
 

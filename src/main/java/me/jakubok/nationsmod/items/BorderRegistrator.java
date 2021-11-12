@@ -34,17 +34,30 @@ public class BorderRegistrator extends Item {
 
         if (user.isSneaking()) {
             openBorderRegistratorScreen(user);
-            return super.use(world, user, hand);
+            return TypedActionResult.success(user.getMainHandStack());
         }
 
-        BlockPos position = user.getCameraBlockPos();
+        BlockPos position = user.getBlockPos();
         BorderSlots slots = ComponentsRegistry.BORDER_SLOTS.get(user);
 
-        if (slots.getSelectedSlot() == null)
+        if (slots.getSelectedSlot() == null) {
             user.sendMessage(new TranslatableText("gui.nationsmod.border_registrator.select_a_slot"), true);
+            return TypedActionResult.success(user.getMainHandStack());
+        }
 
         if (slots.getSelectedSlot().contains(position)) {
+
+            PacketByteBuf buffer = PacketByteBufs.create();
+            buffer.writeBlockPos(slots.getSelectedSlot().get(position).position);
+            ServerPlayNetworking.send((ServerPlayerEntity)user, Packets.UNHIGHLIGHT_A_BLOCK_PACKET, buffer);
+
             slots.getSelectedSlot().delete(position.getX(), position.getZ());
+
+            for (Border b : slots.getSelectedSlot().toList()) {
+                PacketByteBuf bu = PacketByteBufs.create();
+                bu.writeBlockPos(b.position);
+                ServerPlayNetworking.send((ServerPlayerEntity)user, Packets.HIGHLIGHT_A_BLOCK_PACKET, bu);
+            }
 
             TranslatableText firstUnmarkMessage = new TranslatableText("gui.nationsmod.border_registrator.unmark.1");
             TranslatableText secondUnmarkMessage = new TranslatableText("gui.nationsmod.border_registrator.unmark.2");
@@ -61,7 +74,12 @@ public class BorderRegistrator extends Item {
             user.sendMessage(unmarkMessage, true);
 
         } else {
-            slots.getSelectedSlot().insert(new Border(position));
+            Border border = new Border(position);
+            slots.getSelectedSlot().insert(border);
+            
+            PacketByteBuf buffer = PacketByteBufs.create();
+            buffer.writeBlockPos(border.position);
+            ServerPlayNetworking.send((ServerPlayerEntity)user, Packets.HIGHLIGHT_A_BLOCK_PACKET, buffer);
 
             TranslatableText firstMarkMessage = new TranslatableText("gui.nationsmod.border_registrator.mark.1");
             TranslatableText secondMarkMessage = new TranslatableText("gui.nationsmod.border_registrator.mark.2");
@@ -78,7 +96,7 @@ public class BorderRegistrator extends Item {
             user.sendMessage(markMessage, true);
         }
 
-        return super.use(world, user, hand);
+        return TypedActionResult.success(user.getMainHandStack());
     }
 
     private void openBorderRegistratorScreen(PlayerEntity user) {

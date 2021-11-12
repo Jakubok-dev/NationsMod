@@ -22,7 +22,11 @@ public class CreateABorderSlotPacketReceiver implements PlayChannelHandler {
             BorderSlots slots = ComponentsRegistry.BORDER_SLOTS.get(player);
 
             for (BorderGroup slot : slots.slots) {
-                if (slot.name.toLowerCase().equals(name.toLowerCase())) {
+                if (
+                    slot.name.toLowerCase().equals(name.toLowerCase())
+                    ||
+                    slot.name.equals("+")
+                ) {
                     player.sendMessage(new TranslatableText("gui.nationsmod.border_slot_creator_screen.name_not_unique"), false);
                     return;
                 }

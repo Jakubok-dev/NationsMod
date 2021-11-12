@@ -1,5 +1,6 @@
 package me.jakubok.nationsmod.gui;
 
+import me.jakubok.nationsmod.NationsClient;
 import me.jakubok.nationsmod.collections.BorderGroup;
 import me.jakubok.nationsmod.networking.Packets;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -22,14 +23,19 @@ public class BorderSlotScreen extends SimpleWindow {
         this.selected = selected;
     }
 
-    private void makeSelected() {
+    public boolean isSelected() {
+        return this.selected;
+    }
+
+    public void makeSelected() {
         this.selected = true;
         this.select.setMessage(new TranslatableText("gui.nationsmod.border_slot_screen.unselect"));
     }
 
-    private void makeUnselected() {
+    public void makeUnselected() {
         this.selected = false;
         this.select.setMessage(new TranslatableText("gui.nationsmod.border_slot_screen.select"));
+        NationsClient.drawer.emptyStorage();
     }
 
     @Override
