@@ -1,9 +1,6 @@
 package me.jakubok.nationsmod.items;
 
 import me.jakubok.nationsmod.NationsMod;
-import me.jakubok.nationsmod.administration.District;
-import me.jakubok.nationsmod.administration.TerritoryClaimer;
-import me.jakubok.nationsmod.chunk.ChunkClaimRegistry;
 import me.jakubok.nationsmod.networking.Packets;
 import me.jakubok.nationsmod.registries.ComponentsRegistry;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
@@ -40,22 +37,16 @@ public class TownIndependenceDeclaration extends Item implements Declaration {
         
         if (!world.isClient) {
 
-            ChunkClaimRegistry registry = ComponentsRegistry.CHUNK_BINARY_TREE.get(world).get(user.getBlockPos());
-
-            if (registry != null) {
-                if (registry.isBelonging(user.getBlockPos())) {
-
-                    TerritoryClaimer claimer = ComponentsRegistry.TERRITORY_CLAIMERS_REGISTRY.get(world.getLevelProperties()).getClaimer(registry.claimBelonging(user.getBlockPos()));
-
-                    if (claimer instanceof District) {
-
-                        user.sendMessage(new TranslatableText("gui.nationsmod.town_creation_screen.in_a_town"), false);
-
-                        return TypedActionResult.success(user.getStackInHand(hand));
-                    }
-                }
+            if (ComponentsRegistry.BORDER_SLOTS.get(user).selectedSlot == -1) {
+                user.sendMessage(new TranslatableText("gui.nationsmod.border_registrator.select_a_slot"), false);
+                return super.use(world, user, hand);
             }
 
+            if (ComponentsRegistry.BORDER_SLOTS.get(user).getSelectedSlot().getField() == null) {
+                user.sendMessage(new TranslatableText("gui.nationsmod.invalid_border"), false);
+                return super.use(world, user, hand);
+            }
+            
             ServerPlayNetworking.send((ServerPlayerEntity)user, Packets.OPEN_TOWN_CREATION_SCREEN_PACKET, PacketByteBufs.create());
         }
         

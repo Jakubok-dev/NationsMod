@@ -1,6 +1,7 @@
 package me.jakubok.nationsmod.collections;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -18,6 +19,215 @@ public class BorderGroup implements ComponentV3 {
         this.name = name;
     }
     public BorderGroup() {}
+    public BorderGroup(List<Border> list) {
+        for (Border elem : list) 
+            this.insert(elem);
+    }
+
+
+    public boolean validate() {
+        List<Border> border = this.toList();
+
+        if (border.size() == 0) return false;
+
+        Boolean[] visited = new Boolean[border.size()];
+        Arrays.fill(visited, false);
+
+        Queue<Border> q = new LinkedList<Border>();
+        q.add(border.get(0));
+
+        while(!q.isEmpty()) {
+            Border block = q.poll();
+
+            if (
+                visited[border.indexOf(this.get(
+                block.position.getX(),
+                block.position.getZ()))]
+            )
+                continue;
+
+            if (this.contains(block.position.getX()-1, block.position.getZ())) {
+                int nextBlockIndex = border.indexOf(
+                    this.get(block.position.getX()-1, block.position.getZ())
+                );
+
+                q.add(border.get(nextBlockIndex));
+            }
+
+            if (this.contains(block.position.getX()+1, block.position.getZ())) {
+                int nextBlockIndex = border.indexOf(
+                    this.get(block.position.getX()+1, block.position.getZ())
+                );
+
+                q.add(border.get(nextBlockIndex));
+            }
+
+            if (this.contains(block.position.getX(), block.position.getZ()-1)) {
+                int nextBlockIndex = border.indexOf(
+                    this.get(block.position.getX(), block.position.getZ()-1)
+                );
+
+                q.add(border.get(nextBlockIndex));
+            }
+
+            if (this.contains(block.position.getX(), block.position.getZ()+1)) {
+                int nextBlockIndex = border.indexOf(
+                    this.get(block.position.getX(), block.position.getZ()+1)
+                );
+
+                q.add(border.get(nextBlockIndex));
+            }
+
+            visited[border.indexOf(this.get(
+                block.position.getX(),
+                 block.position.getZ()))] = true;
+        }
+
+        for (boolean element : visited)
+            if (!element) return false;
+
+        return true;
+    }
+
+    private class Sides {
+        public List<BorderGroup> sides = new ArrayList<>();
+
+        public void assimilate(BlockPos pos) {
+            boolean found = false;
+            for (BorderGroup element : sides) {
+                if (
+                    element.contains(pos.getX() - 1, pos.getZ()) ||
+                    element.contains(pos.getX() + 1, pos.getZ()) ||
+                    element.contains(pos.getX(), pos.getZ() - 1) ||
+                    element.contains(pos.getX(), pos.getZ() + 1)
+                ) {
+                    if (!element.contains(pos)) {
+                        element.insert(new Border(pos));
+                    }
+
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found) {
+                BorderGroup group = new BorderGroup();
+                group.insert(new Border(pos));
+                this.sides.add(group);
+            }
+        }
+    }
+
+    public BorderGroup getField() {
+
+        if (!this.validate()) return null;
+
+        BorderGroup neighbouringBlocks = new BorderGroup();
+
+        // Find neighbouring blocks
+        for (Border block : this.toList()) {
+
+            for (int x = block.position.getX() - 1; x < block.position.getX() + 2; x++) {
+                for (int z = block.position.getZ() - 1; z < block.position.getZ() + 2; z++) {
+                    if (this.contains(x, z) || neighbouringBlocks.contains(x, z)) continue;
+
+                    neighbouringBlocks.insert(new Border(x, z));
+                }
+            }
+        }
+
+        Sides sides = new Sides();
+
+        while (neighbouringBlocks.root != null) {
+            Queue<Border> queue = new LinkedList<>();
+            queue.add(neighbouringBlocks.root.value);
+
+            while (!queue.isEmpty()) {
+                Border topElement = queue.poll();
+                sides.assimilate(topElement.position);
+                neighbouringBlocks.delete(topElement.position.getX(), topElement.position.getZ());
+
+                if (neighbouringBlocks.contains(
+                    topElement.position.getX(), 
+                    topElement.position.getZ() + 1)
+                ) 
+                    queue.add(neighbouringBlocks.get(
+                        topElement.position.getX(), 
+                        topElement.position.getZ() + 1
+                    ));
+                
+                if (neighbouringBlocks.contains(
+                    topElement.position.getX(), 
+                    topElement.position.getZ() - 1)
+                ) 
+                    queue.add(neighbouringBlocks.get(
+                        topElement.position.getX(), 
+                        topElement.position.getZ() - 1
+                    ));
+            
+                if (neighbouringBlocks.contains(
+                    topElement.position.getX() + 1, 
+                    topElement.position.getZ())
+                ) 
+                    queue.add(neighbouringBlocks.get(
+                        topElement.position.getX() + 1, 
+                        topElement.position.getZ()
+                    ));
+
+                if (neighbouringBlocks.contains(
+                    topElement.position.getX() - 1, 
+                    topElement.position.getZ())
+                ) 
+                    queue.add(neighbouringBlocks.get(
+                        topElement.position.getX() - 1, 
+                        topElement.position.getZ()
+                    ));
+            }
+        }
+
+        if (sides.sides.size() < 2 || sides.sides.size() > 2)
+            return null;
+        
+        BorderGroup innerSide;
+
+        if (sides.sides.get(0).toList().size() < sides.sides.get(1).toList().size())
+            innerSide = sides.sides.get(0);
+        else
+            innerSide = sides.sides.get(1);
+
+        BorderGroup field = new BorderGroup(this.toList());
+        Queue<Border> queue = new LinkedList<>();
+
+        queue.add(innerSide.root.value);
+
+        while (!queue.isEmpty()) {
+            Border topElement = queue.poll();
+
+            if (field.contains(topElement.position))
+                continue;
+
+            field.insert(topElement);
+ 
+            queue.add(new Border(
+                topElement.position.getX(), 
+                topElement.position.getZ() + 1
+            ));
+            queue.add(new Border(
+                topElement.position.getX(), 
+                topElement.position.getZ() - 1
+            ));
+            queue.add(new Border(
+                topElement.position.getX() + 1, 
+                topElement.position.getZ()
+            ));
+            queue.add(new Border(
+                topElement.position.getX() - 1, 
+                topElement.position.getZ()
+            ));
+        }
+
+        return field;
+    }
 
     public Node<Border> root;
     public String name;

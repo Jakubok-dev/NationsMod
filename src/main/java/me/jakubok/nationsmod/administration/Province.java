@@ -17,8 +17,8 @@ public class Province extends TerritoryClaimer {
     private List<UUID> townsIds = new ArrayList<>();
     private UUID capitalsId;
 
-    public Province(String name, Town capital, Nation nation, WorldProperties props) {
-        super(props);
+    public Province(String name, Town capital, Nation nation, World world) {
+        super(world);
         this.name = name;
         this.nationsId = nation.getId();
         this.capitalsId = capital.getId();

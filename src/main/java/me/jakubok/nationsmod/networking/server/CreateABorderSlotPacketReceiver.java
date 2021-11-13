@@ -25,7 +25,7 @@ public class CreateABorderSlotPacketReceiver implements PlayChannelHandler {
                 if (
                     slot.name.toLowerCase().equals(name.toLowerCase())
                     ||
-                    slot.name.equals("+")
+                    name.equals("+")
                 ) {
                     player.sendMessage(new TranslatableText("gui.nationsmod.border_slot_creator_screen.name_not_unique"), false);
                     return;

@@ -41,5 +41,6 @@
     "gui.nationsmod.border_registrator.unmark.1": "The block at",
     "gui.nationsmod.border_registrator.unmark.2": "has been unmarked from the",
     "gui.nationsmod.border_registrator.unmark.3": "slot",
-    "gui.nationsmod.border_registrator.select_a_slot": "Please select a slot"
+    "gui.nationsmod.border_registrator.select_a_slot": "Please select a border slot",
+    "gui.nationsmod.invalid_border": "The selected border is invalid"
 }

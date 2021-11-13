@@ -4,6 +4,8 @@ import java.util.UUID;
 
 import dev.onyxstudios.cca.api.v3.component.ComponentV3;
 import me.jakubok.nationsmod.chunk.ChunkClaimRegistry;
+import me.jakubok.nationsmod.collections.Border;
+import me.jakubok.nationsmod.collections.BorderGroup;
 import me.jakubok.nationsmod.registries.ComponentsRegistry;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.BlockPos;
@@ -17,6 +19,24 @@ public abstract class TerritoryClaimer implements ComponentV3 {
     private long claimedBlocksCount = 0;
     public final WorldProperties props;
 
+    public TerritoryClaimer(World world) {
+        this(world, null);
+    }
+
+    public TerritoryClaimer(World world, BorderGroup borderGroup) {
+        this.props = world.getLevelProperties();
+    
+        if (borderGroup == null)
+            return;
+        
+        BorderGroup field = borderGroup.getField();
+        if (field == null)
+            return;
+
+        for (Border elem : field.toList()) {
+            this.claim(elem.position, world);
+        }
+    }
     public TerritoryClaimer(WorldProperties props) {
         this.props = props;
     }

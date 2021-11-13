@@ -19,12 +19,12 @@ public class Nation implements ComponentV3 {
     private UUID capitalsId;
     private List<UUID> provincesIDs = new ArrayList<>();
     
-    public Nation(String name, WorldProperties props, String provinceName, Town capital) {
+    public Nation(String name, World world, String provinceName, Town capital) {
         this.name = name;
-        this.props = props;
+        this.props = world.getLevelProperties();
         this.capitalsId = capital.getId();
 
-        Province mainProvince = new Province(provinceName, capital, this, props);
+        Province mainProvince = new Province(provinceName, capital, this, world);
         provincesIDs.add(mainProvince.getId());
 
         ComponentsRegistry.NATIONS_REGISTRY.get(this.props).registerNation(this);

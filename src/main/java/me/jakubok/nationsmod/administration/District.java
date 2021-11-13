@@ -2,6 +2,7 @@ package me.jakubok.nationsmod.administration;
 
 import java.util.UUID;
 
+import me.jakubok.nationsmod.collections.BorderGroup;
 import me.jakubok.nationsmod.registries.ComponentsRegistry;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.world.World;
@@ -12,8 +13,8 @@ public class District extends TerritoryClaimer {
     private String name;
     private UUID townId;
 
-    public District(String name, Town town, WorldProperties props) {
-        super(props);
+    public District(String name, Town town, World world, BorderGroup group) {
+        super(world, group);
         this.name = name;
         this.townId = town.getId();
         ComponentsRegistry.TERRITORY_CLAIMERS_REGISTRY.get(props).registerClaimer(this);

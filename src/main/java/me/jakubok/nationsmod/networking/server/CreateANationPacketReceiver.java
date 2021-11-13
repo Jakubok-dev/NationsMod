@@ -50,7 +50,7 @@ public class CreateANationPacketReceiver implements PlayChannelHandler {
             if (!validated.get())
                 return;
 
-            new Nation(nationName, player.getEntityWorld().getLevelProperties(), provinceName, nationCapital);
+            new Nation(nationName, player.getEntityWorld(), provinceName, nationCapital);
         });
     }
 

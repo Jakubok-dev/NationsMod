@@ -6,6 +6,7 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import dev.onyxstudios.cca.api.v3.component.ComponentV3;
+import me.jakubok.nationsmod.collections.BorderGroup;
 import me.jakubok.nationsmod.registries.ComponentsRegistry;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.ChunkPos;
@@ -20,29 +21,19 @@ public class Town implements ComponentV3 {
     public final WorldProperties props;
     private UUID provincesID;
 
-    public Town(String name, String districtName, ChunkPos pos, World world, Province province) {
+    public Town(String name, String districtName, ChunkPos pos, World world, Province province, BorderGroup borderGroup) {
         this.name = name;
         this.props = world.getLevelProperties();
         if (province != null)
             this.provincesID = province.getId();
         ComponentsRegistry.TOWNS_REGISTRY.get(this.props).registerTown(this);
 
-        District mainDistrict = new District(districtName, this, props);
-
-        mainDistrict.claim(pos, world);
-        mainDistrict.claim(new ChunkPos(pos.x-1, pos.z), world);
-        mainDistrict.claim(new ChunkPos(pos.x-1, pos.z-1), world);
-        mainDistrict.claim(new ChunkPos(pos.x+1, pos.z), world);
-        mainDistrict.claim(new ChunkPos(pos.x+1, pos.z+1), world);
-        mainDistrict.claim(new ChunkPos(pos.x, pos.z-1), world);
-        mainDistrict.claim(new ChunkPos(pos.x, pos.z+1), world);
-        mainDistrict.claim(new ChunkPos(pos.x-1, pos.z+1), world);
-        mainDistrict.claim(new ChunkPos(pos.x+1, pos.z-1), world);
+        District mainDistrict = new District(districtName, this, world, borderGroup);
 
         districtsIDs.add(mainDistrict.getId());
     }
-    public Town(String name, String districtName, ChunkPos pos, World world) {
-        this(name, districtName, pos, world, null);
+    public Town(String name, String districtName, ChunkPos pos, World world, BorderGroup group) {
+        this(name, districtName, pos, world, null, group);
     }
     public Town(NbtCompound tag, WorldProperties props) {
         readFromNbt(tag);
