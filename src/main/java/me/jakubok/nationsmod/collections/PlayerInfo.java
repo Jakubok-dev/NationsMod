@@ -22,6 +22,31 @@ public class PlayerInfo implements ComponentV3 {
     public UUID currentProvince;
     public UUID currentNation;
 
+    protected PlayerAccount account;
+
+    public boolean online = false;
+
+    public PlayerInfo(NbtCompound compound) {
+        this.readFromNbt(compound);
+    }
+    public PlayerInfo(PlayerEntity entity) {
+        this.account = new PlayerAccount(entity);
+    }
+    public PlayerInfo(PlayerAccount account) {
+        this.account = account;
+    }
+
+    public PlayerAccount getPlayerAccount() {
+        return this.account;
+    }
+
+    public void setPlayerAccount(PlayerAccount account) {
+        if (!account.isAnOnlineAccount() && this.account.isAnOnlineAccount())
+            return;
+        
+        this.account = account;
+    }
+
     public Text getToolBarText(PlayerEntity player) {
 
         ChunkClaimRegistry registry = ComponentsRegistry.CHUNK_BINARY_TREE.get(player.getEntityWorld()).get(player.getBlockPos());
@@ -114,6 +139,8 @@ public class PlayerInfo implements ComponentV3 {
 
         if (!tag.getBoolean("is_current_nation_null"))
             this.currentNation = tag.getUuid("current_nation");
+
+        this.account = new PlayerAccount(tag.getCompound("account"));
     }
 
     @Override
@@ -135,6 +162,8 @@ public class PlayerInfo implements ComponentV3 {
         if (this.currentNation != null)
             tag.putUuid("current_nation", this.currentNation);
         tag.putBoolean("is_current_nation_null", this.currentNation == null);
+
+        tag.put("account", this.account.writeToNbtAndReturn(new NbtCompound()));
     }
     
 }
