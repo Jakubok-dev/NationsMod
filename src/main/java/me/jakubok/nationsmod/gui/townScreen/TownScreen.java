@@ -15,23 +15,23 @@ import net.minecraft.text.Text;
 public class TownScreen extends TabWindow {
 
     protected final Town town;
-    public final Constitution constitution;
+    public final GeneralInfoSubscreen generalInfo;
 
     public TownScreen(Town town) {
         super(Text.of(town.getName()));
         this.town = town;
-        constitution = new Constitution(this);
+        generalInfo = new GeneralInfoSubscreen(this);
     }
 
     @Override
     protected List<Subscreen<TabWindow>> getTabs() {
         
         List<Subscreen<TabWindow>> tabs = new ArrayList<>();
-        tabs.add(constitution.subscreen);
+        tabs.add(generalInfo.subscreen);
 
         tabs.add(new Subscreen<TabWindow>(
             Text.of("Districts"),
-            new ItemStack(ItemRegistry.TOWN_INDEPENDENCE_DECLARATION), 
+            new ItemStack(ItemRegistry.DISTRICT_DECLARATION), 
             (MatrixStack matrices, int mouseX, int mouseY, float delta, TabWindow instance) -> {
             },
             null, 
@@ -41,6 +41,15 @@ public class TownScreen extends TabWindow {
         tabs.add(new Subscreen<TabWindow>(
             Text.of("Citizens"),
             new ItemStack(Items.PLAYER_HEAD), 
+            (MatrixStack matrices, int mouseX, int mouseY, float delta, TabWindow instance) -> {
+            },
+            null, 
+            null
+        ));
+
+        tabs.add(new Subscreen<TabWindow>(
+            Text.of("Petitions and articles"),
+            new ItemStack(ItemRegistry.DOCUMENT_PAPER), 
             (MatrixStack matrices, int mouseX, int mouseY, float delta, TabWindow instance) -> {
             },
             null, 

@@ -3,7 +3,6 @@ package me.jakubok.nationsmod.gui.townScreen;
 import java.util.Arrays;
 import java.util.List;
 
-import me.jakubok.nationsmod.administration.Town;
 import me.jakubok.nationsmod.gui.SimpleWindow;
 import me.jakubok.nationsmod.gui.TabWindow;
 import me.jakubok.nationsmod.gui.miscellaneous.Setting;
@@ -14,17 +13,17 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 
-public class Constitution {
+public class GeneralInfoSubscreen {
     public final Subscreen<TabWindow> subscreen;
 
     public final List<Setting> settings;
     int page = 0;
     public final ButtonWidget settingsUp, settingsDown, petitionSubmit;
 
-    public Constitution(TownScreen inst) {
+    public GeneralInfoSubscreen(TownScreen inst) {
         this.subscreen = new Subscreen<TabWindow>(
-            Text.of("Constitution"),
-            new ItemStack(ItemRegistry.CONSTITUTION), 
+            Text.of("General info"),
+            new ItemStack(ItemRegistry.TOWN_INDEPENDENCE_DECLARATION), 
             (MatrixStack matrices, int mouseX, int mouseY, float delta, TabWindow instance) -> render(matrices, mouseX, mouseY, delta, instance),
             instance -> init(instance), 
             instance -> remove(instance)
