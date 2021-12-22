@@ -1,7 +1,7 @@
 package me.jakubok.nationsmod.networking.client;
 
 import me.jakubok.nationsmod.administration.Town;
-import me.jakubok.nationsmod.gui.TownScreen;
+import me.jakubok.nationsmod.gui.townScreen.TownScreen;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking.PlayChannelHandler;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.client.MinecraftClient;

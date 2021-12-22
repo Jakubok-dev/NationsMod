@@ -52,8 +52,8 @@ public class TownsScreen extends SimpleWindow {
             final int temp = i;
 
             townButtons.add(new ButtonWidget(
-                this.windowCenterHorizontal - 73,
-                this.windowTop + 28*i,
+                windowCenterHorizontal - 73,
+                windowTop + 28*i,
                 150,
                 20,
                 Text.of(filteredTownsNames.get((page*4) + i - 1)),
@@ -74,8 +74,8 @@ public class TownsScreen extends SimpleWindow {
 
         this.searchBox = new TextFieldWidget(
             this.textRenderer, 
-            this.windowCenterHorizontal - 73,
-            this.windowBottom - 25,
+            windowCenterHorizontal - 73,
+            windowBottom - 25,
             150, 
             20, 
             Text.of("")
@@ -92,8 +92,8 @@ public class TownsScreen extends SimpleWindow {
         this.addDrawableChild(this.searchBox);
         
         this.left = new ButtonWidget(
-            this.windowLeft + 5,
-            this.windowCenterVertical - 10, 
+            windowLeft + 5,
+            windowCenterVertical - 10, 
             20, 
             20, 
             Text.of("<"), 
@@ -105,8 +105,8 @@ public class TownsScreen extends SimpleWindow {
         this.addDrawableChild(this.left);
 
         this.right = new ButtonWidget(
-            this.windowRight - 25,
-            this.windowCenterVertical - 10, 
+            windowRight - 25,
+            windowCenterVertical - 10, 
             20, 
             20, 
             Text.of(">"), 

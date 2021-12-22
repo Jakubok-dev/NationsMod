@@ -13,6 +13,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
+import net.minecraft.world.World;
+import net.minecraft.world.WorldProperties;
 
 public class PlayerInfo implements ComponentV3 {
 
@@ -23,17 +25,29 @@ public class PlayerInfo implements ComponentV3 {
     public UUID currentNation;
 
     protected PlayerAccount account;
+    protected CitizenInfo citizenInfo;
+    public final WorldProperties props;
 
     public boolean online = false;
 
-    public PlayerInfo(NbtCompound compound) {
+    public PlayerInfo(NbtCompound compound, WorldProperties props) {
+        this.props = props;
         this.readFromNbt(compound);
+        citizenInfo = new CitizenInfo(this.props);
     }
-    public PlayerInfo(PlayerEntity entity) {
+    public PlayerInfo(PlayerEntity entity, WorldProperties props) {
         this.account = new PlayerAccount(entity);
+        this.props = props;
+        citizenInfo = new CitizenInfo(this.props);
     }
-    public PlayerInfo(PlayerAccount account) {
+    public PlayerInfo(PlayerAccount account, WorldProperties props) {
         this.account = account;
+        this.props = props;
+        citizenInfo = new CitizenInfo(this.props);
+    }
+
+    public CitizenInfo getCitizenInfo() {
+        return citizenInfo;
     }
 
     public PlayerAccount getPlayerAccount() {
@@ -141,6 +155,7 @@ public class PlayerInfo implements ComponentV3 {
             this.currentNation = tag.getUuid("current_nation");
 
         this.account = new PlayerAccount(tag.getCompound("account"));
+        this.citizenInfo = new CitizenInfo(tag.getCompound("citizen_info"), this.props);
     }
 
     @Override
@@ -164,6 +179,14 @@ public class PlayerInfo implements ComponentV3 {
         tag.putBoolean("is_current_nation_null", this.currentNation == null);
 
         tag.put("account", this.account.writeToNbtAndReturn(new NbtCompound()));
+        tag.put("citizen_info", this.citizenInfo.writeToNbtAndReturn(new NbtCompound()));
     }
     
+    public static PlayerInfo fromAccount(PlayerAccount account, WorldProperties props) {
+        return ComponentsRegistry.PLAYER_INFO.get(props).getAPlayer(account);
+    }
+
+    public static PlayerInfo fromAccount(PlayerAccount account, World world) {
+        return fromAccount(account, world.getLevelProperties());
+    }
 }

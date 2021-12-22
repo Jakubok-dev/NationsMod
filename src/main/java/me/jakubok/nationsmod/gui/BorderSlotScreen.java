@@ -46,8 +46,8 @@ public class BorderSlotScreen extends SimpleWindow {
             matrices, 
             textRenderer, 
             Text.of("Blocks:"), 
-            this.windowCenterHorizontal - this.windowCenterHorizontal / 4,
-            (this.windowCenterVertical - this.windowTop) / 2 + this.windowTop,
+            windowCenterHorizontal - windowCenterHorizontal / 4,
+            (windowCenterVertical - windowTop) / 2 + windowTop,
             0xffffff
         );
 
@@ -55,8 +55,8 @@ public class BorderSlotScreen extends SimpleWindow {
             matrices, 
             textRenderer, 
             Text.of(this.slot.getBorderSize() + ""), 
-            this.windowCenterHorizontal + this.windowCenterHorizontal / 4,
-            (this.windowCenterVertical - this.windowTop) / 2 + this.windowTop,
+            windowCenterHorizontal + windowCenterHorizontal / 4,
+            (windowCenterVertical - windowTop) / 2 + windowTop,
             0xffffff
         );
     }
@@ -66,9 +66,9 @@ public class BorderSlotScreen extends SimpleWindow {
         super.init();
 
         this.select = new ButtonWidget(
-            (this.windowLeft) + 5,
-            this.windowBottom - 25, 
-            (this.windowRight - this.windowLeft) / 3 - 5,
+            (windowLeft) + 5,
+            windowBottom - 25, 
+            (windowRight - windowLeft) / 3 - 5,
             20,
             new TranslatableText("gui.nationsmod.border_slot_screen.select"), 
             t -> {
@@ -95,9 +95,9 @@ public class BorderSlotScreen extends SimpleWindow {
         this.addDrawableChild(this.select);
 
         this.remove = new ButtonWidget(
-            (this.windowLeft + (this.windowRight - this.windowLeft) / 3) + 1,
-            this.windowBottom - 25,
-            (this.windowRight - this.windowLeft) / 3 - 2,
+            (windowLeft + (windowRight - windowLeft) / 3) + 1,
+            windowBottom - 25,
+            (windowRight - windowLeft) / 3 - 2,
             20,
             new TranslatableText("gui.nationsmod.border_slot_screen.remove"), 
             t -> this.client.setScreen(new BorderSlotDeletionScreen(this, slot.name))
@@ -105,9 +105,9 @@ public class BorderSlotScreen extends SimpleWindow {
         this.addDrawableChild(this.remove);
 
         this.close = new ButtonWidget(
-            (this.windowLeft + ((this.windowRight - this.windowLeft) / 3)*2) + 2,
-            this.windowBottom - 25,
-            (this.windowRight - this.windowLeft) / 3 - 5,
+            (windowLeft + ((windowRight - windowLeft) / 3)*2) + 2,
+            windowBottom - 25,
+            (windowRight - windowLeft) / 3 - 5,
             20,
             new TranslatableText("gui.nationsmod.border_slot_screen.close"),
             t -> this.client.setScreen(null)

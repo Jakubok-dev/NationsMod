@@ -29,8 +29,8 @@ public class BorderSlotDeletionScreen extends SimpleWindow {
             matrices, 
             textRenderer, 
             new TranslatableText("gui.nationsmod.delete_a_border_slot_screen.1"), 
-            this.windowCenterHorizontal,
-            this.windowCenterVertical - 20, 
+            windowCenterHorizontal,
+            windowCenterVertical - 20, 
             0xa5081a
         );
 
@@ -38,8 +38,8 @@ public class BorderSlotDeletionScreen extends SimpleWindow {
             matrices, 
             textRenderer, 
             new TranslatableText("gui.nationsmod.delete_a_border_slot_screen.2"), 
-            this.windowCenterHorizontal,
-            this.windowCenterVertical, 
+            windowCenterHorizontal,
+            windowCenterVertical, 
             0xa5081a
         );
     }
@@ -49,9 +49,9 @@ public class BorderSlotDeletionScreen extends SimpleWindow {
         super.init();
 
         this.yes = new ButtonWidget(
-            this.windowLeft + 7,
-            this.windowBottom - 25, 
-            this.windowCenterHorizontal / 2 - 5, 
+            windowLeft + 7,
+            windowBottom - 25, 
+            windowCenterHorizontal / 2 - 5, 
             20,
             new TranslatableText("gui.nationsmod.yes"), 
             t -> {
@@ -68,9 +68,9 @@ public class BorderSlotDeletionScreen extends SimpleWindow {
         this.addDrawableChild(this.yes);
 
         this.no = new ButtonWidget(
-            this.windowCenterHorizontal,
-            this.windowBottom - 25, 
-            this.windowCenterHorizontal / 2 - 5, 
+            windowCenterHorizontal,
+            windowBottom - 25, 
+            windowCenterHorizontal / 2 - 5, 
             20,
             new TranslatableText("gui.nationsmod.no"), 
             t -> this.client.setScreen(parent)

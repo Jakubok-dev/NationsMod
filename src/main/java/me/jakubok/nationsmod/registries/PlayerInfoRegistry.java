@@ -33,7 +33,7 @@ public class PlayerInfoRegistry implements ComponentV3 {
             }
         }
         
-        PlayerInfo player = new PlayerInfo(account);
+        PlayerInfo player = new PlayerInfo(account, this.props);
         this.registerAPlayer(player);
         return player;
     }
@@ -53,7 +53,7 @@ public class PlayerInfoRegistry implements ComponentV3 {
     public void readFromNbt(NbtCompound tag) {
         for (int i = 1; i <= tag.getInt("size"); i++) {
             NbtCompound compound = (NbtCompound)tag.get("player_info" + i);
-            this.players.add(new PlayerInfo(compound));
+            this.players.add(new PlayerInfo(compound, this.props));
         } 
     }
 

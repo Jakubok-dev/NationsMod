@@ -42,4 +42,20 @@ public class PlayerAccount implements ComponentV3 {
         tag.putString("name", this.name);
         return tag;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+
+        if (!(obj instanceof PlayerAccount))
+            return false;
+        
+        if (
+            ((PlayerAccount)obj).name.equals(this.name) &&
+            ((PlayerAccount)obj).playersID.equals(this.playersID) &&
+            ((PlayerAccount)obj).playersOfflineID.equals(this.playersOfflineID)
+        )
+            return true;
+
+        return false;
+    }
 }

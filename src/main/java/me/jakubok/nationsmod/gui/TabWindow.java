@@ -1,14 +1,12 @@
 package me.jakubok.nationsmod.gui;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Stream;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 
-import me.jakubok.nationsmod.gui.tabs.TabOption;
+import me.jakubok.nationsmod.gui.miscellaneous.Subscreen;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.Selectable;
@@ -18,27 +16,25 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
-public class TabWindow extends SimpleWindow {
+public abstract class TabWindow extends SimpleWindow {
 
     protected final Identifier TABS_TEXTURE = new Identifier("textures/gui/container/creative_inventory/tabs.png");
     protected int selectedTab = 0;
-    protected final List<TabOption> tabs;
 
-    protected List<Drawable> drawables = new ArrayList<>();
+    public List<Drawable> drawables = new ArrayList<>();
 
-    public TabWindow(Text title, TabOption[] tabs) {
+    public TabWindow(Text title) {
         super(title);
-
-        Stream<TabOption> str = Arrays.stream(tabs);
-        this.tabs = str.toList();
     }
+
+    protected abstract List<Subscreen<TabWindow>> getTabs();
 
     @Override
     protected void init() {
         super.init();
 
-        if (this.tabs.get(this.selectedTab).init != null) 
-            this.tabs.get(this.selectedTab).init.init();
+        if (this.getTabs().get(this.selectedTab).init != null) 
+            this.getTabs().get(this.selectedTab).init.init(this);
     }
 
     @Override
@@ -53,15 +49,15 @@ public class TabWindow extends SimpleWindow {
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
 
-        for (int i = 0; i < this.tabs.size(); i++) {
+        for (int i = 0; i < this.getTabs().size(); i++) {
             if (this.isClickInTab(i + 1, mouseX, mouseY)) {
-                if (this.tabs.get(this.selectedTab).remove != null) 
-                    this.tabs.get(this.selectedTab).remove.remove();
+                if (this.getTabs().get(this.selectedTab).remove != null) 
+                    this.getTabs().get(this.selectedTab).remove.remove(this);
                 
                 this.selectedTab = i;
 
-                if (this.tabs.get(this.selectedTab).init != null) 
-                    this.tabs.get(this.selectedTab).init.init();
+                if (this.getTabs().get(this.selectedTab).init != null) 
+                    this.getTabs().get(this.selectedTab).init.init(this);
             }
         }
 
@@ -70,15 +66,15 @@ public class TabWindow extends SimpleWindow {
 
     protected boolean isClickInTab(int index, double mouseX, double mouseY) {
         if (index / 9 == 0)
-            return mouseX >= this.windowLeft - 22 + 29*index &&
-            mouseX <= this.windowLeft + 6 + 29*index &&
-            mouseY >= this.windowTop - 28 &&
-            mouseY <= this.windowTop + 4;
+            return mouseX >= windowLeft - 22 + 29*index &&
+            mouseX <= windowLeft + 6 + 29*index &&
+            mouseY >= windowTop - 28 &&
+            mouseY <= windowTop + 4;
         else 
-            return mouseX >= this.windowLeft - 22 + 29*(index % 8) &&
-            mouseX <= this.windowLeft + 6 + 29*(index % 8) &&
-            mouseY >= this.windowBottom - 3 &&
-            mouseY <= this.windowBottom + 25;
+            return mouseX >= windowLeft - 22 + 29*(index % 8) &&
+            mouseX <= windowLeft + 6 + 29*(index % 8) &&
+            mouseY >= windowBottom - 3 &&
+            mouseY <= windowBottom + 25;
     }
 
     protected void drawASelectedTab(MatrixStack matrices, int mouseX, int mouseY, float delta) {
@@ -86,10 +82,10 @@ public class TabWindow extends SimpleWindow {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, this.TABS_TEXTURE);
 
-        this.renderTabIcon(matrices, this.tabs.get(selectedTab), selectedTab + 1, true);
+        this.renderTabIcon(matrices, this.getTabs().get(selectedTab), selectedTab + 1, true);
 
-        if (this.tabs.get(this.selectedTab).render != null)
-            this.tabs.get(this.selectedTab).render.render(matrices, mouseX, mouseY, delta);
+        if (this.getTabs().get(this.selectedTab).render != null)
+            this.getTabs().get(this.selectedTab).render.render(matrices, mouseX, mouseY, delta, this);
     }
 
     protected void drawBackground(MatrixStack matrices) {
@@ -100,7 +96,7 @@ public class TabWindow extends SimpleWindow {
         drawCenteredText(
             matrices, 
             this.textRenderer, 
-            Text.of(this.title.asString() + " - " + this.tabs.get(this.selectedTab).name.asString()), 
+            Text.of(this.title.asString() + " - " + this.getTabs().get(this.selectedTab).name.asString()), 
             windowCenterHorizontal,
             windowTop + 10,
             0xffffff
@@ -119,16 +115,16 @@ public class TabWindow extends SimpleWindow {
     protected void drawUnselectedTabs(MatrixStack matrices, float delta, int mouseX, int mouseY) {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
-        for(int i = 0; i < this.tabs.size(); i++) {
+        for(int i = 0; i < this.getTabs().size(); i++) {
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
             RenderSystem.setShaderTexture(0, this.TABS_TEXTURE);
             if (i != selectedTab) {
-                this.renderTabIcon(matrices, this.tabs.get(i), i + 1, false);
+                this.renderTabIcon(matrices, this.getTabs().get(i), i + 1, false);
             }
         }
     }
 
-    protected void renderTabIcon(MatrixStack matrices, TabOption option, int iteration, boolean selected) {
+    protected void renderTabIcon(MatrixStack matrices, Subscreen<TabWindow> option, int iteration, boolean selected) {
 
         int textureHeight;
         if (selected && iteration / 9 == 0)
@@ -142,15 +138,15 @@ public class TabWindow extends SimpleWindow {
 
         int height;
         if (iteration / 9 == 0)
-            height = this.windowTop - 28;
+            height = windowTop - 28;
         else
-            height = this.windowBottom - 3;
+            height = windowBottom - 3;
 
         int width;
         if (iteration / 9 == 0)
-            width = this.windowLeft - 22 + 29*iteration;
+            width = windowLeft - 22 + 29*iteration;
         else
-            width = this.windowLeft - 22 + 29*(iteration % 8);
+            width = windowLeft - 22 + 29*(iteration % 8);
 
         this.drawTexture(
             matrices, 
@@ -179,13 +175,13 @@ public class TabWindow extends SimpleWindow {
     } 
 
     @Override
-    protected <T extends Element & Drawable & Selectable> T addDrawableChild(T drawableElement) {
+    public <T extends Element & Drawable & Selectable> T addDrawableChild(T drawableElement) {
         this.drawables.add(drawableElement);
         return super.addDrawableChild(drawableElement);
     }
 
     @Override
-    protected void remove(Element child) {
+    public void remove(Element child) {
         if (child instanceof Drawable) {
             this.drawables.remove((Drawable)child);
         }
