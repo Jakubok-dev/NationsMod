@@ -9,14 +9,12 @@ public class Subscreen<T> {
     public final ItemStack icon;
     public final RenderFunction<T> render;
     public final InitFunction<T> init;
-    public final RemoveFunction<T> remove;
 
-    public Subscreen(Text name, ItemStack icon, RenderFunction<T> render, InitFunction<T> init, RemoveFunction<T> remove) {
+    public Subscreen(Text name, ItemStack icon, RenderFunction<T> render, InitFunction<T> init) {
         this.name = name;
         this.icon = icon;
         this.render = render;
         this.init = init;
-        this.remove = remove;
     }
 
     @FunctionalInterface
@@ -27,10 +25,5 @@ public class Subscreen<T> {
     @FunctionalInterface
     public interface InitFunction<T> {
         void init(T instance);
-    }
-
-    @FunctionalInterface
-    public interface RemoveFunction<T> {
-        void remove(T instance);
     }
 }

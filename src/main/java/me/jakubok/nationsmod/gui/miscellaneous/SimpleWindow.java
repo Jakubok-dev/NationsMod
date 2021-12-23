@@ -1,4 +1,4 @@
-package me.jakubok.nationsmod.gui;
+package me.jakubok.nationsmod.gui.miscellaneous;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 

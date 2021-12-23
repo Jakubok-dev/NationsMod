@@ -1,10 +1,5 @@
 package me.jakubok.nationsmod.gui.miscellaneous;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import me.jakubok.nationsmod.gui.SimpleWindow;
-import me.jakubok.nationsmod.gui.TabWindow;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
@@ -14,7 +9,7 @@ import net.minecraft.text.Text;
 
 public class Setting {
     public String property, value;
-    public final Subscreen<TabWindow> changeScreen;
+    public final Screen changeScreen;
     public MinecraftClient client;
     public final ButtonWidget changeButton;
     private int y;
@@ -41,23 +36,7 @@ public class Setting {
 
     }
 
-    class ChangeScreen extends TabWindow {
-
-        public Setting instance;
-        public ChangeScreen(Setting instance) {
-            super(Text.of("Changing"));
-            this.instance = instance;
-        }
-
-        @Override
-        protected List<Subscreen<TabWindow>> getTabs() {
-            List<Subscreen<TabWindow>> res = new ArrayList<>();
-            res.add(changeScreen);
-            return res;
-        }
-    }
-
-    public Setting(String property, String value, Subscreen<TabWindow> changeScreen, MinecraftClient client, int y, boolean changable) {
+    public Setting(String property, String value, Screen changeScreen, MinecraftClient client, int y, boolean changable) {
         this.property = property;
         this.value = value;
         this.changeScreen = changeScreen;
@@ -73,7 +52,7 @@ public class Setting {
             20, 
             Text.of("Change"), 
             t -> {
-                this.client.setScreen(new ChangeScreen(this));
+                this.client.setScreen(changeScreen);
             }
         );
     }

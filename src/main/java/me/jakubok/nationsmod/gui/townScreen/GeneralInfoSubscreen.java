@@ -3,10 +3,11 @@ package me.jakubok.nationsmod.gui.townScreen;
 import java.util.Arrays;
 import java.util.List;
 
-import me.jakubok.nationsmod.gui.SimpleWindow;
-import me.jakubok.nationsmod.gui.TabWindow;
+import me.jakubok.nationsmod.gui.miscellaneous.ChangeOfASettingScreen;
 import me.jakubok.nationsmod.gui.miscellaneous.Setting;
+import me.jakubok.nationsmod.gui.miscellaneous.SimpleWindow;
 import me.jakubok.nationsmod.gui.miscellaneous.Subscreen;
+import me.jakubok.nationsmod.gui.miscellaneous.TabWindow;
 import me.jakubok.nationsmod.registries.ItemRegistry;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
@@ -18,36 +19,23 @@ public class GeneralInfoSubscreen {
 
     public final List<Setting> settings;
     int page = 0;
-    public final ButtonWidget settingsUp, settingsDown, petitionSubmit;
+    public final ButtonWidget settingsUp, settingsDown; 
 
     public GeneralInfoSubscreen(TownScreen inst) {
         this.subscreen = new Subscreen<TabWindow>(
             Text.of("General info"),
             new ItemStack(ItemRegistry.TOWN_INDEPENDENCE_DECLARATION), 
             (MatrixStack matrices, int mouseX, int mouseY, float delta, TabWindow instance) -> render(matrices, mouseX, mouseY, delta, instance),
-            instance -> init(instance), 
-            instance -> remove(instance)
+            instance -> init(instance)
         );
 
         settings = Arrays.asList(new Setting[] {
             new Setting(
                 "Name:", 
                 inst.town.getName(), 
-                new Subscreen<TabWindow>(
-                    Text.of("Town's name"),
-                    new ItemStack(ItemRegistry.CONSTITUTION), 
-                    (MatrixStack matrices, int mouseX, int mouseY, float delta, TabWindow instance) -> {
-                        SimpleWindow.drawCenteredText(
-                            matrices, 
-                            inst.getTextRenderer(), 
-                            Text.of("n?"), 
-                            SimpleWindow.windowCenterHorizontal, 
-                            SimpleWindow.windowCenterVertical, 
-                            0xFFFFFF
-                        );
-                    }, 
-                    (instance) -> {}, 
-                    null
+                new ChangeOfASettingScreen(
+                    Text.of("Name"), 
+                    instance -> {}
                 ), 
                 inst.getClient(),
                 SimpleWindow.windowTop + 35 + 21 * 0,
@@ -56,22 +44,10 @@ public class GeneralInfoSubscreen {
             new Setting(
                 "Mayor:", 
                 inst.town.getARuler().name, 
-                new Subscreen<TabWindow>(
-                    Text.of("Mayor"),
-                    new ItemStack(ItemRegistry.CONSTITUTION), 
-                    (MatrixStack matrices, int mouseX, int mouseY, float delta, TabWindow instance) -> {
-                        SimpleWindow.drawCenteredText(
-                            matrices, 
-                            inst.getTextRenderer(), 
-                            Text.of("m?"), 
-                            SimpleWindow.windowCenterHorizontal, 
-                            SimpleWindow.windowCenterVertical, 
-                            0xFFFFFF
-                        );
-                    }, 
-                    (instance) -> {}, 
-                    null
-                ), 
+                new ChangeOfASettingScreen(
+                    Text.of("Mayor"), 
+                    instance -> {}
+                ),
                 inst.getClient(),
                 SimpleWindow.windowTop + 35 + 21 * 1,
                 true
@@ -79,22 +55,10 @@ public class GeneralInfoSubscreen {
             new Setting(
                 "Regime:", 
                 "dictatorship", 
-                new Subscreen<TabWindow>(
-                    Text.of("Regime"),
-                    new ItemStack(ItemRegistry.CONSTITUTION), 
-                    (MatrixStack matrices, int mouseX, int mouseY, float delta, TabWindow instance) -> {
-                        SimpleWindow.drawCenteredText(
-                            matrices, 
-                            inst.getTextRenderer(), 
-                            Text.of("r?"), 
-                            SimpleWindow.windowCenterHorizontal, 
-                            SimpleWindow.windowCenterVertical, 
-                            0xFFFFFF
-                        );
-                    }, 
-                    (instance) -> {}, 
-                    null
-                ), 
+                new ChangeOfASettingScreen(
+                    Text.of("Regime"), 
+                    instance -> {}
+                ),
                 inst.getClient(),
                 SimpleWindow.windowTop + 35 + 21 * 2,
                 true
@@ -118,22 +82,10 @@ public class GeneralInfoSubscreen {
             new Setting(
                 "Petition support:", 
                 "10 %", 
-                new Subscreen<TabWindow>(
-                    Text.of("Regime"),
-                    new ItemStack(ItemRegistry.CONSTITUTION), 
-                    (MatrixStack matrices, int mouseX, int mouseY, float delta, TabWindow instance) -> {
-                        SimpleWindow.drawCenteredText(
-                            matrices, 
-                            inst.getTextRenderer(), 
-                            Text.of("ps?"), 
-                            SimpleWindow.windowCenterHorizontal, 
-                            SimpleWindow.windowCenterVertical, 
-                            0xFFFFFF
-                        );
-                    }, 
-                    (instance) -> {}, 
-                    null
-                ),  
+                new ChangeOfASettingScreen(
+                    Text.of("Petition support"), 
+                    instance -> {}
+                ),
                 inst.getClient(),
                 SimpleWindow.windowTop + 35 + 21 * 0,
                 true
@@ -147,9 +99,8 @@ public class GeneralInfoSubscreen {
             20, 
             Text.of("▲"), 
             t -> {
-                this.subscreen.remove.remove(inst);
                 page--;
-                this.subscreen.init.init(inst);
+                inst.reload();
             }
         );
 
@@ -160,19 +111,9 @@ public class GeneralInfoSubscreen {
             20, 
             Text.of("▼"), 
             t -> {
-                this.subscreen.remove.remove(inst);
                 page++;
-                this.subscreen.init.init(inst);
+                inst.reload();
             }
-        );
-
-        petitionSubmit = new ButtonWidget(
-            SimpleWindow.windowLeft + 30, 
-            SimpleWindow.windowBottom - 25, 
-            210,
-            20, 
-            Text.of("Create a petition"),
-            t -> {}
         );
     }
 
@@ -187,7 +128,6 @@ public class GeneralInfoSubscreen {
         this.settingsDown.active = isDownActive();
         instance.addDrawableChild(this.settingsUp);
         instance.addDrawableChild(this.settingsDown);
-        instance.addDrawableChild(this.petitionSubmit);
         for (int i = page*5; i < 5*(page + 1) && i < this.settings.size(); i++) {
             this.settings.get(i).client = instance.getClient();
             if (this.settings.get(i).changable)

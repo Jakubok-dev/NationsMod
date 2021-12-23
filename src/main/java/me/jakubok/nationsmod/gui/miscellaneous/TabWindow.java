@@ -1,4 +1,4 @@
-package me.jakubok.nationsmod.gui;
+package me.jakubok.nationsmod.gui.miscellaneous;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -6,7 +6,6 @@ import java.util.List;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 
-import me.jakubok.nationsmod.gui.miscellaneous.Subscreen;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.Selectable;
@@ -51,17 +50,17 @@ public abstract class TabWindow extends SimpleWindow {
 
         for (int i = 0; i < this.getTabs().size(); i++) {
             if (this.isClickInTab(i + 1, mouseX, mouseY)) {
-                if (this.getTabs().get(this.selectedTab).remove != null) 
-                    this.getTabs().get(this.selectedTab).remove.remove(this);
-                
                 this.selectedTab = i;
-
-                if (this.getTabs().get(this.selectedTab).init != null) 
-                    this.getTabs().get(this.selectedTab).init.init(this);
+                this.reload();
             }
         }
 
         return super.mouseReleased(mouseX, mouseY, button);
+    }
+
+    public void reload() {
+        this.drawables.clear();
+        this.init();
     }
 
     protected boolean isClickInTab(int index, double mouseX, double mouseY) {
