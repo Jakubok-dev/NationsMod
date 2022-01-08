@@ -3,7 +3,6 @@ package me.jakubok.nationsmod.block;
 import me.jakubok.nationsmod.registries.BlockRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -150,15 +149,5 @@ public class BorderSignEntity extends BlockEntity {
 
         this.searchForBorderSigns();
         return true;
-    }
-
-    @Override
-    public void readNbt(NbtCompound nbt) {
-        super.readNbt(nbt);
-    }
-
-    @Override
-    public NbtCompound writeNbt(NbtCompound nbt) {
-        return super.writeNbt(nbt);
     }
 }

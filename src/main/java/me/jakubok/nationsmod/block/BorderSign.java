@@ -10,8 +10,6 @@ import net.minecraft.block.Waterloggable;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
@@ -58,10 +56,6 @@ public class BorderSign extends Block implements BlockEntityProvider, Waterlogga
         return VoxelShapes.cuboid(0.25f, 0f, 0.25f, 0.75f, 1f, 0.75f);
     }
 
-    public FluidState getFluidState(BlockState state) {
-        return (Boolean)state.get(Properties.WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
-    }
-
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
         return new BorderSignEntity(pos, state);
@@ -90,11 +84,11 @@ public class BorderSign extends Block implements BlockEntityProvider, Waterlogga
             BlockHitResult hit) {
         
         if (world.isClient)
-            return super.onUse(state, world, pos, player, hand, hit);
+            return ActionResult.SUCCESS;
         
         this.update(world, pos);
 
-        return super.onUse(state, world, pos, player, hand, hit);
+        return ActionResult.SUCCESS;
     }
 
     @Override

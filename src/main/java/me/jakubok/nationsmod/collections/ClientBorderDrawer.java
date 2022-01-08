@@ -74,7 +74,7 @@ public class ClientBorderDrawer {
 
         stack.push();
         stack.translate(-cameraPosition.x, -cameraPosition.y, -cameraPosition.z);
-        Matrix4f model = stack.peek().getModel();
+        Matrix4f model = stack.peek().getPositionMatrix();
 
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
