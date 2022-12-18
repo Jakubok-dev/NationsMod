@@ -1,5 +1,6 @@
 package me.jakubok.nationsmod.administration;
 
+import java.util.Random;
 import java.util.UUID;
 
 import dev.onyxstudios.cca.api.v3.component.ComponentV3;
@@ -18,6 +19,8 @@ public abstract class TerritoryClaimer implements ComponentV3 {
     private UUID id = UUID.randomUUID();
     private long claimedBlocksCount = 0;
     public final WorldProperties props;
+    private int minX = 2147483647, maxX = -2147483648, minZ = 2147483647, maxZ = -2147483648;
+    public int[] mapColour = {-1, -1, -1, 100};
 
     public TerritoryClaimer(World world) {
         this(world, null);
@@ -25,7 +28,14 @@ public abstract class TerritoryClaimer implements ComponentV3 {
 
     public TerritoryClaimer(World world, BorderGroup borderGroup) {
         this.props = world.getLevelProperties();
-    
+        Random rng = new Random();
+        if (mapColour[0] < 0)
+            mapColour[0] = rng.nextInt(256);
+        if (mapColour[1] < 0)
+            mapColour[1] = rng.nextInt(256);
+        if (mapColour[2] < 0)
+            mapColour[2] = rng.nextInt(256);
+
         if (borderGroup == null)
             return;
         
@@ -59,6 +69,11 @@ public abstract class TerritoryClaimer implements ComponentV3 {
         chunkClaimRegistry.addClaim(pos, this);
         claimedBlocksCount++;
         
+        this.minX = Math.min(this.minX, pos.getX());
+        this.maxX = Math.max(this.maxX, pos.getX());
+        this.minZ = Math.min(this.minZ, pos.getZ());
+        this.maxZ = Math.max(this.maxZ, pos.getZ());
+
         return 1;
     }
     public int claim(ChunkPos pos, World world) {
@@ -92,15 +107,46 @@ public abstract class TerritoryClaimer implements ComponentV3 {
         return result;
     }
 
+    public int getMaxX() {
+        return maxX;
+    }
+
+    public int getMaxZ() {
+        return maxZ;
+    }
+
+    public int getMinX() {
+        return minX;
+    }
+
+    public int getMinZ() {
+        return minZ;
+    }
+
     @Override
     public void readFromNbt(NbtCompound tag) {
         id = tag.getUuid("id");
         claimedBlocksCount = tag.getLong("claimedBlocksCount");
+        this.mapColour = tag.getIntArray("mapColour");
+        this.maxX = tag.getInt("maxX");
+        this.maxZ = tag.getInt("maxZ");
+        this.minX = tag.getInt("minX");
+        this.minZ = tag.getInt("minZ");
     }
 
     @Override
     public void writeToNbt(NbtCompound tag) {
+        this.writeToNbtAndReturn(tag);
+    }
+
+    public NbtCompound writeToNbtAndReturn(NbtCompound tag) {
         tag.putUuid("id", id);
         tag.putLong("claimedBlocksCount", claimedBlocksCount);
+        tag.putIntArray("mapColour", this.mapColour);
+        tag.putInt("maxX", this.maxX);
+        tag.putInt("minX", this.minX);
+        tag.putInt("maxZ", this.maxZ);
+        tag.putInt("minZ", this.minZ);
+        return tag;
     }
 }

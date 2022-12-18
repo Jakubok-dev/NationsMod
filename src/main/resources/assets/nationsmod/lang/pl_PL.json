@@ -16,6 +16,7 @@
     "gui.nationsmod.main_screen.title": "Nacje: Ekran Główny",
     "gui.nationsmod.main_screen.towns_button": "Miasta",
     "gui.nationsmod.main_screen.nations_button": "Nacje",
+    "gui.nationsmod.main_screen.map_button": "Mapa",
     "gui.nationsmod.towns_screen.title": "Miasta",
     "gui.nationsmod.nation_creation_screen.title": "Panel tworzenia nacji",
     "gui.nationsmod.nation_creation_screen.nation_name": "Nazwa nacji:",
@@ -42,6 +43,6 @@
     "gui.nationsmod.border_registrator.unmark.3": "",
     "gui.nationsmod.border_registrator.select_a_slot": "Zaznacz slot z granicą",
     "gui.nationsmod.invalid_border": "Zaznaczona granica jest nieprawidłowa",
-    "item.nationsmod.document_paper": "Papier urzędowy",
+    "item.nationsmod.document_paper": "Pergamin",
     "item.nationsmod.district_declaration": "Deklaracja dzielnicy"
 }

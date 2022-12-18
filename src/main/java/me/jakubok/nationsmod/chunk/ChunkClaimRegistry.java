@@ -127,6 +127,10 @@ public class ChunkClaimRegistry implements ComponentV3 {
 
     @Override
     public void writeToNbt(NbtCompound tag) {
+        writeToNbtAndReturn(tag);
+    }
+
+    public NbtCompound writeToNbtAndReturn(NbtCompound tag) {
         tag.putInt("x", this.x);
         tag.putInt("z", this.z);
 
@@ -139,5 +143,7 @@ public class ChunkClaimRegistry implements ComponentV3 {
             tag.put("claim" + size.incrementAndGet(), claim);
         });
         tag.putInt("size", size.get());
+
+        return tag;
     }
 }

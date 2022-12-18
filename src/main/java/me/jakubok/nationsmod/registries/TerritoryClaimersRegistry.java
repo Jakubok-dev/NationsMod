@@ -53,6 +53,7 @@ public class TerritoryClaimersRegistry implements ComponentV3 {
 
     @Override
     public void readFromNbt(NbtCompound tag) {
+        claimers.clear();
         for (int i = 1; i <= tag.getInt("size"); i++) {
             NbtCompound claimerCompound = (NbtCompound)tag.get("claimer" + i);
             if (claimerCompound.getBoolean("district"))
@@ -64,6 +65,10 @@ public class TerritoryClaimersRegistry implements ComponentV3 {
 
     @Override
     public void writeToNbt(NbtCompound tag) {
+        writeToNbtAndReturn(tag);
+    }
+
+    public NbtCompound writeToNbtAndReturn(NbtCompound tag) {
         AtomicInteger size = new AtomicInteger(0);
         claimers.forEach(el -> {
             NbtCompound claimerCompound = new NbtCompound();
@@ -71,5 +76,6 @@ public class TerritoryClaimersRegistry implements ComponentV3 {
             tag.put("claimer" + size.incrementAndGet(), claimerCompound);
         });
         tag.putInt("size", size.get());
+        return tag;
     }
 }

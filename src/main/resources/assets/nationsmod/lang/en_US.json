@@ -17,6 +17,7 @@
     "gui.nationsmod.main_screen.title": "Nations Mod's Main Screen",
     "gui.nationsmod.main_screen.towns_button": "Towns",
     "gui.nationsmod.main_screen.nations_button": "Nations",
+    "gui.nationsmod.main_screen.map_button": "Map",
     "gui.nationsmod.towns_screen.title": "Towns",
     "gui.nationsmod.nation_creation_screen.title": "Nation creation screen",
     "gui.nationsmod.nation_creation_screen.nation_name": "Nation name:",
@@ -43,6 +44,6 @@
     "gui.nationsmod.border_registrator.unmark.3": "slot",
     "gui.nationsmod.border_registrator.select_a_slot": "Please select a border slot",
     "gui.nationsmod.invalid_border": "The selected border is invalid",
-    "item.nationsmod.document_paper": "Document paper",
+    "item.nationsmod.document_paper": "Parchment",
     "item.nationsmod.district_declaration": "District declaration"
 }

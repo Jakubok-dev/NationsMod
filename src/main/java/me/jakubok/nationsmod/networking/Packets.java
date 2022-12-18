@@ -37,4 +37,9 @@ public class Packets {
     public static final Identifier HIGHLIGHT_A_BLOCK_PACKET = new Identifier(NationsMod.MOD_ID, "highlight_a_block_packet");
     public static final Identifier UNHIGHLIGHT_A_BLOCK_PACKET = new Identifier(NationsMod.MOD_ID, "unhighlight_a_block_packet");
 
+    public static final Identifier REQUEST_A_CHUNK_REGISTRY = new Identifier(NationsMod.MOD_ID, "request_a_chunk_registry");
+    public static final Identifier REQUEST_A_CHUNK_REGISTRY_RESPONSE = new Identifier(NationsMod.MOD_ID, "request_a_chunk_registry_response");
+    
+    public static final Identifier REQUEST_A_TERRITORY_CLAIMER = new Identifier(NationsMod.MOD_ID, "request_a_territory_claimer");
+    public static final Identifier REQUEST_A_TERRITORY_CLAIMER_RESPONSE = new Identifier(NationsMod.MOD_ID, "request_a_territory_claimer_response");
 }

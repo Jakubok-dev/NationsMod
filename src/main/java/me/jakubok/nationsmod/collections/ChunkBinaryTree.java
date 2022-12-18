@@ -108,8 +108,13 @@ public class ChunkBinaryTree implements ComponentV3 {
 
     @Override
     public void writeToNbt(NbtCompound tag) {
+        writeToNbtAndReturn(tag);
+    }
+
+    public NbtCompound writeToNbtAndReturn(NbtCompound tag) {
         if (this.root != null)
             this.root.writeToNbt(tag);
         tag.putBoolean("is_root_null", this.root == null);
+        return tag;
     }
 }
