@@ -49,14 +49,14 @@ public class BorderRegistrator extends Item {
 
             PacketByteBuf buffer = PacketByteBufs.create();
             buffer.writeBlockPos(slots.getSelectedSlot().get(position).position);
-            ServerPlayNetworking.send((ServerPlayerEntity)user, Packets.UNHIGHLIGHT_A_BLOCK_PACKET, buffer);
+            ServerPlayNetworking.send((ServerPlayerEntity)user, Packets.UNHIGHLIGHT_A_BLOCK, buffer);
 
             slots.getSelectedSlot().delete(position.getX(), position.getZ());
 
             for (Border b : slots.getSelectedSlot().toList()) {
                 PacketByteBuf bu = PacketByteBufs.create();
                 bu.writeBlockPos(b.position);
-                ServerPlayNetworking.send((ServerPlayerEntity)user, Packets.HIGHLIGHT_A_BLOCK_PACKET, bu);
+                ServerPlayNetworking.send((ServerPlayerEntity)user, Packets.HIGHLIGHT_A_BLOCK, bu);
             }
 
             TranslatableText firstUnmarkMessage = new TranslatableText("gui.nationsmod.border_registrator.unmark.1");
@@ -79,7 +79,7 @@ public class BorderRegistrator extends Item {
             
             PacketByteBuf buffer = PacketByteBufs.create();
             buffer.writeBlockPos(border.position);
-            ServerPlayNetworking.send((ServerPlayerEntity)user, Packets.HIGHLIGHT_A_BLOCK_PACKET, buffer);
+            ServerPlayNetworking.send((ServerPlayerEntity)user, Packets.HIGHLIGHT_A_BLOCK, buffer);
 
             TranslatableText firstMarkMessage = new TranslatableText("gui.nationsmod.border_registrator.mark.1");
             TranslatableText secondMarkMessage = new TranslatableText("gui.nationsmod.border_registrator.mark.2");
@@ -112,6 +112,6 @@ public class BorderRegistrator extends Item {
 
         buffer.writeNbt(tag);
 
-        ServerPlayNetworking.send((ServerPlayerEntity)user, Packets.OPEN_BORDER_REGISTRATOR_SCREEN_PACKET, buffer);
+        ServerPlayNetworking.send((ServerPlayerEntity)user, Packets.OPEN_BORDER_REGISTRATOR_SCREEN, buffer);
     }
 }

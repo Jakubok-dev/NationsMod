@@ -11,7 +11,7 @@ import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 
-public class OpenBorderRegistratorScreenPacketReceiver implements PlayChannelHandler {
+public class OpenBorderRegistratorScreen implements PlayChannelHandler {
 
     @Override
     public void receive(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf,

@@ -47,7 +47,7 @@ public class TownIndependenceDeclaration extends Item implements Declaration {
                 return super.use(world, user, hand);
             }
             
-            ServerPlayNetworking.send((ServerPlayerEntity)user, Packets.OPEN_TOWN_CREATION_SCREEN_PACKET, PacketByteBufs.create());
+            ServerPlayNetworking.send((ServerPlayerEntity)user, Packets.OPEN_TOWN_CREATION_SCREEN, PacketByteBufs.create());
         }
         
         return TypedActionResult.success(user.getStackInHand(hand));

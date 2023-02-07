@@ -75,7 +75,7 @@ public class BorderSlotScreen extends SimpleWindow {
             t -> {
                 if (this.selected) {
 
-                    ClientPlayNetworking.send(Packets.UNSELECT_A_BORDER_SLOT_PACKET, PacketByteBufs.create());
+                    ClientPlayNetworking.send(Packets.UNSELECT_A_BORDER_SLOT, PacketByteBufs.create());
 
                     this.makeUnselected();
                     return;
@@ -84,7 +84,7 @@ public class BorderSlotScreen extends SimpleWindow {
                 PacketByteBuf buffer = PacketByteBufs.create();
                 buffer.writeString(slot.name);
 
-                ClientPlayNetworking.send(Packets.SELECT_A_BORDER_SLOT_PACKET, buffer);
+                ClientPlayNetworking.send(Packets.SELECT_A_BORDER_SLOT, buffer);
 
                 this.makeSelected();
             }

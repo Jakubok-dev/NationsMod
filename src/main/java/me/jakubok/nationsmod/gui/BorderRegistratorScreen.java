@@ -6,12 +6,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import me.jakubok.nationsmod.collections.BorderGroup;
 import me.jakubok.nationsmod.gui.miscellaneous.SimpleWindow;
+import me.jakubok.nationsmod.networking.ClientNetworking;
 import me.jakubok.nationsmod.networking.Packets;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking.PlayChannelHandler;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -61,10 +66,19 @@ public class BorderRegistratorScreen extends SimpleWindow {
                 20,
                 Text.of(this.filteredSlotsNames.get((page*4) + i - 1)),
                 b -> {
-                    PacketByteBuf buf = PacketByteBufs.create();
-                    buf.writeInt(this.slots.get(this.filteredSlotsNames.get((page*4) + temp - 1)));
+                    PacketByteBuf buffer = PacketByteBufs.create();
+                    buffer.writeInt(this.slots.get(this.filteredSlotsNames.get((page*4) + temp - 1)));
                     
-                    ClientPlayNetworking.send(Packets.PREPARE_BORDER_SLOT_SCREEN_PACKET, buf);
+                    PlayChannelHandler response = (MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) -> {
+                        BorderGroup slot = new BorderGroup(buf.readNbt());
+                        boolean selected = buf.readBoolean();
+
+                        client.execute(() -> {
+                            client.setScreen(new BorderSlotScreen(slot, selected));
+                        });
+                    };
+
+                    ClientNetworking.makeARequest(Packets.PREPARE_BORDER_SLOT_SCREEN, buffer, response);
                 }
             ));
             this.addDrawableChild(this.slotsButtons.get(i-1));

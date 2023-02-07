@@ -94,7 +94,7 @@ public class TownCreationScreen extends SimpleWindow {
 
                 buf.writeNbt(compound);
 
-                ClientPlayNetworking.send(Packets.CREATE_A_TOWN_PACKET, buf);
+                ClientPlayNetworking.send(Packets.CREATE_A_TOWN, buf);
 
                 b.active = false;
                 this.client.setScreen(null);

@@ -18,7 +18,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.world.World;
 
-public class CreateANationPacketReceiver implements PlayChannelHandler {
+public class CreateANation implements PlayChannelHandler {
 
     @Override
     public void receive(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler,

@@ -8,12 +8,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import me.jakubok.nationsmod.administration.Town;
 import me.jakubok.nationsmod.gui.miscellaneous.SimpleWindow;
+import me.jakubok.nationsmod.gui.townScreen.TownScreen;
+import me.jakubok.nationsmod.networking.ClientNetworking;
 import me.jakubok.nationsmod.networking.Packets;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking.PlayChannelHandler;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -59,10 +66,19 @@ public class TownsScreen extends SimpleWindow {
                 20,
                 Text.of(filteredTownsNames.get((page*4) + i - 1)),
                 b -> {
-                    PacketByteBuf buf = PacketByteBufs.create();
-                    buf.writeUuid(towns.get(filteredTownsNames.get((page*4) + temp - 1)));
+                    PacketByteBuf buffer = PacketByteBufs.create();
+                    NbtCompound nbt = new NbtCompound();
+                    nbt.putUuid("id", towns.get(filteredTownsNames.get((page*4) + temp - 1)));
+                    buffer.writeNbt(nbt);
 
-                    ClientPlayNetworking.send(Packets.PREPARE_TOWN_SCREEN_PACKET, buf);
+                    PlayChannelHandler response = (MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) -> {
+                        Town town = new Town(buf.readNbt(), client.world.getLevelProperties());
+
+                        client.execute(() -> {
+                            client.setScreen(new TownScreen(town));
+                        });
+                    };
+                    ClientNetworking.makeARequest(Packets.PREPARE_TOWN_SCREEN, buffer, response);
                 }
             ));
             this.addDrawableChild(townButtons.get(i-1));

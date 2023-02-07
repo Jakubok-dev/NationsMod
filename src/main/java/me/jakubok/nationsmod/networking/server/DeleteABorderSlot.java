@@ -11,7 +11,7 @@ import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 
-public class DeleteABorderSlotPacketReceiver implements PlayChannelHandler {
+public class DeleteABorderSlot implements PlayChannelHandler {
 
     @Override
     public void receive(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler,

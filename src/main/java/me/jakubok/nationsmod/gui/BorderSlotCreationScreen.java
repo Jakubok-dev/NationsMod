@@ -62,7 +62,7 @@ public class BorderSlotCreationScreen extends SimpleWindow {
                 PacketByteBuf buffer = PacketByteBufs.create();
                 buffer.writeString(this.nameField.getText());
 
-                ClientPlayNetworking.send(Packets.CREATE_A_BORDER_SLOT_PACKET, buffer);
+                ClientPlayNetworking.send(Packets.CREATE_A_BORDER_SLOT, buffer);
 
                 t.active = false;
                 this.client.setScreen(null);

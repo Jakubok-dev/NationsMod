@@ -11,7 +11,7 @@ import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.TranslatableText;
 
-public class CreateABorderSlotPacketReceiver implements PlayChannelHandler {
+public class CreateABorderSlot implements PlayChannelHandler {
 
     @Override
     public void receive(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler,

@@ -14,7 +14,7 @@ import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.TranslatableText;
 
-public class CreateATownPacketReceiver implements PlayChannelHandler {
+public class CreateATown implements PlayChannelHandler {
     @Override
     public void receive(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler,
         PacketByteBuf buf, PacketSender responseSender) {

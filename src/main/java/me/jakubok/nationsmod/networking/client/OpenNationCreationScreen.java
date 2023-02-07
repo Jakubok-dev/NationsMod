@@ -7,7 +7,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.network.PacketByteBuf;
 
-public class OpenNationCreationScreenPacketReceiver implements PlayChannelHandler {
+public class OpenNationCreationScreen implements PlayChannelHandler {
 
     @Override
     public void receive(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf,

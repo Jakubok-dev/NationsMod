@@ -87,7 +87,7 @@ public class NationCreationScreen extends SimpleWindow {
 
                 buf.writeNbt(compound);
 
-                ClientPlayNetworking.send(Packets.CREATE_A_NATION_PACKET, buf);
+                ClientPlayNetworking.send(Packets.CREATE_A_NATION, buf);
 
                 b.active = false;
                 this.client.setScreen(null);

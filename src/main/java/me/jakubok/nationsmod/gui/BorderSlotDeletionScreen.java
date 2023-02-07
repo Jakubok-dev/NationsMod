@@ -62,7 +62,7 @@ public class BorderSlotDeletionScreen extends SimpleWindow {
                 PacketByteBuf buffer = PacketByteBufs.create();
                 buffer.writeString(this.borderSlotName);
 
-                ClientPlayNetworking.send(Packets.DELETE_A_BORDER_SLOT_PACKET, buffer);
+                ClientPlayNetworking.send(Packets.DELETE_A_BORDER_SLOT, buffer);
                 this.client.setScreen(null);
             }
         );

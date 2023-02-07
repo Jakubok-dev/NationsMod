@@ -57,7 +57,7 @@ public class NationIndependenceDeclaration extends Item implements Declaration {
                 return super.use(world, user, hand);
             }
 
-            ServerPlayNetworking.send((ServerPlayerEntity)user, Packets.OPEN_NATION_CREATION_SCREEN_PACKET, PacketByteBufs.create());
+            ServerPlayNetworking.send((ServerPlayerEntity)user, Packets.OPEN_NATION_CREATION_SCREEN, PacketByteBufs.create());
         }
         return super.use(world, user, hand);
     }

@@ -1,11 +1,21 @@
 package me.jakubok.nationsmod.gui;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
+import me.jakubok.nationsmod.networking.ClientNetworking;
 import me.jakubok.nationsmod.networking.Packets;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking.PlayChannelHandler;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.TranslatableText;
 
 public class MainScreen extends Screen {
@@ -52,8 +62,21 @@ public class MainScreen extends Screen {
             200, 
             20, 
             new TranslatableText("gui.nationsmod.main_screen.towns_button"), 
-            b ->
-                 ClientPlayNetworking.send(Packets.PREPARE_TOWNS_SCREEN_PACKET, PacketByteBufs.create())
+            b -> {
+                PlayChannelHandler response = (MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) -> {
+                    NbtCompound compound = buf.readNbt();
+
+                    Map<String, UUID> towns = new HashMap<>();
+                    for (int i = 1; i <= compound.getInt("size"); i++)
+                        towns.put(compound.getString("town_name" + i), compound.getUuid("town_id" + i));
+
+                    client.execute(() -> {
+                        client.setScreen(new TownsScreen(towns));
+                    });
+                };
+
+                ClientNetworking.makeARequest(Packets.PREPARE_TOWNS_SCREEN, PacketByteBufs.create(), response);
+            }
         ));
 
         this.addDrawableChild(new ButtonWidget(
