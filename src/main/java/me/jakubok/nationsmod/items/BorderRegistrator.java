@@ -30,7 +30,7 @@ public class BorderRegistrator extends Item {
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         if (world.isClient)
-            return super.use(world, user, hand);
+            return super.use(world, user, hand); 
 
         if (user.isSneaking()) {
             openBorderRegistratorScreen(user);

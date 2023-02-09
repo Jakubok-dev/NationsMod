@@ -4,7 +4,7 @@ import me.jakubok.nationsmod.NationsMod;
 import me.jakubok.nationsmod.items.BorderRegistrator;
 import me.jakubok.nationsmod.items.Constitution;
 import me.jakubok.nationsmod.items.DistrictDeclaration;
-import me.jakubok.nationsmod.items.DocumentPaper;
+import me.jakubok.nationsmod.items.Parchment;
 import me.jakubok.nationsmod.items.NationIndependenceDeclaration;
 import me.jakubok.nationsmod.items.TownIndependenceDeclaration;
 import net.minecraft.util.Identifier;
@@ -20,11 +20,11 @@ public class ItemRegistry {
 
     public static final BorderRegistrator BORDER_REGISTRATOR = new BorderRegistrator();
 
-    public static final DocumentPaper DOCUMENT_PAPER = new DocumentPaper();
+    public static final Parchment DOCUMENT_PAPER = new Parchment();
 
     static {
         Registry.register(Registry.ITEM, new Identifier(NationsMod.MOD_ID, "constitution"), CONSTITUTION);
-        Registry.register(Registry.ITEM, new Identifier(NationsMod.MOD_ID, "document_paper"), DOCUMENT_PAPER);
+        Registry.register(Registry.ITEM, new Identifier(NationsMod.MOD_ID, "parchment"), DOCUMENT_PAPER);
         Registry.register(Registry.ITEM, new Identifier(NationsMod.MOD_ID, "district_declaration"), DISTRICT_DECLARATION);
         Registry.register(Registry.ITEM, new Identifier(NationsMod.MOD_ID, "town_independence_declaration"), TOWN_INDEPENDENCE_DECLARATION);
         Registry.register(Registry.ITEM, new Identifier(NationsMod.MOD_ID, "nation_independence_declaration"), NATION_INDEPENDENCE_DECLARATION);

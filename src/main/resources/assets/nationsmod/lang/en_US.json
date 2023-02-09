@@ -44,6 +44,6 @@
     "gui.nationsmod.border_registrator.unmark.3": "slot",
     "gui.nationsmod.border_registrator.select_a_slot": "Please select a border slot",
     "gui.nationsmod.invalid_border": "The selected border is invalid",
-    "item.nationsmod.document_paper": "Parchment",
+    "item.nationsmod.parchment": "Parchment",
     "item.nationsmod.district_declaration": "District declaration"
 }
