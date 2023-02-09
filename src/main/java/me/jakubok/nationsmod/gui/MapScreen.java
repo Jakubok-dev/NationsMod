@@ -2,6 +2,8 @@ package me.jakubok.nationsmod.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 
+import me.jakubok.nationsmod.NationsClient;
+import me.jakubok.nationsmod.collections.Colour;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -12,7 +14,6 @@ import net.minecraft.client.render.VertexFormat.DrawMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.Heightmap;
 
 public class MapScreen extends Screen {
 
@@ -48,22 +49,13 @@ public class MapScreen extends Screen {
         RenderSystem.enableBlend();
         for (double i = 0d; i < width; i += scale) {
             for (double j = 0d; j < height; j += scale) {
-                final int blockHeight = this.client.world.getTopY(Heightmap.Type.MOTION_BLOCKING, x, z) - 1;
-                int colour = this.client.world.getBlockState(new BlockPos(
-                        x,
-                        blockHeight,
-                        z
-                    )).getBlock().getDefaultMapColor().color;
-
-                final int r = (colour >> 16) & 0xFF;
-                final int g = (colour >> 8) & 0xFF;
-                final int b = colour & 0xFF;
-
-                buffer.vertex(i, j, 0).color(r, g, b, 255).next();
-                buffer.vertex(i, j + scale, 0).color(r, g, b, 255).next();
-                buffer.vertex(i + scale, j + scale, 0).color(r, g, b, 255).next();
-                buffer.vertex(i + scale, j, 0).color(r, g, b, 255).next();
-
+                Colour colour = NationsClient.map.get(new BlockPos(x, 64, z));
+                if (colour != null) {
+                    buffer.vertex(i, j, 0).color(colour.getR(), colour.getG(), colour.getB(), 255).next();
+                    buffer.vertex(i, j + scale, 0).color(colour.getR(), colour.getG(), colour.getB(), 255).next();
+                    buffer.vertex(i + scale, j + scale, 0).color(colour.getR(), colour.getG(), colour.getB(), 255).next();
+                    buffer.vertex(i + scale, j, 0).color(colour.getR(), colour.getG(), colour.getB(), 255).next();
+                }
                 z++;
             }
             z = (int)(centreZ - (this.height / scale / 2));
@@ -71,12 +63,14 @@ public class MapScreen extends Screen {
         }
         tesselator.draw();
         RenderSystem.disableBlend();
+        drawTextWithShadow(matrices, textRenderer, Text.of("X: " + (int)(Math.floor(mouseX / scale) + Math.floor(centreX - this.width / scale / 2)) + " Z: " + (int)(Math.floor(mouseY / scale) + Math.floor(centreZ - this.height / scale / 2))), 0, this.height - 10, 0xFFFFFF);
         super.render(matrices, mouseX, mouseY, delta);
     }
 
     @Override
     protected void init() {
         super.init();
+
         this.plus = new ButtonWidget(
             0, 
             0, 
