@@ -9,6 +9,7 @@ import me.jakubok.nationsmod.networking.client.OpenBorderRegistratorScreen;
 import me.jakubok.nationsmod.networking.client.OpenBorderSlotCreatorScreen;
 import me.jakubok.nationsmod.networking.client.OpenNationCreationScreen;
 import me.jakubok.nationsmod.networking.client.Receive;
+import me.jakubok.nationsmod.networking.client.RenderClaimantsColour;
 import me.jakubok.nationsmod.networking.client.OpenTownCreationScreen;
 import me.jakubok.nationsmod.networking.client.UnhighlightABlock;
 import net.fabricmc.api.EnvType;
@@ -51,5 +52,6 @@ public class ClientNetworking {
         ClientPlayNetworking.registerGlobalReceiver(Packets.HIGHLIGHT_A_BLOCK, new HighlightABlock());
         ClientPlayNetworking.registerGlobalReceiver(Packets.UNHIGHLIGHT_A_BLOCK, new UnhighlightABlock());
         ClientPlayNetworking.registerGlobalReceiver(Packets.RECEIVE, new Receive());
+        ClientPlayNetworking.registerGlobalReceiver(Packets.RENDER_CLAIMANTS_COLOUR, new RenderClaimantsColour());
     }
 }

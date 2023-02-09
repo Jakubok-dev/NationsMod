@@ -1,6 +1,9 @@
 package me.jakubok.nationsmod.collections;
 
-public class Colour {
+import dev.onyxstudios.cca.api.v3.component.ComponentV3;
+import net.minecraft.nbt.NbtCompound;
+
+public class Colour implements ComponentV3 {
     private int r, g, b;
     public Colour(int r, int g, int b) {
         this.r = r;
@@ -11,6 +14,9 @@ public class Colour {
         this.r = (bitmask >> 16) & 0xFF;
         this.g = (bitmask >> 8) & 0xFF;
         this.b = bitmask & 0xFF;
+    }
+    public Colour(NbtCompound compound) {
+        this.readFromNbt(compound);
     }
 
     public int getR() {
@@ -84,5 +90,21 @@ public class Colour {
             (int)(((double)firstColour.g*firstFactor + (double)secondColour.g*secondFactor) / (firstFactor + secondFactor)),
             (int)(((double)firstColour.b*firstFactor + (double)secondColour.b*secondFactor) / (firstFactor + secondFactor))
         );
+    }
+    @Override
+    public void readFromNbt(NbtCompound tag) {
+        int bitmask = tag.getInt("colour");
+        this.r = (bitmask >> 16) & 0xFF;
+        this.g = (bitmask >> 8) & 0xFF;
+        this.b = bitmask & 0xFF;
+    }
+    @Override
+    public void writeToNbt(NbtCompound tag) {
+        writeToNbtAndReturn(tag);
+    }
+
+    public NbtCompound writeToNbtAndReturn(NbtCompound tag) {
+        tag.putInt("colour", this.getBitmask());
+        return tag;
     }
 }

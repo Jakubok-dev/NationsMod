@@ -32,5 +32,9 @@ public class Packets {
 
     public static final Identifier HIGHLIGHT_A_BLOCK = new Identifier(NationsMod.MOD_ID, "highlight_a_block");
     public static final Identifier UNHIGHLIGHT_A_BLOCK = new Identifier(NationsMod.MOD_ID, "unhighlight_a_block");
+
     public static final Identifier RECEIVE = new Identifier(NationsMod.MOD_ID, "receive");
+
+    public static final Identifier GET_BLOCKS_CLAIMANT_COLOUR = new Identifier(NationsMod.MOD_ID, "get_chunk_claimants_colour");
+    public static final Identifier RENDER_CLAIMANTS_COLOUR = new Identifier(NationsMod.MOD_ID, "render_claimants_colour");
 }

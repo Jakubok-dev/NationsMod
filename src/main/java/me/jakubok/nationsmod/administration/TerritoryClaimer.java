@@ -7,6 +7,7 @@ import dev.onyxstudios.cca.api.v3.component.ComponentV3;
 import me.jakubok.nationsmod.chunk.ChunkClaimRegistry;
 import me.jakubok.nationsmod.collections.Border;
 import me.jakubok.nationsmod.collections.BorderGroup;
+import me.jakubok.nationsmod.collections.Colour;
 import me.jakubok.nationsmod.registries.ComponentsRegistry;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.BlockPos;
@@ -20,7 +21,7 @@ public abstract class TerritoryClaimer implements ComponentV3 {
     private long claimedBlocksCount = 0;
     public final WorldProperties props;
     private int minX = 2147483647, maxX = -2147483648, minZ = 2147483647, maxZ = -2147483648;
-    public int[] mapColour = {-1, -1, -1, 100};
+    public Colour mapColour = new Colour(0);
 
     public TerritoryClaimer(World world) {
         this(world, null);
@@ -29,12 +30,12 @@ public abstract class TerritoryClaimer implements ComponentV3 {
     public TerritoryClaimer(World world, BorderGroup borderGroup) {
         this.props = world.getLevelProperties();
         Random rng = new Random();
-        if (mapColour[0] < 0)
-            mapColour[0] = rng.nextInt(256);
-        if (mapColour[1] < 0)
-            mapColour[1] = rng.nextInt(256);
-        if (mapColour[2] < 0)
-            mapColour[2] = rng.nextInt(256);
+        if (mapColour.getR() <= 0)
+            mapColour.setR(rng.nextInt(255));
+        if (mapColour.getG() <= 0)
+            mapColour.setG(rng.nextInt(255));
+        if (mapColour.getB() <= 0)
+            mapColour.setB(rng.nextInt(255));
 
         if (borderGroup == null)
             return;
@@ -127,7 +128,7 @@ public abstract class TerritoryClaimer implements ComponentV3 {
     public void readFromNbt(NbtCompound tag) {
         id = tag.getUuid("id");
         claimedBlocksCount = tag.getLong("claimedBlocksCount");
-        this.mapColour = tag.getIntArray("mapColour");
+        this.mapColour = new Colour(tag.getCompound("mapColour"));
         this.maxX = tag.getInt("maxX");
         this.maxZ = tag.getInt("maxZ");
         this.minX = tag.getInt("minX");
@@ -142,7 +143,7 @@ public abstract class TerritoryClaimer implements ComponentV3 {
     public NbtCompound writeToNbtAndReturn(NbtCompound tag) {
         tag.putUuid("id", id);
         tag.putLong("claimedBlocksCount", claimedBlocksCount);
-        tag.putIntArray("mapColour", this.mapColour);
+        tag.put("mapColour", this.mapColour.writeToNbtAndReturn(new NbtCompound()));
         tag.putInt("maxX", this.maxX);
         tag.putInt("minX", this.minX);
         tag.putInt("maxZ", this.maxZ);

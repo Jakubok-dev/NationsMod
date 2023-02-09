@@ -4,6 +4,7 @@ import me.jakubok.nationsmod.networking.server.CheckPosition;
 import me.jakubok.nationsmod.networking.server.CreateANation;
 import me.jakubok.nationsmod.networking.server.CreateATown;
 import me.jakubok.nationsmod.networking.server.DeleteABorderSlot;
+import me.jakubok.nationsmod.networking.server.GetBlocksClaimantColour;
 import me.jakubok.nationsmod.networking.server.CreateABorderSlot;
 import me.jakubok.nationsmod.networking.server.PrepareBorderSlotScreen;
 import me.jakubok.nationsmod.networking.server.PrepareTownScreen;
@@ -24,5 +25,6 @@ public class ServerNetworking {
         ServerPlayNetworking.registerGlobalReceiver(Packets.DELETE_A_BORDER_SLOT, new DeleteABorderSlot());
         ServerPlayNetworking.registerGlobalReceiver(Packets.SELECT_A_BORDER_SLOT, new SelectABorderSlot());
         ServerPlayNetworking.registerGlobalReceiver(Packets.UNSELECT_A_BORDER_SLOT, new UnselectABorderSlot());
+        ServerPlayNetworking.registerGlobalReceiver(Packets.GET_BLOCKS_CLAIMANT_COLOUR, new GetBlocksClaimantColour());
     }
 }
