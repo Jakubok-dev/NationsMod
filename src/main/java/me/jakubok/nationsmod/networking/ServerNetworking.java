@@ -5,11 +5,13 @@ import me.jakubok.nationsmod.networking.server.CreateANation;
 import me.jakubok.nationsmod.networking.server.CreateATown;
 import me.jakubok.nationsmod.networking.server.DeleteABorderSlot;
 import me.jakubok.nationsmod.networking.server.GetBlocksClaimantColour;
+import me.jakubok.nationsmod.networking.server.HighlightABlock;
 import me.jakubok.nationsmod.networking.server.CreateABorderSlot;
 import me.jakubok.nationsmod.networking.server.PrepareBorderSlotScreen;
 import me.jakubok.nationsmod.networking.server.PrepareTownScreen;
 import me.jakubok.nationsmod.networking.server.PrepareTownsScreen;
 import me.jakubok.nationsmod.networking.server.SelectABorderSlot;
+import me.jakubok.nationsmod.networking.server.UnhighlightABlock;
 import me.jakubok.nationsmod.networking.server.UnselectABorderSlot;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 
@@ -26,5 +28,7 @@ public class ServerNetworking {
         ServerPlayNetworking.registerGlobalReceiver(Packets.SELECT_A_BORDER_SLOT, new SelectABorderSlot());
         ServerPlayNetworking.registerGlobalReceiver(Packets.UNSELECT_A_BORDER_SLOT, new UnselectABorderSlot());
         ServerPlayNetworking.registerGlobalReceiver(Packets.GET_BLOCKS_CLAIMANT_COLOUR, new GetBlocksClaimantColour());
+        ServerPlayNetworking.registerGlobalReceiver(Packets.HIGHLIGHT_A_BLOCK, new HighlightABlock());
+        ServerPlayNetworking.registerGlobalReceiver(Packets.UNHIGHLIGHT_A_BLOCK, new UnhighlightABlock());
     }
 }

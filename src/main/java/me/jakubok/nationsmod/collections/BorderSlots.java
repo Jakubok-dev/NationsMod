@@ -10,6 +10,11 @@ import net.minecraft.nbt.NbtCompound;
 public class BorderSlots implements ComponentV3 {
 
     public List<BorderGroup> slots = new ArrayList<>();
+
+    public BorderSlots() {}
+    public BorderSlots(NbtCompound nbt) {
+        this.readFromNbt(nbt);
+    }
     
     public int selectedSlot = -1;
     public boolean isSelected(int index) {
@@ -26,10 +31,15 @@ public class BorderSlots implements ComponentV3 {
         this.slots.clear();
         for (int i = 1; i <= tag.getInt("size"); i++)
             slots.add(new BorderGroup((NbtCompound)tag.get("slot" + i)));
+        this.selectedSlot = tag.getInt("selectedSlot");
     }
 
     @Override
     public void writeToNbt(NbtCompound tag) {
+        writeToNbtAndReturn(tag);
+    }
+
+    public NbtCompound writeToNbtAndReturn(NbtCompound tag) {
         AtomicInteger size = new AtomicInteger(0);
         this.slots.forEach(el -> {
             NbtCompound subtag = new NbtCompound();
@@ -37,6 +47,8 @@ public class BorderSlots implements ComponentV3 {
             tag.put("slot" + size.incrementAndGet(), subtag);
         });
         tag.putInt("size", size.get());
+        tag.putInt("selectedSlot", this.selectedSlot);
+        return tag;
     }
     
 }

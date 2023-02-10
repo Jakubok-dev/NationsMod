@@ -11,8 +11,7 @@ import net.minecraft.util.math.BlockPos;
 public class HighlightABlock implements PlayChannelHandler {
 
     @Override
-    public void receive(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf,
-            PacketSender responseSender) {
+    public void receive(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {
         BlockPos pos = buf.readBlockPos();
 
         client.execute(() -> {
