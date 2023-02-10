@@ -4,6 +4,7 @@ import me.jakubok.nationsmod.gui.miscellaneous.SimpleWindow;
 import me.jakubok.nationsmod.networking.Packets;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.network.PacketByteBuf;
@@ -16,8 +17,8 @@ public class BorderSlotDeletionScreen extends SimpleWindow {
     protected ButtonWidget yes, no;
     String borderSlotName;
 
-    public BorderSlotDeletionScreen(BorderSlotScreen parent, String borderSlotName) {
-        super(Text.of(""));
+    public BorderSlotDeletionScreen(BorderSlotScreen parent, String borderSlotName, Screen previousScreen) {
+        super(Text.of(""), previousScreen);
         this.parent = parent;
         this.borderSlotName = borderSlotName;
     }

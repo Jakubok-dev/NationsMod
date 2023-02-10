@@ -13,7 +13,7 @@ public class OpenBorderSlotCreatorScreen implements PlayChannelHandler {
     public void receive(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf,
             PacketSender responseSender) {
         client.execute(() -> {
-            client.setScreen(new BorderSlotCreationScreen());
+            client.setScreen(new BorderSlotCreationScreen(client.currentScreen));
         });
     }
     

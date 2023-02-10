@@ -43,4 +43,12 @@ public class NationsClient implements ClientModInitializer {
         colour.changeTheShade(shadeFactor);
         NationsClient.map.put(new BlockPos(blockx, 64, blockz), colour);
     }
+
+    public static void renderClaimantsColour(int bytemask, BlockPos pos) {
+        Colour claimersColour = new Colour(bytemask);
+
+        Colour colour = NationsClient.map.get(pos);
+        colour.mix(claimersColour, 1.5);
+        NationsClient.map.put(pos, colour);
+    }
 }

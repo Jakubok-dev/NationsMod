@@ -1,17 +1,28 @@
 package me.jakubok.nationsmod.gui;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import me.jakubok.nationsmod.NationsClient;
 import me.jakubok.nationsmod.collections.Colour;
+import me.jakubok.nationsmod.networking.ClientNetworking;
+import me.jakubok.nationsmod.networking.Packets;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking.PlayChannelHandler;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.render.VertexFormat.DrawMode;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 
@@ -19,13 +30,15 @@ public class MapScreen extends Screen {
 
     public double centreX, centreZ;
     public int playerX = 0, playerZ = 0;
-    public ButtonWidget plus, minus;
+    public ButtonWidget plus, minus, borderSlots;
     final MinecraftClient client;
     public double scale = 1.25d;
+    private final Screen previousScreen;
 
-    public MapScreen(MinecraftClient client) {
+    public MapScreen(MinecraftClient client, Screen previousScreen) {
         super(Text.of("Map"));
         this.client = client;
+        this.previousScreen = previousScreen;
         if (client.player != null) {
             centreX = client.player.getBlockX();
             centreZ = client.player.getBlockZ();
@@ -93,6 +106,26 @@ public class MapScreen extends Screen {
             }
         );
         this.addDrawableChild(this.minus);
+        this.borderSlots = new ButtonWidget(
+            40, 
+            0, 
+            80, 
+            20, 
+            Text.of("Border slots"), 
+            t -> {
+                PlayChannelHandler responseFunction = (MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) -> {
+                    NbtCompound nbt = buf.readNbt();
+                    Map<String, Integer> slots = new HashMap<>();
+                    for (int i = 0; i < nbt.getInt("size"); i++)
+                        slots.put(nbt.getString("name" + i), nbt.getInt("index" + i));
+                    client.execute(() -> {
+                        client.setScreen(new BorderRegistratorScreen(slots, this));
+                    });
+                };
+                ClientNetworking.makeARequest(Packets.PREPARE_BORDER_REGISTRATOR_SCREEN, PacketByteBufs.create(), responseFunction);
+            }
+        );
+        this.addDrawableChild(this.borderSlots);
     }
 
     @Override
@@ -109,5 +142,10 @@ public class MapScreen extends Screen {
         else
             scale *= Math.pow(1.25d, amount);
         return true;
+    }
+
+    @Override
+    public void onClose() {
+        this.client.setScreen(previousScreen);
     }
 }

@@ -1,5 +1,6 @@
 package me.jakubok.nationsmod.gui.miscellaneous;
 
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
@@ -12,8 +13,8 @@ public class ChangeOfASettingScreen extends SimpleWindow {
     public TextFieldWidget nameField;
     public SubmitFunction submitFunction;
 
-    public ChangeOfASettingScreen(Text title, SubmitFunction submitFunction) {
-        super(Text.of("Changing - " + title.asString()));
+    public ChangeOfASettingScreen(Text title, SubmitFunction submitFunction, Screen previousScreen) {
+        super(Text.of("Changing - " + title.asString()), previousScreen);
         this.submitFunction = submitFunction;
     }
 

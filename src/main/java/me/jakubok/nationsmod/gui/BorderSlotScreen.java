@@ -6,6 +6,7 @@ import me.jakubok.nationsmod.gui.miscellaneous.SimpleWindow;
 import me.jakubok.nationsmod.networking.Packets;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.network.PacketByteBuf;
@@ -18,8 +19,8 @@ public class BorderSlotScreen extends SimpleWindow {
     protected ButtonWidget close, remove, select;
     protected boolean selected;
 
-    public BorderSlotScreen(BorderGroup slot, boolean selected) {
-        super(Text.of(slot.name));
+    public BorderSlotScreen(BorderGroup slot, boolean selected, Screen previousScreen) {
+        super(Text.of(slot.name), previousScreen);
         this.slot = slot;
         this.selected = selected;
     }
@@ -101,7 +102,7 @@ public class BorderSlotScreen extends SimpleWindow {
             (windowRight - windowLeft) / 3 - 2,
             20,
             new TranslatableText("gui.nationsmod.border_slot_screen.remove"), 
-            t -> this.client.setScreen(new BorderSlotDeletionScreen(this, slot.name))
+            t -> this.client.setScreen(new BorderSlotDeletionScreen(this, slot.name, this))
         );
         this.addDrawableChild(this.remove);
 
@@ -111,7 +112,7 @@ public class BorderSlotScreen extends SimpleWindow {
             (windowRight - windowLeft) / 3 - 5,
             20,
             new TranslatableText("gui.nationsmod.border_slot_screen.close"),
-            t -> this.client.setScreen(null)
+            t -> this.onClose()
         );
         this.addDrawableChild(this.close);
     }

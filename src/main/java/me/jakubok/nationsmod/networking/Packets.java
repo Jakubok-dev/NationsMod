@@ -40,4 +40,6 @@ public class Packets {
 
     public static final Identifier GET_BLOCKS_CLAIMANT_COLOUR = new Identifier(NationsMod.MOD_ID, "get_chunk_claimants_colour");
     public static final Identifier RENDER_CLAIMANTS_COLOUR = new Identifier(NationsMod.MOD_ID, "render_claimants_colour");
+
+    public static final Identifier PREPARE_BORDER_REGISTRATOR_SCREEN = new Identifier(NationsMod.MOD_ID, "prepare_border_registrator_screen");
 }

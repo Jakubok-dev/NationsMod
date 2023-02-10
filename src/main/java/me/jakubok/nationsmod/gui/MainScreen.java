@@ -71,7 +71,7 @@ public class MainScreen extends Screen {
                         towns.put(compound.getString("town_name" + i), compound.getUuid("town_id" + i));
 
                     client.execute(() -> {
-                        client.setScreen(new TownsScreen(towns));
+                        client.setScreen(new TownsScreen(towns, this));
                     });
                 };
 
@@ -95,7 +95,7 @@ public class MainScreen extends Screen {
             20, 
             new TranslatableText("gui.nationsmod.main_screen.map_button"), 
             b -> {
-                this.client.setScreen(new MapScreen(this.client));
+                this.client.setScreen(new MapScreen(this.client, this));
             }
         ));
     }

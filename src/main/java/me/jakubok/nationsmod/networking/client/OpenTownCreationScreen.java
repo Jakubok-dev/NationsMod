@@ -12,7 +12,7 @@ public class OpenTownCreationScreen implements PlayChannelHandler {
     public void receive(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf,
             PacketSender responseSender) {
                 client.execute(() -> {
-                    client.setScreen(new TownCreationScreen(client));
+                    client.setScreen(new TownCreationScreen(client, client.currentScreen));
                 });
     }
 }

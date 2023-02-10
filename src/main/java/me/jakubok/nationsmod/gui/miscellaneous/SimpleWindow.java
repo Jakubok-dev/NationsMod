@@ -20,8 +20,11 @@ public abstract class SimpleWindow extends Screen {
     public static final int windowCenterHorizontal = (windowLeft + windowRight) / 2;
     public static final int windowCenterVertical = (windowTop + windowBottom) / 2;
 
-    public SimpleWindow(Text title) {
+    private final Screen previousScreen;
+
+    public SimpleWindow(Text title, Screen previousScreen) {
         super(title);
+        this.previousScreen = previousScreen;
     }
     
     @Override
@@ -50,5 +53,10 @@ public abstract class SimpleWindow extends Screen {
 
     public MinecraftClient getClient() {
         return this.client;
+    }
+
+    @Override
+    public void onClose() {
+        this.client.setScreen(previousScreen);
     }
 }

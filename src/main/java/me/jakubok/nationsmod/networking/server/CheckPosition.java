@@ -42,6 +42,7 @@ public class CheckPosition implements PlayChannelHandler {
                 Colour colour = new Colour(district.mapColour.getBitmask());
                 colour.changeTheShade(2);
                 responseBuffer.writeInt(colour.getBitmask());
+                responseBuffer.writeBoolean(false);
                 ServerPlayNetworking.send(player, Packets.UNHIGHLIGHT_A_BLOCK_CLIENT, responseBuffer);
             }
         }
@@ -66,6 +67,7 @@ public class CheckPosition implements PlayChannelHandler {
                 Colour colour = new Colour(district.mapColour.getBitmask());
                 colour.changeTheShade(2);
                 responseBuffer.writeInt(colour.getBitmask());
+                responseBuffer.writeBoolean(false);
                 ServerPlayNetworking.send(player, Packets.HIGHLIGHT_A_BLOCK_CLIENT, responseBuffer);
             }
         }

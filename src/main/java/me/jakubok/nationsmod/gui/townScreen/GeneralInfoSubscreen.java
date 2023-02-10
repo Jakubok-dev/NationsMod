@@ -35,7 +35,8 @@ public class GeneralInfoSubscreen {
                 inst.town.getName(), 
                 new ChangeOfASettingScreen(
                     Text.of("Name"), 
-                    instance -> {}
+                    instance -> {},
+                    inst
                 ), 
                 inst.getClient(),
                 SimpleWindow.windowTop + 35 + 21 * 0,
@@ -46,7 +47,8 @@ public class GeneralInfoSubscreen {
                 inst.town.getARuler().name, 
                 new ChangeOfASettingScreen(
                     Text.of("Mayor"), 
-                    instance -> {}
+                    instance -> {},
+                    inst
                 ),
                 inst.getClient(),
                 SimpleWindow.windowTop + 35 + 21 * 1,
@@ -57,7 +59,8 @@ public class GeneralInfoSubscreen {
                 "dictatorship", 
                 new ChangeOfASettingScreen(
                     Text.of("Regime"), 
-                    instance -> {}
+                    instance -> {},
+                    inst
                 ),
                 inst.getClient(),
                 SimpleWindow.windowTop + 35 + 21 * 2,
@@ -84,7 +87,8 @@ public class GeneralInfoSubscreen {
                 "10 %", 
                 new ChangeOfASettingScreen(
                     Text.of("Petition support"), 
-                    instance -> {}
+                    instance -> {},
+                    inst
                 ),
                 inst.getClient(),
                 SimpleWindow.windowTop + 35 + 21 * 0,

@@ -4,6 +4,7 @@ import me.jakubok.nationsmod.gui.miscellaneous.SimpleWindow;
 import me.jakubok.nationsmod.networking.Packets;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
@@ -16,8 +17,8 @@ public class NationCreationScreen extends SimpleWindow {
     TextFieldWidget nationName, provinceName;
     ButtonWidget submit;
 
-    public NationCreationScreen() {
-        super(new TranslatableText("gui.nationsmod.nation_creation_screen.title"));
+    public NationCreationScreen(Screen previousScreen) {
+        super(new TranslatableText("gui.nationsmod.nation_creation_screen.title"), previousScreen);
     }
     
     @Override

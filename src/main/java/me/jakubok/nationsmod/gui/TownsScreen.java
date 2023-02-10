@@ -17,6 +17,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking.PlayCha
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
@@ -39,8 +40,8 @@ public class TownsScreen extends SimpleWindow {
     protected boolean isPageAtLeft() { return page > 0;  }
     protected boolean isPageAtRight() { return (page+1)*4 < this.filteredTownsNames.size(); }
     
-    public TownsScreen(Map<String, UUID> towns) {
-        super(new TranslatableText("gui.nationsmod.towns_screen.title"));
+    public TownsScreen(Map<String, UUID> towns, Screen previousScreen) {
+        super(new TranslatableText("gui.nationsmod.towns_screen.title"), previousScreen);
         this.towns = towns;
         townsNames.addAll(towns.keySet());
         Collections.sort(townsNames);
@@ -75,7 +76,7 @@ public class TownsScreen extends SimpleWindow {
                         Town town = new Town(buf.readNbt(), client.world.getLevelProperties());
 
                         client.execute(() -> {
-                            client.setScreen(new TownScreen(town));
+                            client.setScreen(new TownScreen(town, this));
                         });
                     };
                     ClientNetworking.makeARequest(Packets.PREPARE_TOWN_SCREEN, buffer, response);

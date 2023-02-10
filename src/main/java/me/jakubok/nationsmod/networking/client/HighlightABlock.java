@@ -15,9 +15,13 @@ public class HighlightABlock implements PlayChannelHandler {
     public void receive(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {
         BlockPos pos = buf.readBlockPos();
         Colour colour = new Colour(buf.readInt());
+        boolean selectedSlot = buf.readBoolean();
 
         client.execute(() -> {
             NationsClient.drawer.highLightABlock(pos, colour);
+            if (selectedSlot) {
+                NationsClient.renderClaimantsColour(colour.getBitmask(), pos);
+            }
         });
     }
     

@@ -9,6 +9,7 @@ import me.jakubok.nationsmod.collections.PlayerAccount;
 import me.jakubok.nationsmod.gui.miscellaneous.Subscreen;
 import me.jakubok.nationsmod.gui.miscellaneous.TabWindow;
 import me.jakubok.nationsmod.registries.ItemRegistry;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
@@ -23,8 +24,8 @@ public class TownScreen extends TabWindow {
     public final ButtonWidget petitionSubmit;
     public Directive<Town> draft;
 
-    public TownScreen(Town town) {
-        super(Text.of(town.getName()));
+    public TownScreen(Town town, Screen previousScreen) {
+        super(Text.of(town.getName()), previousScreen);
         this.town = town;
         this.generalInfo = new GeneralInfoSubscreen(this);
         this.petitionsAndDirectives = new PetitionsAndDirectivesSubscreen(this);
@@ -75,6 +76,6 @@ public class TownScreen extends TabWindow {
     }
 
     private void handlePetitionSubmit(ButtonWidget t) {
-        this.client.setScreen(new TownDirectiveCreationScreen(this.draft));
+        this.client.setScreen(new TownDirectiveCreationScreen(this.draft, this));
     }
 }

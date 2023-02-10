@@ -14,6 +14,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking.PlayCha
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
@@ -35,8 +36,8 @@ public class BorderRegistratorScreen extends SimpleWindow {
     List<String> filteredSlotsNames = new ArrayList<>();
     List<ButtonWidget> slotsButtons = new ArrayList<>();
 
-    public BorderRegistratorScreen(Map<String, Integer> slots) {
-        super(new TranslatableText("gui.nationsmod.border_registrator_screen.title"));
+    public BorderRegistratorScreen(Map<String, Integer> slots, Screen previousScreen) {
+        super(new TranslatableText("gui.nationsmod.border_registrator_screen.title"), previousScreen);
         this.slots = slots;
         this.slotsNames.addAll(this.slots.keySet());
         Collections.sort(this.slotsNames);
@@ -74,7 +75,7 @@ public class BorderRegistratorScreen extends SimpleWindow {
                         boolean selected = buf.readBoolean();
 
                         client.execute(() -> {
-                            client.setScreen(new BorderSlotScreen(slot, selected));
+                            client.setScreen(new BorderSlotScreen(slot, selected, this));
                         });
                     };
 

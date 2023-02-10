@@ -33,7 +33,7 @@ public class SelectABorderSlot implements PlayChannelHandler {
                         PacketByteBuf buffer = PacketByteBufs.create();
                         buffer.writeBlockPos(block.position);
                         buffer.writeInt(Colour.GET_BITMASK(255, 255, 255));
-
+                        buffer.writeBoolean(true);
                         ServerPlayNetworking.send(player, Packets.HIGHLIGHT_A_BLOCK_CLIENT, buffer);
                     }
 
