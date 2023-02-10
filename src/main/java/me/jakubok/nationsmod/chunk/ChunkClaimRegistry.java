@@ -7,8 +7,15 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import dev.onyxstudios.cca.api.v3.component.ComponentV3;
 import me.jakubok.nationsmod.administration.TerritoryClaimer;
+import me.jakubok.nationsmod.networking.Packets;
 import me.jakubok.nationsmod.registries.ComponentsRegistry;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -41,7 +48,7 @@ public class ChunkClaimRegistry implements ComponentV3 {
         return claims;
     }
 
-    public boolean addClaim(int x, int z, TerritoryClaimer claimer) {
+    public boolean addClaim(int x, int z, TerritoryClaimer claimer, ServerWorld world) {
         
         BlockPos position = new BlockPos(x, 64, z);
 
@@ -50,38 +57,43 @@ public class ChunkClaimRegistry implements ComponentV3 {
 
         claims.put(position, claimer.getId());
         
+        this.addToPlayersMaps(world, position, claimer);
+
         return true;
     }
-    public boolean addClaim(BlockPos pos, TerritoryClaimer claimer) {
-        return addClaim(pos.getX(), pos.getZ(), claimer);
+    public boolean addClaim(BlockPos pos, TerritoryClaimer claimer, ServerWorld world) {
+        return addClaim(pos.getX(), pos.getZ(), claimer, world);
     }
 
-    public boolean removeClaim(int x, int z) {
+    public boolean removeClaim(int x, int z, ServerWorld world) {
         BlockPos position = new BlockPos(x, 64, z);
 
         if (claims.get(position) == null)
             return false;
 
         claims.remove(position);
+
+        this.removeFromPlayersMaps(world, position);
         
         return true;
     }
-    public boolean removeClaim(BlockPos pos) {
-        return removeClaim(pos.getX(), pos.getZ());
+    public boolean removeClaim(BlockPos pos, ServerWorld world) {
+        return removeClaim(pos.getX(), pos.getZ(), world);
     }
 
-    public boolean removeClaims(TerritoryClaimer claimer) {
+    public boolean removeClaims(TerritoryClaimer claimer, ServerWorld world) {
         boolean result = false;
         for (BlockPos pos : claims.keySet()) {
-            if (claims.get(pos).toString() == claimer.toString()) {
+            if (claims.get(pos).equals(claimer.getId())) {
                 result = true;
                 claims.remove(pos);
+                this.removeFromPlayersMaps(world, pos);
             }
         }
         return result;
     }
 
-    public boolean changeClaim(int x, int z, TerritoryClaimer claimer) {
+    public boolean changeClaim(int x, int z, TerritoryClaimer claimer, ServerWorld world) {
         
         BlockPos position = new BlockPos(x, 64, z);
 
@@ -90,12 +102,14 @@ public class ChunkClaimRegistry implements ComponentV3 {
         if (claims.get(position).toString() == claimer.getId().toString())
             return false;
 
+        this.removeFromPlayersMaps(world, position);
         claims.put(position, claimer.getId());
+        this.addToPlayersMaps(world, position, claimer);
         
         return true;
     }
-    public boolean changeClaim(BlockPos pos, TerritoryClaimer claimer) {
-        return changeClaim(pos.getX(), pos.getZ(), claimer);
+    public boolean changeClaim(BlockPos pos, TerritoryClaimer claimer, ServerWorld world) {
+        return changeClaim(pos.getX(), pos.getZ(), claimer, world);
     }
 
     public UUID claimBelonging(int x, int z) {
@@ -112,6 +126,23 @@ public class ChunkClaimRegistry implements ComponentV3 {
     public boolean isBelonging(BlockPos pos) {
         return isBelonging(pos.getX(), pos.getZ());
     }
+
+    public void addToPlayersMaps(ServerWorld world, BlockPos pos, TerritoryClaimer claimer) {
+        PacketByteBuf buffer = PacketByteBufs.create();
+        buffer.writeBlockPos(pos);
+        buffer.writeInt(claimer.mapColour.getBitmask());
+        for (ServerPlayerEntity playerEntity : PlayerLookup.tracking(world, pos)) {
+            ServerPlayNetworking.send(playerEntity, Packets.RENDER_CLAIMANTS_COLOUR, buffer);
+        }
+    }
+    public void removeFromPlayersMaps(ServerWorld world, BlockPos pos) {
+        PacketByteBuf buffer = PacketByteBufs.create();
+        buffer.writeBlockPos(pos);
+        for (ServerPlayerEntity playerEntity : PlayerLookup.tracking(world, pos)) {
+            ServerPlayNetworking.send(playerEntity, Packets.CLEAR_CLAIMANTS_COLOUR, buffer);
+        }
+    }
+
     @Override
     public void readFromNbt(NbtCompound tag) {
         claims.clear();

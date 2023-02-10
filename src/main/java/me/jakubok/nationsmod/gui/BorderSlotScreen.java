@@ -18,11 +18,13 @@ public class BorderSlotScreen extends SimpleWindow {
     protected BorderGroup slot;
     protected ButtonWidget close, remove, select;
     protected boolean selected;
+    protected final int index;
 
-    public BorderSlotScreen(BorderGroup slot, boolean selected, Screen previousScreen) {
+    public BorderSlotScreen(BorderGroup slot, int index, boolean selected, Screen previousScreen) {
         super(Text.of(slot.name), previousScreen);
         this.slot = slot;
         this.selected = selected;
+        this.index = index;
     }
 
     public boolean isSelected() {
@@ -77,6 +79,7 @@ public class BorderSlotScreen extends SimpleWindow {
                 if (this.selected) {
 
                     ClientPlayNetworking.send(Packets.UNSELECT_A_BORDER_SLOT, PacketByteBufs.create());
+                    NationsClient.selectedSlot = -1;
 
                     this.makeUnselected();
                     return;
@@ -86,6 +89,7 @@ public class BorderSlotScreen extends SimpleWindow {
                 buffer.writeString(slot.name);
 
                 ClientPlayNetworking.send(Packets.SELECT_A_BORDER_SLOT, buffer);
+                NationsClient.selectedSlot = this.index;
 
                 this.makeSelected();
             }

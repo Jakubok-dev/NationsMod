@@ -27,6 +27,16 @@ public class SelectABorderSlot implements PlayChannelHandler {
 
             for (BorderGroup slot : slots.slots) {
                 if (slot.name.toLowerCase().equals(slotName.toLowerCase())) {
+
+                    if (slots.selectedSlot > -1)
+                        for (Border block : slots.slots.get(slots.selectedSlot).toList()) {
+                            PacketByteBuf buffer = PacketByteBufs.create();
+                            buffer.writeBlockPos(block.position);
+                            buffer.writeInt(Colour.GET_BITMASK(255, 255, 255));
+                            buffer.writeBoolean(true);
+                            ServerPlayNetworking.send(player, Packets.UNHIGHLIGHT_A_BLOCK_CLIENT, buffer);
+                        }
+
                     slots.selectedSlot = slots.slots.indexOf(slot);
 
                     for (Border block : slot.toList()) {

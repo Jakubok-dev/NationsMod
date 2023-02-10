@@ -53,7 +53,7 @@ public class OpenBorderRegistratorScreen implements PlayChannelHandler {
                 ClientPlayNetworking.send(Packets.UNHIGHLIGHT_A_BLOCK_SERVER, buffer);
     
                 NationsClient.drawer.unhighlightABlock(slots.getSelectedSlot().get(position).position, new Colour(255, 255, 255));
-                NationsClient.renderBlock(client.world, slots.getSelectedSlot().get(position).position.getX(), slots.getSelectedSlot().get(position).position.getZ());
+                NationsClient.map.clearTheBorderRegistratorLayer(slots.getSelectedSlot().get(position).position);
     
                 TranslatableText firstUnmarkMessage = new TranslatableText("gui.nationsmod.border_registrator.unmark.1");
                 TranslatableText secondUnmarkMessage = new TranslatableText("gui.nationsmod.border_registrator.unmark.2");
@@ -72,7 +72,7 @@ public class OpenBorderRegistratorScreen implements PlayChannelHandler {
             } else {
                 Border border = new Border(position);
                 NationsClient.drawer.highLightABlock(border.position, new Colour(255, 255, 255));
-                NationsClient.renderClaimantsColour(Colour.GET_BITMASK(255, 255, 255), border.position);
+                NationsClient.map.renderTheBorderRegistratorLayer(border.position);
                 
                 PacketByteBuf buffer = PacketByteBufs.create();
                 buffer.writeBlockPos(border.position);

@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import me.jakubok.nationsmod.networking.client.ClearClaimantsColour;
 import me.jakubok.nationsmod.networking.client.HighlightABlock;
 import me.jakubok.nationsmod.networking.client.OpenBorderRegistratorScreen;
 import me.jakubok.nationsmod.networking.client.OpenBorderSlotCreatorScreen;
@@ -49,10 +50,10 @@ public class ClientNetworking {
         ClientPlayNetworking.registerGlobalReceiver(Packets.OPEN_NATION_CREATION_SCREEN, new OpenNationCreationScreen());
         ClientPlayNetworking.registerGlobalReceiver(Packets.OPEN_BORDER_REGISTRATOR_SCREEN, new OpenBorderRegistratorScreen());
         ClientPlayNetworking.registerGlobalReceiver(Packets.OPEN_BORDER_SLOT_CREATOR_SCREEN, new OpenBorderSlotCreatorScreen());
-
         ClientPlayNetworking.registerGlobalReceiver(Packets.RECEIVE, new Receive());
         ClientPlayNetworking.registerGlobalReceiver(Packets.RENDER_CLAIMANTS_COLOUR, new RenderClaimantsColour());
         ClientPlayNetworking.registerGlobalReceiver(Packets.HIGHLIGHT_A_BLOCK_CLIENT, new HighlightABlock());
         ClientPlayNetworking.registerGlobalReceiver(Packets.UNHIGHLIGHT_A_BLOCK_CLIENT, new UnhighlightABlock());
+        ClientPlayNetworking.registerGlobalReceiver(Packets.CLEAR_CLAIMANTS_COLOUR, new ClearClaimantsColour());
     }
 }

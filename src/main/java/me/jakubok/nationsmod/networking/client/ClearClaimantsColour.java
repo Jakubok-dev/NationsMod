@@ -8,16 +8,13 @@ import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
 
-public class RenderClaimantsColour implements PlayChannelHandler {
+public class ClearClaimantsColour implements PlayChannelHandler {
 
     @Override
     public void receive(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf,
             PacketSender responseSender) {
         BlockPos pos = buf.readBlockPos();
-        int bytemask = buf.readInt();
-        if (bytemask < 0)
-                return;
-        NationsClient.map.renderTheTownLayer(bytemask, pos);
+        NationsClient.map.clearTheTownLayer(pos);
     }
     
 }

@@ -75,7 +75,7 @@ public class BorderRegistratorScreen extends SimpleWindow {
                         boolean selected = buf.readBoolean();
 
                         client.execute(() -> {
-                            client.setScreen(new BorderSlotScreen(slot, selected, this));
+                            client.setScreen(new BorderSlotScreen(slot, this.slots.get(this.filteredSlotsNames.get((page*4) + temp - 1)), selected, this));
                         });
                     };
 

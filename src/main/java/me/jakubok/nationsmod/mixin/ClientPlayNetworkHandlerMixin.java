@@ -27,7 +27,7 @@ public abstract class ClientPlayNetworkHandlerMixin {
                 PacketByteBuf buffer = PacketByteBufs.create();
                 buffer.writeBlockPos(new BlockPos(blockx, 64, blockz));
                 ClientPlayNetworking.send(Packets.GET_BLOCKS_CLAIMANT_COLOUR, buffer);
-                NationsClient.renderBlock(this.client.world, blockx, blockz);
+                NationsClient.map.renderBlockLayer(this.client.world, blockx, blockz);
             }
         }
     }

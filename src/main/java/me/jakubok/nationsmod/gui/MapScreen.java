@@ -30,7 +30,8 @@ public class MapScreen extends Screen {
 
     public double centreX, centreZ;
     public int playerX = 0, playerZ = 0;
-    public ButtonWidget plus, minus, borderSlots;
+    public ButtonWidget plus, minus, borderSlots, drawing;
+    protected boolean drawingMode = false;
     final MinecraftClient client;
     public double scale = 1.25d;
     private final Screen previousScreen;
@@ -62,7 +63,7 @@ public class MapScreen extends Screen {
         RenderSystem.enableBlend();
         for (double i = 0d; i < width; i += scale) {
             for (double j = 0d; j < height; j += scale) {
-                Colour colour = NationsClient.map.get(new BlockPos(x, 64, z));
+                Colour colour = NationsClient.map.theColourAt(new BlockPos(x, 64, z));
                 if (colour != null) {
                     buffer.vertex(i, j, 0).color(colour.getR(), colour.getG(), colour.getB(), 255).next();
                     buffer.vertex(i, j + scale, 0).color(colour.getR(), colour.getG(), colour.getB(), 255).next();
@@ -126,12 +127,35 @@ public class MapScreen extends Screen {
             }
         );
         this.addDrawableChild(this.borderSlots);
+        this.drawing = new ButtonWidget(
+            120, 
+            0, 
+            120, 
+            20, 
+            Text.of("Start drawing"), 
+            t -> {
+                if (NationsClient.selectedSlot == -1)
+                    return;
+                drawingMode = !drawingMode;
+                if (drawingMode) {
+                    this.drawing.setMessage(Text.of("Stop drawing"));
+                } else {
+                    this.drawing.setMessage(Text.of("Start drawing"));
+                }
+            }
+        );
+        this.addDrawableChild(this.drawing);
     }
 
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
-        centreX -= deltaX / scale;
-        centreZ -= deltaY / scale;
+        if (!drawingMode) {
+            centreX -= deltaX / scale;
+            centreZ -= deltaY / scale;
+        } else {
+            int x = (int)(Math.floor(mouseX / scale) + Math.floor(centreX - this.width / scale / 2));
+            int z = (int)(Math.floor(mouseY / scale) + Math.floor(centreZ - this.height / scale / 2));
+        }
         return true;
     }
 

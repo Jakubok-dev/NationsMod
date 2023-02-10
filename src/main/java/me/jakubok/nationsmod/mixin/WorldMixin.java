@@ -23,7 +23,7 @@ public abstract class WorldMixin implements WorldAccess {
         if (!this.isClient()) {
             info.cancel();
         }
-        NationsClient.renderBlock(this, pos.getX(), pos.getZ());
+        NationsClient.map.renderBlockLayer(this, pos.getX(), pos.getZ());
         PacketByteBuf buffer = PacketByteBufs.create();
         buffer.writeBlockPos(new BlockPos(pos.getX(), 64, pos.getZ()));
         ClientPlayNetworking.send(Packets.GET_BLOCKS_CLAIMANT_COLOUR, buffer);

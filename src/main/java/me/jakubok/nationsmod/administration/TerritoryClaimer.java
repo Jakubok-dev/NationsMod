@@ -10,6 +10,7 @@ import me.jakubok.nationsmod.collections.BorderGroup;
 import me.jakubok.nationsmod.collections.Colour;
 import me.jakubok.nationsmod.registries.ComponentsRegistry;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
@@ -67,7 +68,7 @@ public abstract class TerritoryClaimer implements ComponentV3 {
         if(chunkClaimRegistry.isBelonging(pos))
             return 0;
 
-        chunkClaimRegistry.addClaim(pos, this);
+        chunkClaimRegistry.addClaim(pos, this, (ServerWorld)world);
         claimedBlocksCount++;
         
         this.minX = Math.min(this.minX, pos.getX());
@@ -94,7 +95,7 @@ public abstract class TerritoryClaimer implements ComponentV3 {
         if (chunkClaimRegistry.claimBelonging(pos).toString() != this.id.toString())
             return 0;
 
-        chunkClaimRegistry.removeClaim(pos);
+        chunkClaimRegistry.removeClaim(pos, (ServerWorld)world);
         claimedBlocksCount--;
         
         return 1;

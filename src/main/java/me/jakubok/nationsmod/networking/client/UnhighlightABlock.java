@@ -15,12 +15,12 @@ public class UnhighlightABlock implements PlayChannelHandler {
     public void receive(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {
         BlockPos pos = buf.readBlockPos();
         Colour colour = new Colour(buf.readInt());
-        boolean selectedSlot = buf.readBoolean();
+        boolean renderOnMap = buf.readBoolean();
 
         client.execute(() -> {
             NationsClient.drawer.unhighlightABlock(pos, colour);
-            if (selectedSlot) {
-                NationsClient.renderBlock(client.world, pos.getX(), pos.getZ());
+            if (renderOnMap) {
+                NationsClient.map.clearTheBorderRegistratorLayer(pos);
             }
         });
     }
