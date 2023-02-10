@@ -52,7 +52,7 @@ public class ClientNetworking {
 
         ClientPlayNetworking.registerGlobalReceiver(Packets.RECEIVE, new Receive());
         ClientPlayNetworking.registerGlobalReceiver(Packets.RENDER_CLAIMANTS_COLOUR, new RenderClaimantsColour());
-        ClientPlayNetworking.registerGlobalReceiver(Packets.HIGHLIGHT_A_BLOCK, new HighlightABlock());
-        ClientPlayNetworking.registerGlobalReceiver(Packets.UNHIGHLIGHT_A_BLOCK, new UnhighlightABlock());
+        ClientPlayNetworking.registerGlobalReceiver(Packets.HIGHLIGHT_A_BLOCK_CLIENT, new HighlightABlock());
+        ClientPlayNetworking.registerGlobalReceiver(Packets.UNHIGHLIGHT_A_BLOCK_CLIENT, new UnhighlightABlock());
     }
 }

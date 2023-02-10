@@ -1,6 +1,7 @@
 package me.jakubok.nationsmod.networking.client;
 
 import me.jakubok.nationsmod.NationsClient;
+import me.jakubok.nationsmod.collections.Colour;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking.PlayChannelHandler;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.client.MinecraftClient;
@@ -13,9 +14,10 @@ public class UnhighlightABlock implements PlayChannelHandler {
     @Override
     public void receive(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {
         BlockPos pos = buf.readBlockPos();
+        Colour colour = new Colour(buf.readInt());
 
         client.execute(() -> {
-            NationsClient.drawer.unhighlightABlock(pos);
+            NationsClient.drawer.unhighlightABlock(pos, colour);
         });
     }
     

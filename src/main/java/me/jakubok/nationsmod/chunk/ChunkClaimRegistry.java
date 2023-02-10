@@ -7,8 +7,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import dev.onyxstudios.cca.api.v3.component.ComponentV3;
 import me.jakubok.nationsmod.administration.TerritoryClaimer;
+import me.jakubok.nationsmod.registries.ComponentsRegistry;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 public class ChunkClaimRegistry implements ComponentV3 {
 
@@ -145,5 +147,15 @@ public class ChunkClaimRegistry implements ComponentV3 {
         tag.putInt("size", size.get());
 
         return tag;
+    }
+
+    public static UUID GET_CLAIMANT(int x, int z, World world) {
+        return GET_CLAIMANT(new BlockPos(x, 64, z), world);
+    }
+    public static UUID GET_CLAIMANT(BlockPos pos, World world) {
+        ChunkClaimRegistry registry = ComponentsRegistry.CHUNK_BINARY_TREE.get(world).get(pos);
+        if (registry == null)
+            return null;
+        return registry.claimBelonging(pos);
     }
 }

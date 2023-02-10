@@ -3,6 +3,7 @@ package me.jakubok.nationsmod.networking.server;
 import me.jakubok.nationsmod.collections.Border;
 import me.jakubok.nationsmod.collections.BorderGroup;
 import me.jakubok.nationsmod.collections.BorderSlots;
+import me.jakubok.nationsmod.collections.Colour;
 import me.jakubok.nationsmod.networking.Packets;
 import me.jakubok.nationsmod.registries.ComponentsRegistry;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -31,8 +32,9 @@ public class SelectABorderSlot implements PlayChannelHandler {
                     for (Border block : slot.toList()) {
                         PacketByteBuf buffer = PacketByteBufs.create();
                         buffer.writeBlockPos(block.position);
+                        buffer.writeInt(Colour.GET_BITMASK(255, 255, 255));
 
-                        ServerPlayNetworking.send(player, Packets.HIGHLIGHT_A_BLOCK, buffer);
+                        ServerPlayNetworking.send(player, Packets.HIGHLIGHT_A_BLOCK_CLIENT, buffer);
                     }
 
                     return;

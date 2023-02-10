@@ -30,8 +30,11 @@ public class Packets {
     public static final Identifier SELECT_A_BORDER_SLOT = new Identifier(NationsMod.MOD_ID, "select_a_border_slot");
     public static final Identifier UNSELECT_A_BORDER_SLOT = new Identifier(NationsMod.MOD_ID, "unselect_a_border_slot");
 
-    public static final Identifier HIGHLIGHT_A_BLOCK = new Identifier(NationsMod.MOD_ID, "highlight_a_block");
-    public static final Identifier UNHIGHLIGHT_A_BLOCK = new Identifier(NationsMod.MOD_ID, "unhighlight_a_block");
+    public static final Identifier HIGHLIGHT_A_BLOCK_CLIENT = new Identifier(NationsMod.MOD_ID, "highlight_a_block_client");
+    public static final Identifier UNHIGHLIGHT_A_BLOCK_CLIENT = new Identifier(NationsMod.MOD_ID, "unhighlight_a_block_client");
+
+    public static final Identifier HIGHLIGHT_A_BLOCK_SERVER = new Identifier(NationsMod.MOD_ID, "highlight_a_block_server");
+    public static final Identifier UNHIGHLIGHT_A_BLOCK_SERVER = new Identifier(NationsMod.MOD_ID, "unhighlight_a_block_server");
 
     public static final Identifier RECEIVE = new Identifier(NationsMod.MOD_ID, "receive");
 

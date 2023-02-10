@@ -6,6 +6,7 @@ import java.util.Map;
 import me.jakubok.nationsmod.NationsClient;
 import me.jakubok.nationsmod.collections.Border;
 import me.jakubok.nationsmod.collections.BorderSlots;
+import me.jakubok.nationsmod.collections.Colour;
 import me.jakubok.nationsmod.gui.BorderRegistratorScreen;
 import me.jakubok.nationsmod.networking.Packets;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -49,9 +50,9 @@ public class OpenBorderRegistratorScreen implements PlayChannelHandler {
     
                 PacketByteBuf buffer = PacketByteBufs.create();
                 buffer.writeBlockPos(slots.getSelectedSlot().get(position).position);
-                ClientPlayNetworking.send(Packets.UNHIGHLIGHT_A_BLOCK, buffer);
+                ClientPlayNetworking.send(Packets.UNHIGHLIGHT_A_BLOCK_SERVER, buffer);
     
-                NationsClient.drawer.unhighlightABlock(slots.getSelectedSlot().get(position).position);
+                NationsClient.drawer.unhighlightABlock(slots.getSelectedSlot().get(position).position, new Colour(255, 255, 255));
     
                 TranslatableText firstUnmarkMessage = new TranslatableText("gui.nationsmod.border_registrator.unmark.1");
                 TranslatableText secondUnmarkMessage = new TranslatableText("gui.nationsmod.border_registrator.unmark.2");
@@ -69,11 +70,11 @@ public class OpenBorderRegistratorScreen implements PlayChannelHandler {
     
             } else {
                 Border border = new Border(position);
-                NationsClient.drawer.highLightABlock(border.position);
+                NationsClient.drawer.highLightABlock(border.position, new Colour(255, 255, 255));
                 
                 PacketByteBuf buffer = PacketByteBufs.create();
                 buffer.writeBlockPos(border.position);
-                ClientPlayNetworking.send(Packets.HIGHLIGHT_A_BLOCK, buffer);
+                ClientPlayNetworking.send(Packets.HIGHLIGHT_A_BLOCK_SERVER, buffer);
     
                 TranslatableText firstMarkMessage = new TranslatableText("gui.nationsmod.border_registrator.mark.1");
                 TranslatableText secondMarkMessage = new TranslatableText("gui.nationsmod.border_registrator.mark.2");

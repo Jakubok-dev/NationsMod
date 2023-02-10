@@ -1,7 +1,7 @@
 package me.jakubok.nationsmod.collections;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 
@@ -19,47 +19,37 @@ import net.minecraft.util.math.Vec3d;
 
 public class ClientBorderDrawer {
 
-    List<BlockPos> storage = new ArrayList<>();
-    public float red = 1.0f, green = 1.0f, blue = 1.0f, alpha = 0.8f;
+    Map<BlockPos, Colour> storage = new HashMap<>();
 
     public void emptyStorage() {
-        storage.clear();
+        this.storage.clear();
     }
 
-    public void highLightABlock(BlockPos pos) {
-        List<BlockPos> filteredStorage = this.storage.stream()
-        .filter(blockpos -> blockpos.getX() == pos.getX() && blockpos.getY() == pos.getY() && blockpos.getZ() == pos.getZ())
-        .toList();
-
-        if (filteredStorage.size() == 0)
-            this.storage.add(pos);
+    public boolean highLightABlock(BlockPos pos, Colour colour) {
+        if (this.storage.get(pos) != null) return false;
+        this.storage.put(pos, colour);
+        return true;
     }
 
-    public void unhighlightABlock(BlockPos pos) {
-        for (int i = 0; i < this.storage.size(); i++) {
-            if (
-                this.storage.get(i).getX() == pos.getX() &&
-                this.storage.get(i).getY() == pos.getY() &&
-                this.storage.get(i).getZ() == pos.getZ()
-            ) {
-                this.storage.remove(i);
-                return;
-            }
-        }
+    public boolean unhighlightABlock(BlockPos pos, Colour colour) {
+        if (this.storage.get(pos) == null)
+            return false;
+        if (!this.storage.get(pos).equals(colour))
+            return false;
+        this.storage.remove(pos);
+        return true;
     }
 
     public void render(float partialTicks, MatrixStack stack) {
-        for (int i = 0; i < storage.size(); i++) {
-            BlockPos blocksPosition = storage.get(i);
+        for (BlockPos blocksPosition : this.storage.keySet()) {
             MinecraftClient client = MinecraftClient.getInstance();
             BlockPos playersPos = client.cameraEntity.getBlockPos();
 
-            this.drawABox(stack, new BlockPos(blocksPosition.getX(), playersPos.getY() - 1, blocksPosition.getZ()));
-
+            this.drawABox(stack, new BlockPos(blocksPosition.getX(), playersPos.getY(), blocksPosition.getZ()), this.storage.get(blocksPosition));
         }
     }
 
-    private void drawABox(MatrixStack stack, BlockPos blockPosition) {
+    private void drawABox(MatrixStack stack, BlockPos blockPosition, Colour colour) {
         MinecraftClient client = MinecraftClient.getInstance();
         Camera camera = client.gameRenderer.getCamera();
         Vec3d cameraPosition = camera.getPos();
@@ -82,44 +72,44 @@ public class ClientBorderDrawer {
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
         buffer.begin(DrawMode.DEBUG_LINE_STRIP, VertexFormats.POSITION_COLOR);
 
-        buffer.vertex(model, blockPosition.getX(), blockPosition.getY(), blockPosition.getZ()).color(red, green, blue, alpha)
+        buffer.vertex(model, blockPosition.getX(), blockPosition.getY(), blockPosition.getZ()).color((float)colour.getR()/255f, (float)colour.getG()/255f, (float)colour.getB()/255f, 1.0f)
         .next();
-        buffer.vertex(model, blockPosition.getX() + 1, blockPosition.getY(), blockPosition.getZ()).color(red, green, blue, alpha)
+        buffer.vertex(model, blockPosition.getX() + 1, blockPosition.getY(), blockPosition.getZ()).color((float)colour.getR()/255f, (float)colour.getG()/255f, (float)colour.getB()/255f, 1.0f)
         .next();
-        buffer.vertex(model, blockPosition.getX() + 1, blockPosition.getY(), blockPosition.getZ() + 1).color(red, green, blue, alpha)
+        buffer.vertex(model, blockPosition.getX() + 1, blockPosition.getY(), blockPosition.getZ() + 1).color((float)colour.getR()/255f, (float)colour.getG()/255f, (float)colour.getB()/255f, 1.0f)
         .next();
-        buffer.vertex(model, blockPosition.getX(), blockPosition.getY(), blockPosition.getZ() + 1).color(red, green, blue, alpha)
+        buffer.vertex(model, blockPosition.getX(), blockPosition.getY(), blockPosition.getZ() + 1).color((float)colour.getR()/255f, (float)colour.getG()/255f, (float)colour.getB()/255f, 1.0f)
         .next();
-        buffer.vertex(model, blockPosition.getX(), blockPosition.getY(), blockPosition.getZ()).color(red, green, blue, alpha)
-        .next();
-
-        buffer.vertex(model, blockPosition.getX(), blockPosition.getY() + 1, blockPosition.getZ()).color(red, green, blue, alpha)
+        buffer.vertex(model, blockPosition.getX(), blockPosition.getY(), blockPosition.getZ()).color((float)colour.getR()/255f, (float)colour.getG()/255f, (float)colour.getB()/255f, 1.0f)
         .next();
 
-        buffer.vertex(model, blockPosition.getX(), blockPosition.getY() + 1, blockPosition.getZ()).color(red, green, blue, alpha)
-        .next();
-        buffer.vertex(model, blockPosition.getX() + 1, blockPosition.getY() + 1, blockPosition.getZ()).color(red, green, blue, alpha)
-        .next();
-        buffer.vertex(model, blockPosition.getX() + 1, blockPosition.getY() + 1, blockPosition.getZ() + 1).color(red, green, blue, alpha)
-        .next();
-        buffer.vertex(model, blockPosition.getX(), blockPosition.getY() + 1, blockPosition.getZ() + 1).color(red, green, blue, alpha)
-        .next();
-        buffer.vertex(model, blockPosition.getX(), blockPosition.getY() + 1, blockPosition.getZ()).color(red, green, blue, alpha)
+        buffer.vertex(model, blockPosition.getX(), blockPosition.getY() + 1, blockPosition.getZ()).color((float)colour.getR()/255f, (float)colour.getG()/255f, (float)colour.getB()/255f, 1.0f)
         .next();
 
-        buffer.vertex(model, blockPosition.getX(), blockPosition.getY() + 1, blockPosition.getZ() + 1).color(red, green, blue, alpha)
+        buffer.vertex(model, blockPosition.getX(), blockPosition.getY() + 1, blockPosition.getZ()).color((float)colour.getR()/255f, (float)colour.getG()/255f, (float)colour.getB()/255f, 1.0f)
         .next();
-        buffer.vertex(model, blockPosition.getX(), blockPosition.getY(), blockPosition.getZ() + 1).color(red, green, blue, alpha)
+        buffer.vertex(model, blockPosition.getX() + 1, blockPosition.getY() + 1, blockPosition.getZ()).color((float)colour.getR()/255f, (float)colour.getG()/255f, (float)colour.getB()/255f, 1.0f)
+        .next();
+        buffer.vertex(model, blockPosition.getX() + 1, blockPosition.getY() + 1, blockPosition.getZ() + 1).color((float)colour.getR()/255f, (float)colour.getG()/255f, (float)colour.getB()/255f, 1.0f)
+        .next();
+        buffer.vertex(model, blockPosition.getX(), blockPosition.getY() + 1, blockPosition.getZ() + 1).color((float)colour.getR()/255f, (float)colour.getG()/255f, (float)colour.getB()/255f, 1.0f)
+        .next();
+        buffer.vertex(model, blockPosition.getX(), blockPosition.getY() + 1, blockPosition.getZ()).color((float)colour.getR()/255f, (float)colour.getG()/255f, (float)colour.getB()/255f, 1.0f)
         .next();
 
-        buffer.vertex(model, blockPosition.getX() + 1, blockPosition.getY(), blockPosition.getZ() + 1).color(red, green, blue, alpha)
+        buffer.vertex(model, blockPosition.getX(), blockPosition.getY() + 1, blockPosition.getZ() + 1).color((float)colour.getR()/255f, (float)colour.getG()/255f, (float)colour.getB()/255f, 1.0f)
         .next();
-        buffer.vertex(model, blockPosition.getX() + 1, blockPosition.getY() + 1, blockPosition.getZ() + 1).color(red, green, blue, alpha)
+        buffer.vertex(model, blockPosition.getX(), blockPosition.getY(), blockPosition.getZ() + 1).color((float)colour.getR()/255f, (float)colour.getG()/255f, (float)colour.getB()/255f, 1.0f)
         .next();
 
-        buffer.vertex(model, blockPosition.getX() + 1, blockPosition.getY() + 1, blockPosition.getZ()).color(red, green, blue, alpha)
+        buffer.vertex(model, blockPosition.getX() + 1, blockPosition.getY(), blockPosition.getZ() + 1).color((float)colour.getR()/255f, (float)colour.getG()/255f, (float)colour.getB()/255f, 1.0f)
         .next();
-        buffer.vertex(model, blockPosition.getX() + 1, blockPosition.getY(), blockPosition.getZ()).color(red, green, blue, alpha)
+        buffer.vertex(model, blockPosition.getX() + 1, blockPosition.getY() + 1, blockPosition.getZ() + 1).color((float)colour.getR()/255f, (float)colour.getG()/255f, (float)colour.getB()/255f, 1.0f)
+        .next();
+
+        buffer.vertex(model, blockPosition.getX() + 1, blockPosition.getY() + 1, blockPosition.getZ()).color((float)colour.getR()/255f, (float)colour.getG()/255f, (float)colour.getB()/255f, 1.0f)
+        .next();
+        buffer.vertex(model, blockPosition.getX() + 1, blockPosition.getY(), blockPosition.getZ()).color((float)colour.getR()/255f, (float)colour.getG()/255f, (float)colour.getB()/255f, 1.0f)
         .next();
         
         tessellator.draw();
