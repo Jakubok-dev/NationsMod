@@ -6,9 +6,11 @@ import java.util.Map;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import me.jakubok.nationsmod.NationsClient;
+import me.jakubok.nationsmod.collections.Border;
 import me.jakubok.nationsmod.collections.Colour;
 import me.jakubok.nationsmod.networking.ClientNetworking;
 import me.jakubok.nationsmod.networking.Packets;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking.PlayChannelHandler;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
@@ -32,9 +34,16 @@ public class MapScreen extends Screen {
     public int playerX = 0, playerZ = 0;
     public ButtonWidget plus, minus, borderSlots, drawing;
     protected boolean drawingMode = false;
+    protected MODE mode = MODE.NONE;
     final MinecraftClient client;
     public double scale = 1.25d;
     private final Screen previousScreen;
+
+    enum MODE {
+        HIGHLIGHTING,
+        UNHIGHLIGHTING,
+        NONE
+    };
 
     public MapScreen(MinecraftClient client, Screen previousScreen) {
         super(Text.of("Map"));
@@ -155,8 +164,33 @@ public class MapScreen extends Screen {
         } else {
             int x = (int)(Math.floor(mouseX / scale) + Math.floor(centreX - this.width / scale / 2));
             int z = (int)(Math.floor(mouseY / scale) + Math.floor(centreZ - this.height / scale / 2));
+            
+            if (this.mode == MODE.NONE)
+                this.mode = NationsClient.borderSlot.contains(x, z) ? MODE.UNHIGHLIGHTING : MODE.HIGHLIGHTING;
+            
+            if (this.mode == MODE.UNHIGHLIGHTING) {
+                NationsClient.map.clearTheBorderRegistratorLayer(new BlockPos(x, 64, z));
+                NationsClient.borderSlot.delete(x, z);
+                NationsClient.drawer.unhighlightABlock(new BlockPos(x, 64, z), new Colour(255, 255, 255));
+                PacketByteBuf buf = PacketByteBufs.create();
+                buf.writeBlockPos(new BlockPos(x, 64, z));
+                ClientPlayNetworking.send(Packets.UNHIGHLIGHT_A_BLOCK_SERVER, buf);
+            } else {
+                NationsClient.borderSlot.insert(new Border(x, z));
+                NationsClient.map.renderTheBorderRegistratorLayer(new BlockPos(x, 64, z));
+                NationsClient.drawer.highlightABlock(new BlockPos(x, 64, z), new Colour(255, 255, 255));
+                PacketByteBuf buf = PacketByteBufs.create();
+                buf.writeBlockPos(new BlockPos(x, 64, z));
+                ClientPlayNetworking.send(Packets.HIGHLIGHT_A_BLOCK_SERVER, buf);
+            }
         }
         return true;
+    }
+
+    @Override
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        this.mode = MODE.NONE;
+        return super.mouseReleased(mouseX, mouseY, button);
     }
 
     @Override

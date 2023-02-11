@@ -21,6 +21,7 @@ public class UnhighlightABlock implements PlayChannelHandler {
             NationsClient.drawer.unhighlightABlock(pos, colour);
             if (renderOnMap) {
                 NationsClient.map.clearTheBorderRegistratorLayer(pos);
+                NationsClient.borderSlot.delete(pos.getX(), pos.getZ());
             }
         });
     }

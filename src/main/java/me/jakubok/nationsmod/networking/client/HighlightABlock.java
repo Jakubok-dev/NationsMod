@@ -1,6 +1,7 @@
 package me.jakubok.nationsmod.networking.client;
 
 import me.jakubok.nationsmod.NationsClient;
+import me.jakubok.nationsmod.collections.Border;
 import me.jakubok.nationsmod.collections.Colour;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking.PlayChannelHandler;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
@@ -18,9 +19,11 @@ public class HighlightABlock implements PlayChannelHandler {
         boolean renderOnMap = buf.readBoolean();
 
         client.execute(() -> {
-            NationsClient.drawer.highLightABlock(pos, colour);
-            if (renderOnMap)
+            NationsClient.drawer.highlightABlock(pos, colour);
+            if (renderOnMap) {
                 NationsClient.map.renderTheBorderRegistratorLayer(pos);
+                NationsClient.borderSlot.insert(new Border(pos));
+            }
         });
     }
     

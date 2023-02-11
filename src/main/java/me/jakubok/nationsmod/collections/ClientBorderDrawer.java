@@ -25,7 +25,7 @@ public class ClientBorderDrawer {
         this.storage.clear();
     }
 
-    public boolean highLightABlock(BlockPos pos, Colour colour) {
+    public boolean highlightABlock(BlockPos pos, Colour colour) {
         if (this.storage.get(pos) != null) return false;
         this.storage.put(pos, colour);
         return true;

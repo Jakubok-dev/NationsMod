@@ -80,6 +80,7 @@ public class BorderSlotScreen extends SimpleWindow {
 
                     ClientPlayNetworking.send(Packets.UNSELECT_A_BORDER_SLOT, PacketByteBufs.create());
                     NationsClient.selectedSlot = -1;
+                    NationsClient.borderSlot = new BorderGroup();
 
                     this.makeUnselected();
                     return;
@@ -88,6 +89,7 @@ public class BorderSlotScreen extends SimpleWindow {
                 PacketByteBuf buffer = PacketByteBufs.create();
                 buffer.writeString(slot.name);
 
+                NationsClient.borderSlot = new BorderGroup();
                 ClientPlayNetworking.send(Packets.SELECT_A_BORDER_SLOT, buffer);
                 NationsClient.selectedSlot = this.index;
 

@@ -6,6 +6,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import me.jakubok.nationsmod.NationsClient;
+import me.jakubok.nationsmod.collections.BorderGroup;
 import me.jakubok.nationsmod.collections.PlayerAccount;
 import me.jakubok.nationsmod.collections.PlayerInfo;
 import me.jakubok.nationsmod.map.MapStorage;
@@ -41,5 +42,6 @@ public class PlayerManagerMixin {
     private void clearTheMap(ServerPlayerEntity player, CallbackInfo info) {
         NationsClient.map = new MapStorage();
         NationsClient.selectedSlot = -1;
+        NationsClient.borderSlot = new BorderGroup();
     }
 }
