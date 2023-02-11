@@ -15,6 +15,8 @@ public class ClearClaimantsColour implements PlayChannelHandler {
             PacketSender responseSender) {
         BlockPos pos = buf.readBlockPos();
         NationsClient.map.clearTheTownLayer(pos);
+        NationsClient.map.clearATownsName(pos);
+        NationsClient.map.clearADistrictsName(pos);
     }
     
 }

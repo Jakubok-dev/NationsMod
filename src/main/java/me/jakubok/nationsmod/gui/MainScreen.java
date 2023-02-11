@@ -57,8 +57,19 @@ public class MainScreen extends Screen {
         // windowCenterVertical - 12,
 
         this.addDrawableChild(new ButtonWidget(
-            this.windowCenterHorizontal - 100, 
+            windowCenterHorizontal - 100, 
             windowCenterVertical - 12, 
+            200, 
+            20, 
+            new TranslatableText("gui.nationsmod.main_screen.map_button"), 
+            b -> {
+                this.client.setScreen(new MapScreen(this.client, this));
+            }
+        ));
+
+        this.addDrawableChild(new ButtonWidget(
+            this.windowCenterHorizontal - 100, 
+            windowCenterVertical + 12, 
             200, 
             20, 
             new TranslatableText("gui.nationsmod.main_screen.towns_button"), 
@@ -81,22 +92,11 @@ public class MainScreen extends Screen {
 
         this.addDrawableChild(new ButtonWidget(
             windowCenterHorizontal - 100, 
-            windowCenterVertical + 12, 
+            windowCenterVertical + 36, 
             200, 
             20, 
             new TranslatableText("gui.nationsmod.main_screen.nations_button"), 
             b -> {}
-        ));
-
-        this.addDrawableChild(new ButtonWidget(
-            windowCenterHorizontal - 100, 
-            windowCenterVertical + 36, 
-            200, 
-            20, 
-            new TranslatableText("gui.nationsmod.main_screen.map_button"), 
-            b -> {
-                this.client.setScreen(new MapScreen(this.client, this));
-            }
         ));
     }
 }

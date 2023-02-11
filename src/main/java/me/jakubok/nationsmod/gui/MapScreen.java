@@ -2,12 +2,15 @@ package me.jakubok.nationsmod.gui;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import me.jakubok.nationsmod.NationsClient;
+import me.jakubok.nationsmod.administration.Town;
 import me.jakubok.nationsmod.collections.Border;
 import me.jakubok.nationsmod.collections.Colour;
+import me.jakubok.nationsmod.gui.townScreen.TownScreen;
 import me.jakubok.nationsmod.networking.ClientNetworking;
 import me.jakubok.nationsmod.networking.Packets;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -87,7 +90,18 @@ public class MapScreen extends Screen {
         tesselator.draw();
         RenderSystem.disableBlend();
         drawTextWithShadow(matrices, textRenderer, Text.of("X: " + (int)(Math.floor(mouseX / scale) + Math.floor(centreX - this.width / scale / 2)) + " Z: " + (int)(Math.floor(mouseY / scale) + Math.floor(centreZ - this.height / scale / 2))), 0, this.height - 10, 0xFFFFFF);
+        this.mouseHovered(matrices, mouseX, mouseY);
         super.render(matrices, mouseX, mouseY, delta);
+    }
+
+    protected void mouseHovered(MatrixStack matrices, int mouseX, int mouseY) {
+        int blockx = (int)(Math.floor(mouseX / scale) + Math.floor(centreX - this.width / scale / 2));
+        int blockz = (int)(Math.floor(mouseY / scale) + Math.floor(centreZ - this.height / scale / 2));
+        
+        String temp = NationsClient.map.claimersAtAsString(new BlockPos(blockx, 64, blockz));
+        if (temp == null)
+            return;
+        this.renderTooltip(matrices, Text.of(temp), mouseX, mouseY);
     }
 
     @Override
@@ -185,6 +199,32 @@ public class MapScreen extends Screen {
             }
         }
         return true;
+    }
+
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        int blockx = (int)(Math.floor(mouseX / scale) + Math.floor(centreX - this.width / scale / 2));
+        int blockz = (int)(Math.floor(mouseY / scale) + Math.floor(centreZ - this.height / scale / 2));
+
+        UUID townsID = NationsClient.map.townsUUIDAt(new BlockPos(blockx, 64, blockz));
+        if (townsID == null)
+            return super.mouseClicked(mouseX, mouseY, button);
+
+        PacketByteBuf buffer = PacketByteBufs.create();
+        NbtCompound nbt = new NbtCompound();
+        nbt.putUuid("id", townsID);
+        buffer.writeNbt(nbt);
+
+        PlayChannelHandler response = (MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) -> {
+            Town town = new Town(buf.readNbt(), client.world.getLevelProperties());
+
+            client.execute(() -> {
+                client.setScreen(new TownScreen(town, this));
+            });
+        };
+        ClientNetworking.makeARequest(Packets.PREPARE_TOWN_SCREEN, buffer, response);
+
+        return super.mouseClicked(mouseX, mouseY, button);
     }
 
     @Override

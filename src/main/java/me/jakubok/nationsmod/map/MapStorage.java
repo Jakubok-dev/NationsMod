@@ -2,8 +2,10 @@ package me.jakubok.nationsmod.map;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import me.jakubok.nationsmod.collections.Colour;
+import me.jakubok.nationsmod.collections.Pair;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
@@ -15,6 +17,7 @@ public class MapStorage {
     protected Map<BlockPos, Colour> blockLayer = new HashMap<>();
     protected Map<BlockPos, Colour> townLayer = new HashMap<>();
     protected Map<BlockPos, Colour> borderRegistratorLayer = new HashMap<>();
+    protected Map<BlockPos, MapBlockInfo> claimersInfoLayer = new HashMap<>();
 
     public void renderBlockLayer(WorldAccess world, int blockx, int blockz) {
         final int blockHeight = world.getTopY(Heightmap.Type.MOTION_BLOCKING, blockx, blockz) - 1;
@@ -40,6 +43,23 @@ public class MapStorage {
         this.townLayer.put(pos, claimersColour);
     }
 
+    public void addATownsName(String name, UUID id, BlockPos pos) {
+        if (this.claimersInfoLayer.get(pos) == null) {
+            this.claimersInfoLayer.put(pos, new MapBlockInfo(null, new Pair<String, UUID>(name, id)));
+            return;
+        }
+        MapBlockInfo info = this.claimersInfoLayer.get(pos);
+        info.town = new Pair<String, UUID>(name, id);
+    }
+    public void addADistrictsName(String name, UUID id, BlockPos pos) {
+        if (this.claimersInfoLayer.get(pos) == null) {
+            this.claimersInfoLayer.put(pos, new MapBlockInfo(new Pair<String, UUID>(name, id), null));
+            return;
+        }
+        MapBlockInfo info = this.claimersInfoLayer.get(pos);
+        info.district = new Pair<String, UUID>(name, id);
+    }
+
     public void clearTheTownLayer(BlockPos pos) {
         this.townLayer.remove(pos);
     }
@@ -52,6 +72,19 @@ public class MapStorage {
         this.borderRegistratorLayer.remove(pos);
     }
 
+    public void clearATownsName(BlockPos pos) {
+        if (this.claimersInfoLayer.get(pos) == null)
+            return;
+        MapBlockInfo info = this.claimersInfoLayer.get(pos);
+        info.town = null;
+    }
+    public void clearADistrictsName(BlockPos pos) {
+        if (this.claimersInfoLayer.get(pos) == null)
+            return;
+        MapBlockInfo info = this.claimersInfoLayer.get(pos);
+        info.district = null;
+    }
+
     public Colour theColourAt(BlockPos pos) {
         Colour colour = this.blockLayer.getOrDefault(pos, new Colour(0));
         Colour townColour = this.townLayer.get(pos);
@@ -61,5 +94,40 @@ public class MapStorage {
         if (borderRegistratorColour != null)
             colour = Colour.MIX(colour, 1.0d, borderRegistratorColour, 1.0d);
         return colour;
+    }
+
+    public String claimersAtAsString(BlockPos pos) {
+        String result = "";
+
+        MapBlockInfo info = this.claimersInfoLayer.get(pos);
+
+        if (info == null)
+            return null;
+
+        if (info.district != null)
+            result += info.district.key;
+        if (info.town != null)
+            result += " | " + info.town.key;
+
+        if (result == "")
+            return null;
+        return result;
+    }
+
+    public UUID districtsUUIDAt(BlockPos pos) {
+        MapBlockInfo info = this.claimersInfoLayer.get(pos);
+        if (info == null)
+            return null;
+        if (info.district == null)
+            return null;
+        return info.district.value;
+    }
+    public UUID townsUUIDAt(BlockPos pos) {
+        MapBlockInfo info = this.claimersInfoLayer.get(pos);
+        if (info == null)
+            return null;
+        if (info.town == null)
+            return null;
+        return info.town.value;
     }
 }
