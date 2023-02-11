@@ -24,6 +24,8 @@ public class TownsRegistry implements ComponentV3 {
     }
 
     public Town getTown(UUID id) {
+        if (id == null)
+            return null;
         for (Town town : towns) {
             if (town.getId().toString().equals(id.toString()))
                 return town;

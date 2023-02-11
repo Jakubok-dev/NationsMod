@@ -25,6 +25,8 @@ public class TerritoryClaimersRegistry implements ComponentV3 {
     }
 
     public TerritoryClaimer getClaimer(UUID id) {
+        if (id == null)
+            return null;
         for (TerritoryClaimer claimer : claimers) {
             if (claimer.getId().toString().equals(id.toString()))
                 return claimer;

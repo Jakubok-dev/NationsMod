@@ -24,45 +24,38 @@ public class GetBlocksClaimantColour implements PlayChannelHandler {
     public void receive(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler,
             PacketByteBuf buf, PacketSender responseSender) {
         BlockPos pos = buf.readBlockPos();
-        PacketByteBuf responseBuffer = PacketByteBufs.create();
-        responseBuffer.writeBlockPos(pos);
-        NbtCompound nbt = new NbtCompound();
+        PacketByteBuf responseBufferToRenderColour = PacketByteBufs.create();
+        PacketByteBuf responseBufferToPushInfo = PacketByteBufs.create();
+        responseBufferToRenderColour.writeBlockPos(pos);
+        responseBufferToPushInfo.writeBlockPos(pos);
 
         server.execute(() -> {
             ChunkClaimRegistry registry = ComponentsRegistry.CHUNK_BINARY_TREE.get(player.getEntityWorld()).get(pos);
-            if (registry == null) {
-                responseBuffer.writeInt(-1);
-                nbt.putString("townsName", "");
-                nbt.putString("districtsName", "");
-                nbt.putUuid("townsUUID", UUID.randomUUID());
-                nbt.putUuid("districtsUUID", UUID.randomUUID());
-                responseBuffer.writeNbt(nbt);
-                ServerPlayNetworking.send(player, Packets.RENDER_CLAIMANTS_COLOUR, responseBuffer);
+            if (registry == null)
                 return;
-            }
             
             UUID districtID = registry.claimBelonging(pos);
-            if (districtID == null) {
-                responseBuffer.writeInt(-1);
-                nbt.putString("townsName", "");
-                nbt.putString("districtsName", "");
-                nbt.putUuid("townsUUID", UUID.randomUUID());
-                nbt.putUuid("districtsUUID", UUID.randomUUID());
-                responseBuffer.writeNbt(nbt);
-                ServerPlayNetworking.send(player, Packets.RENDER_CLAIMANTS_COLOUR, responseBuffer);
+            if (districtID == null)
                 return;
-            }
 
             District district = District.fromUUID(districtID, player.getEntityWorld());
+
+            if (district == null)
+                return;
+
             Colour colour = new Colour(district.mapColour.getBitmask());
-            responseBuffer.writeInt(colour.getBitmask());
+            responseBufferToRenderColour.writeInt(colour.getBitmask());
+
+            ServerPlayNetworking.send(player, Packets.RENDER_CLAIMANTS_COLOUR, responseBufferToRenderColour);
+
+            NbtCompound nbt = new NbtCompound();
             nbt.putString("townsName", district.getTown().getName());
             nbt.putString("districtsName", district.getName());
             nbt.putUuid("townsUUID", district.getTown().getId());
             nbt.putUuid("districtsUUID", districtID);
-            responseBuffer.writeNbt(nbt);
+            responseBufferToPushInfo.writeNbt(nbt);
 
-            ServerPlayNetworking.send(player, Packets.RENDER_CLAIMANTS_COLOUR, responseBuffer);
+            ServerPlayNetworking.send(player, Packets.PULL_MAP_BLOCK_INFO, responseBufferToPushInfo);
         });
     }
 }

@@ -7,6 +7,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import me.jakubok.nationsmod.registries.ComponentsRegistry;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldProperties;
 
@@ -84,5 +85,10 @@ public class Province extends TerritoryClaimer {
         for (UUID townsID : townsIds)
             tag.putUuid("towns_id" + townsIdsSize.incrementAndGet(), townsID);
         tag.putInt("towns_ids_size", townsIdsSize.get());
+    }
+    @Override
+    protected void sendMapBlockInfo(ServerWorld world) {
+        // TODO Implement later
+        
     }
 }

@@ -23,6 +23,8 @@ public class PlayerInfoRegistry implements ComponentV3 {
     }
 
     public PlayerInfo getAPlayer(PlayerAccount account) {
+        if (account == null)
+            return null;
         for (PlayerInfo player : this.players) {
             if (account.isAnOnlineAccount()) {
                 if (player.getPlayerAccount().playersID.equals(account.playersID))

@@ -1,5 +1,7 @@
 package me.jakubok.nationsmod.administration;
 
+import java.util.PriorityQueue;
+import java.util.Queue;
 import java.util.Random;
 import java.util.UUID;
 
@@ -23,6 +25,7 @@ public abstract class TerritoryClaimer implements ComponentV3 {
     public final WorldProperties props;
     private int minX = 2147483647, maxX = -2147483648, minZ = 2147483647, maxZ = -2147483648;
     public Colour mapColour = new Colour(0);
+    protected Queue<BlockPos> sendMapBlockInfoQ = new PriorityQueue<>();
 
     public TerritoryClaimer(World world) {
         this(world, null);
@@ -76,6 +79,8 @@ public abstract class TerritoryClaimer implements ComponentV3 {
         this.minZ = Math.min(this.minZ, pos.getZ());
         this.maxZ = Math.max(this.maxZ, pos.getZ());
 
+        this.sendMapBlockInfoQ.add(pos);
+
         return 1;
     }
     public int claim(ChunkPos pos, World world) {
@@ -108,6 +113,8 @@ public abstract class TerritoryClaimer implements ComponentV3 {
         }
         return result;
     }
+
+    protected abstract void sendMapBlockInfo(ServerWorld world);
 
     public int getMaxX() {
         return maxX;

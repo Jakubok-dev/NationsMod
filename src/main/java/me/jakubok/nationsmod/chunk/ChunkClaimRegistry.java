@@ -6,7 +6,6 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import dev.onyxstudios.cca.api.v3.component.ComponentV3;
-import me.jakubok.nationsmod.administration.District;
 import me.jakubok.nationsmod.administration.TerritoryClaimer;
 import me.jakubok.nationsmod.networking.Packets;
 import me.jakubok.nationsmod.registries.ComponentsRegistry;
@@ -130,17 +129,8 @@ public class ChunkClaimRegistry implements ComponentV3 {
 
     public void addToPlayersMaps(ServerWorld world, BlockPos pos, TerritoryClaimer claimer) {
         PacketByteBuf buffer = PacketByteBufs.create();
-        NbtCompound nbt = new NbtCompound();
         buffer.writeBlockPos(pos);
         buffer.writeInt(claimer.mapColour.getBitmask());
-        if (claimer instanceof District) {
-            District district = (District) claimer;
-            nbt.putString("townsName", district.getTown().getName());
-            nbt.putString("districtsName", district.getName());
-            nbt.putUuid("townsUUID", district.getTown().getId());
-            nbt.putUuid("districtsUUID", district.getId());
-        }
-        buffer.writeNbt(nbt);
         for (ServerPlayerEntity playerEntity : PlayerLookup.tracking(world, pos)) {
             ServerPlayNetworking.send(playerEntity, Packets.RENDER_CLAIMANTS_COLOUR, buffer);
         }
@@ -149,7 +139,7 @@ public class ChunkClaimRegistry implements ComponentV3 {
         PacketByteBuf buffer = PacketByteBufs.create();
         buffer.writeBlockPos(pos);
         for (ServerPlayerEntity playerEntity : PlayerLookup.tracking(world, pos)) {
-            ServerPlayNetworking.send(playerEntity, Packets.CLEAR_CLAIMANTS_COLOUR, buffer);
+            ServerPlayNetworking.send(playerEntity, Packets.CLEAR_CLAIMANT_ON_THE_MAP, buffer);
         }
     }
 

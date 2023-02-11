@@ -40,7 +40,8 @@ public class Packets {
 
     public static final Identifier GET_BLOCKS_CLAIMANT_COLOUR = new Identifier(NationsMod.MOD_ID, "get_chunk_claimants_colour");
     public static final Identifier RENDER_CLAIMANTS_COLOUR = new Identifier(NationsMod.MOD_ID, "render_claimants_colour");
-    public static final Identifier CLEAR_CLAIMANTS_COLOUR = new Identifier(NationsMod.MOD_ID, "clear_claimants_colour");
+    public static final Identifier CLEAR_CLAIMANT_ON_THE_MAP = new Identifier(NationsMod.MOD_ID, "clear_claimant_on_the_map");
+    public static final Identifier PULL_MAP_BLOCK_INFO = new Identifier(NationsMod.MOD_ID, "pull_map_block_info");
 
     public static final Identifier PREPARE_BORDER_REGISTRATOR_SCREEN = new Identifier(NationsMod.MOD_ID, "prepare_border_registrator_screen");
 }

@@ -244,6 +244,8 @@ public class MapScreen extends Screen {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (this.drawingMode)
+            return super.mouseClicked(mouseX, mouseY, button);
         int blockx = (int)(Math.floor(mouseX / scale) + Math.floor(centreX - this.width / scale / 2));
         int blockz = (int)(Math.floor(mouseY / scale) + Math.floor(centreZ - this.height / scale / 2));
 

@@ -8,7 +8,7 @@ import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
 
-public class ClearClaimantsColour implements PlayChannelHandler {
+public class ClearClaimantOnTheMap implements PlayChannelHandler {
 
     @Override
     public void receive(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf,

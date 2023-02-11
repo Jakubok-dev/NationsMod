@@ -23,6 +23,8 @@ public class NationsRegistry implements ComponentV3 {
     }
 
     public Nation getNation(UUID id) {
+        if (id == null)
+            return null;
         for (Nation nation : nations) {
             if (nation.getId().toString().equals(id.toString()))
                 return nation;
