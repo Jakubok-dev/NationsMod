@@ -35,8 +35,8 @@ public class MapScreen extends Screen {
 
     public double centreX, centreZ;
     public int playerX = 0, playerZ = 0;
-    public ButtonWidget plus, minus, borderSlots, drawing;
-    protected boolean drawingMode = false;
+    public ButtonWidget plus, minus, borderSlots, drawing, correction;
+    protected boolean drawingMode = false, autocorrection = true;
     protected MODE mode = MODE.NONE;
     final MinecraftClient client;
     public double scale = 1.25d;
@@ -168,6 +168,22 @@ public class MapScreen extends Screen {
             }
         );
         this.addDrawableChild(this.drawing);
+        this.correction = new ButtonWidget(
+            240, 
+            0, 
+            140, 
+            20, 
+            Text.of("Turn off autocorrection"), 
+            t -> {
+                autocorrection = !autocorrection;
+                if (autocorrection) {
+                    this.correction.setMessage(Text.of("Turn off autocorrection"));
+                } else {
+                    this.correction.setMessage(Text.of("Turn on autocorrection"));
+                }
+            }
+        );
+        this.addDrawableChild(this.correction);
     }
 
     @Override
@@ -190,15 +206,40 @@ public class MapScreen extends Screen {
                 buf.writeBlockPos(new BlockPos(x, 64, z));
                 ClientPlayNetworking.send(Packets.UNHIGHLIGHT_A_BLOCK_SERVER, buf);
             } else {
-                NationsClient.borderSlot.insert(new Border(x, z));
-                NationsClient.map.renderTheBorderRegistratorLayer(new BlockPos(x, 64, z));
-                NationsClient.drawer.highlightABlock(new BlockPos(x, 64, z), new Colour(255, 255, 255));
-                PacketByteBuf buf = PacketByteBufs.create();
-                buf.writeBlockPos(new BlockPos(x, 64, z));
-                ClientPlayNetworking.send(Packets.HIGHLIGHT_A_BLOCK_SERVER, buf);
+                this.highlightABlock(x, z);
+                if (autocorrection)
+                    this.doAutoplacement(x, z);
             }
         }
         return true;
+    }
+
+    private void doAutoplacement(int x, int z) {
+        BlockPos posB = new BlockPos(x + 1, 64, z - 1);
+        BlockPos posB1 = new BlockPos(x + 1, 64, z);
+        if (NationsClient.borderSlot.contains(posB) && !NationsClient.borderSlot.contains(posB1))
+            this.highlightABlock(x + 1, z);
+        BlockPos posC = new BlockPos(x + 1, 64, z + 1);
+        BlockPos posC1 = new BlockPos(x + 1, 64, z);
+        if (NationsClient.borderSlot.contains(posC) && !NationsClient.borderSlot.contains(posC1))
+            this.highlightABlock(x + 1, z);
+        BlockPos posD = new BlockPos(x - 1, 64, z - 1);
+        BlockPos posD1 = new BlockPos(x - 1, 64, z);
+        if (NationsClient.borderSlot.contains(posD) && !NationsClient.borderSlot.contains(posD1))
+            this.highlightABlock(x - 1, z);
+        BlockPos posE = new BlockPos(x - 1, 64, z + 1);
+        BlockPos posE1 = new BlockPos(x - 1, 64, z);
+        if (NationsClient.borderSlot.contains(posE) && !NationsClient.borderSlot.contains(posE1))
+            this.highlightABlock(x - 1, z);
+    }
+
+    private void highlightABlock(int x, int z) {
+        NationsClient.borderSlot.insert(new Border(x, z));
+        NationsClient.map.renderTheBorderRegistratorLayer(new BlockPos(x, 64, z));
+        NationsClient.drawer.highlightABlock(new BlockPos(x, 64, z), new Colour(255, 255, 255));
+        PacketByteBuf buf = PacketByteBufs.create();
+        buf.writeBlockPos(new BlockPos(x, 64, z));
+        ClientPlayNetworking.send(Packets.HIGHLIGHT_A_BLOCK_SERVER, buf);
     }
 
     @Override
