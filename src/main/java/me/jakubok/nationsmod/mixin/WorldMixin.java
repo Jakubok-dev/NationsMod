@@ -7,6 +7,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import me.jakubok.nationsmod.NationsClient;
 import me.jakubok.nationsmod.networking.Packets;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.block.BlockState;
@@ -18,6 +20,7 @@ import net.minecraft.world.WorldAccess;
 @Mixin(World.class)
 public abstract class WorldMixin implements WorldAccess {
 
+    @Environment(EnvType.CLIENT)
     @Inject(at = @At("RETURN"), method = "onBlockChanged")
     private void updateTheMap(BlockPos pos, BlockState oldBlock, BlockState newBlock, CallbackInfo info) {
         if (!this.isClient())

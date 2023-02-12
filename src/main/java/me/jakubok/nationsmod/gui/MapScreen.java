@@ -92,7 +92,7 @@ public class MapScreen extends Screen {
         }
         tesselator.draw();
         RenderSystem.disableBlend();
-        drawTextWithShadow(matrices, textRenderer, Text.of("X: " + (int)(Math.floor(mouseX / scale) + Math.floor(centreX - this.width / scale / 2)) + " Z: " + (int)(Math.floor(mouseY / scale) + Math.floor(centreZ - this.height / scale / 2))), 0, this.height - 10, 0xFFFFFF);
+        drawTextWithShadow(matrices, textRenderer, Text.of("X: " + this.getBlockX(mouseX) + " Z: " + this.getBlockZ(mouseY)), 0, this.height - 10, 0xFFFFFF);
         this.mouseHovered(matrices, mouseX, mouseY);
         this.drawing.active = NationsClient.selectedSlot != -1;
         super.render(matrices, mouseX, mouseY, delta);
@@ -118,8 +118,8 @@ public class MapScreen extends Screen {
             this.renderTooltip(matrices, lines, mouseX, mouseY);
             return;
         }
-        int blockx = (int)(Math.floor(mouseX / scale) + Math.floor(centreX - this.width / scale / 2));
-        int blockz = (int)(Math.floor(mouseY / scale) + Math.floor(centreZ - this.height / scale / 2));
+        int blockx = this.getBlockX(mouseX);
+        int blockz = this.getBlockZ(mouseY);
         List<Text> temp = NationsClient.map.claimersAtInLines(new BlockPos(blockx, 64, blockz));
         if (temp == null)
             return;
@@ -177,7 +177,7 @@ public class MapScreen extends Screen {
             0, 
             120, 
             20, 
-            new TranslatableText("gui.nationsmod.map_screen.start_drawing"), 
+            null, 
             t -> {
                 if (NationsClient.selectedSlot == -1)
                     return;
@@ -189,13 +189,18 @@ public class MapScreen extends Screen {
                 }
             }
         );
+        if (drawingMode) {
+            this.drawing.setMessage(new TranslatableText("gui.nationsmod.map_screen.stop_drawing"));
+        } else {
+            this.drawing.setMessage(new TranslatableText("gui.nationsmod.map_screen.start_drawing"));
+        }
         this.addDrawableChild(this.drawing);
         this.correction = new ButtonWidget(
             240, 
             0, 
             140, 
             20, 
-            new TranslatableText("gui.nationsmod.map_screen.turn_off_autocorrection"), 
+            null, 
             t -> {
                 autocorrection = !autocorrection;
                 if (autocorrection) {
@@ -205,6 +210,11 @@ public class MapScreen extends Screen {
                 }
             }
         );
+        if (autocorrection) {
+            this.correction.setMessage(new TranslatableText("gui.nationsmod.map_screen.turn_off_autocorrection"));
+        } else {
+            this.correction.setMessage(new TranslatableText("gui.nationsmod.map_screen.turn_on_autocorrection"));
+        }
         this.addDrawableChild(this.correction);
     }
 
@@ -214,8 +224,8 @@ public class MapScreen extends Screen {
             centreX -= deltaX / scale;
             centreZ -= deltaY / scale;
         } else {
-            int x = (int)(Math.floor(mouseX / scale) + Math.floor(centreX - this.width / scale / 2));
-            int z = (int)(Math.floor(mouseY / scale) + Math.floor(centreZ - this.height / scale / 2));
+            int x = this.getBlockX(mouseX);
+            int z = this.getBlockZ(mouseY);
             
             if (this.mode == MODE.NONE)
                 this.mode = NationsClient.borderSlot.contains(x, z) ? MODE.UNHIGHLIGHTING : MODE.HIGHLIGHTING;
@@ -270,10 +280,10 @@ public class MapScreen extends Screen {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (mouseX >= 0 && mouseX <= 380 && mouseY >= 0 && mouseY <= 20)
+        if (mouseX >= 0 && mouseX <= 380 && mouseY >= 0 && mouseY <= 20 || this.drawingMode)
             return super.mouseClicked(mouseX, mouseY, button);
-        int blockx = (int)(Math.floor(mouseX / scale) + Math.floor(centreX - this.width / scale / 2));
-        int blockz = (int)(Math.floor(mouseY / scale) + Math.floor(centreZ - this.height / scale / 2));
+        int blockx = this.getBlockX(mouseX);
+        int blockz = this.getBlockZ(mouseY);
 
         UUID townsID = NationsClient.map.townsUUIDAt(new BlockPos(blockx, 64, blockz));
         if (townsID == null)
@@ -314,5 +324,14 @@ public class MapScreen extends Screen {
     @Override
     public void onClose() {
         this.client.setScreen(previousScreen);
+    }
+
+    public int getBlockX(double mouseX) {
+        int blockx = (int)(Math.floor(mouseX / scale) + (int)(centreX - (this.width / scale / 2)));
+        return blockx;
+    }
+    public int getBlockZ(double mouseY) {
+        int blockz = (int)(Math.floor(mouseY / scale) + (int)(centreZ - (this.height / scale / 2)));
+        return blockz;
     }
 }
