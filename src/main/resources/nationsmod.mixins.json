@@ -4,13 +4,14 @@
   "package": "me.jakubok.nationsmod.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "WorldMixin"
+    "WorldMixin",
+    "PlayerManagerMixin"
   ],
   "client": [
     "ClientPlayerMixin",
     "GameRendererMixin",
-    "PlayerManagerMixin",
-    "ClientPlayNetworkHandlerMixin"
+    "ClientPlayNetworkHandlerMixin",
+    "ClientConnectionMixin"
   ],
   "injectors": {
     "defaultRequire": 1

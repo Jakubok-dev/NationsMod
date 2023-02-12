@@ -30,7 +30,7 @@ public class BorderRegistrator extends Item {
 
         BorderSlots slots = ComponentsRegistry.BORDER_SLOTS.get(user);
         PacketByteBuf buffer = PacketByteBufs.create();
-        buffer.writeNbt(slots.writeToNbtAndReturn(new NbtCompound()));
+        buffer.writeNbt(slots.writeToNbtAndReturn(new NbtCompound(), true));
         ServerPlayNetworking.send((ServerPlayerEntity)user, Packets.OPEN_BORDER_REGISTRATOR_SCREEN, buffer);
 
         return TypedActionResult.success(user.getMainHandStack());

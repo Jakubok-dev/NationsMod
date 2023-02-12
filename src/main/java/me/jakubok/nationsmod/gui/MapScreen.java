@@ -94,6 +94,7 @@ public class MapScreen extends Screen {
         RenderSystem.disableBlend();
         drawTextWithShadow(matrices, textRenderer, Text.of("X: " + (int)(Math.floor(mouseX / scale) + Math.floor(centreX - this.width / scale / 2)) + " Z: " + (int)(Math.floor(mouseY / scale) + Math.floor(centreZ - this.height / scale / 2))), 0, this.height - 10, 0xFFFFFF);
         this.mouseHovered(matrices, mouseX, mouseY);
+        this.drawing.active = NationsClient.selectedSlot != -1;
         super.render(matrices, mouseX, mouseY, delta);
     }
 
@@ -229,28 +230,32 @@ public class MapScreen extends Screen {
             } else {
                 this.highlightABlock(x, z);
                 if (autocorrection)
-                    this.doAutoplacement(x, z);
+                    this.doAutocorrection(x, z);
             }
         }
         return true;
     }
 
-    private void doAutoplacement(int x, int z) {
+    private void doAutocorrection(int x, int z) {
         BlockPos posB = new BlockPos(x + 1, 64, z - 1);
         BlockPos posB1 = new BlockPos(x + 1, 64, z);
-        if (NationsClient.borderSlot.contains(posB) && !NationsClient.borderSlot.contains(posB1))
+        BlockPos posB2 = new BlockPos(x, 64, z - 1);
+        if (NationsClient.borderSlot.contains(posB) && !NationsClient.borderSlot.contains(posB1) && !NationsClient.borderSlot.contains(posB2))
             this.highlightABlock(x + 1, z);
         BlockPos posC = new BlockPos(x + 1, 64, z + 1);
         BlockPos posC1 = new BlockPos(x + 1, 64, z);
-        if (NationsClient.borderSlot.contains(posC) && !NationsClient.borderSlot.contains(posC1))
+        BlockPos posC2 = new BlockPos(x, 64, z + 1);
+        if (NationsClient.borderSlot.contains(posC) && !NationsClient.borderSlot.contains(posC1) && !NationsClient.borderSlot.contains(posC2))
             this.highlightABlock(x + 1, z);
         BlockPos posD = new BlockPos(x - 1, 64, z - 1);
         BlockPos posD1 = new BlockPos(x - 1, 64, z);
-        if (NationsClient.borderSlot.contains(posD) && !NationsClient.borderSlot.contains(posD1))
+        BlockPos posD2 = new BlockPos(x, 64, z - 1);
+        if (NationsClient.borderSlot.contains(posD) && !NationsClient.borderSlot.contains(posD1) && !NationsClient.borderSlot.contains(posD2))
             this.highlightABlock(x - 1, z);
         BlockPos posE = new BlockPos(x - 1, 64, z + 1);
         BlockPos posE1 = new BlockPos(x - 1, 64, z);
-        if (NationsClient.borderSlot.contains(posE) && !NationsClient.borderSlot.contains(posE1))
+        BlockPos posE2 = new BlockPos(x, 64, z + 1);
+        if (NationsClient.borderSlot.contains(posE) && !NationsClient.borderSlot.contains(posE1) && !NationsClient.borderSlot.contains(posE2))
             this.highlightABlock(x - 1, z);
     }
 

@@ -59,7 +59,11 @@ public class CheckPosition implements PlayChannelHandler {
                     registry.claimBelonging(i, j).equals(ChunkClaimRegistry.GET_CLAIMANT(i - 1, j, world)) &&
                     registry.claimBelonging(i, j).equals(ChunkClaimRegistry.GET_CLAIMANT(i + 1, j, world)) &&
                     registry.claimBelonging(i, j).equals(ChunkClaimRegistry.GET_CLAIMANT(i, j - 1, world)) &&
-                    registry.claimBelonging(i, j).equals(ChunkClaimRegistry.GET_CLAIMANT(i, j + 1, world))
+                    registry.claimBelonging(i, j).equals(ChunkClaimRegistry.GET_CLAIMANT(i, j + 1, world)) &&
+                    registry.claimBelonging(i, j).equals(ChunkClaimRegistry.GET_CLAIMANT(i - 1, j - 1, world)) &&
+                    registry.claimBelonging(i, j).equals(ChunkClaimRegistry.GET_CLAIMANT(i + 1, j - 1, world)) &&
+                    registry.claimBelonging(i, j).equals(ChunkClaimRegistry.GET_CLAIMANT(i - 1, j + 1, world)) &&
+                    registry.claimBelonging(i, j).equals(ChunkClaimRegistry.GET_CLAIMANT(i + 1, j + 1, world))
                 )
                     continue;
                 PacketByteBuf responseBuffer = PacketByteBufs.create();

@@ -18,11 +18,10 @@ import net.minecraft.world.WorldAccess;
 @Mixin(World.class)
 public abstract class WorldMixin implements WorldAccess {
 
-    @Inject(at = @At("RETURN"), method = "onBlockChanged", cancellable = true)
+    @Inject(at = @At("RETURN"), method = "onBlockChanged")
     private void updateTheMap(BlockPos pos, BlockState oldBlock, BlockState newBlock, CallbackInfo info) {
-        if (!this.isClient()) {
-            info.cancel();
-        }
+        if (!this.isClient())
+            return;
         NationsClient.map.renderBlockLayer(this, pos.getX(), pos.getZ());
         PacketByteBuf buffer = PacketByteBufs.create();
         buffer.writeBlockPos(new BlockPos(pos.getX(), 64, pos.getZ()));

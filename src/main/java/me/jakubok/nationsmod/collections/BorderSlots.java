@@ -36,10 +36,10 @@ public class BorderSlots implements ComponentV3 {
 
     @Override
     public void writeToNbt(NbtCompound tag) {
-        writeToNbtAndReturn(tag);
+        writeToNbtAndReturn(tag, false);
     }
 
-    public NbtCompound writeToNbtAndReturn(NbtCompound tag) {
+    public NbtCompound writeToNbtAndReturn(NbtCompound tag, boolean writeSelectedSlot) {
         AtomicInteger size = new AtomicInteger(0);
         this.slots.forEach(el -> {
             NbtCompound subtag = new NbtCompound();
@@ -47,7 +47,8 @@ public class BorderSlots implements ComponentV3 {
             tag.put("slot" + size.incrementAndGet(), subtag);
         });
         tag.putInt("size", size.get());
-        tag.putInt("selectedSlot", this.selectedSlot);
+        if (writeSelectedSlot)
+            tag.putInt("selectedSlot", this.selectedSlot);
         return tag;
     }
     

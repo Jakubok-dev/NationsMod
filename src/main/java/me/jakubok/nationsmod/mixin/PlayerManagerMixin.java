@@ -5,11 +5,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import me.jakubok.nationsmod.NationsClient;
-import me.jakubok.nationsmod.collections.BorderGroup;
 import me.jakubok.nationsmod.collections.PlayerAccount;
 import me.jakubok.nationsmod.collections.PlayerInfo;
-import me.jakubok.nationsmod.map.MapStorage;
 import me.jakubok.nationsmod.registries.ComponentsRegistry;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.server.PlayerManager;
@@ -36,12 +33,5 @@ public class PlayerManagerMixin {
         .getAPlayer(new PlayerAccount(player));
 
         playerinfo.online = false;
-    }
-
-    @Inject(at = @At("HEAD"), method = "Lnet/minecraft/server/PlayerManager;remove(Lnet/minecraft/server/network/ServerPlayerEntity;)V")
-    private void clearTheMap(ServerPlayerEntity player, CallbackInfo info) {
-        NationsClient.map = new MapStorage();
-        NationsClient.selectedSlot = -1;
-        NationsClient.borderSlot = new BorderGroup();
     }
 }

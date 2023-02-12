@@ -23,34 +23,38 @@ public class SelectABorderSlot implements PlayChannelHandler {
         String slotName = buf.readString();
 
         server.execute(() -> {
-            BorderSlots slots = ComponentsRegistry.BORDER_SLOTS.get(player);
+            SEND_DATA_TO_CLIENT(slotName, player);
+        });
+    }
+    
 
-            for (BorderGroup slot : slots.slots) {
-                if (slot.name.toLowerCase().equals(slotName.toLowerCase())) {
+    public static void SEND_DATA_TO_CLIENT(String slotName, ServerPlayerEntity player) {
+        BorderSlots slots = ComponentsRegistry.BORDER_SLOTS.get(player);
 
-                    if (slots.selectedSlot > -1)
-                        for (Border block : slots.slots.get(slots.selectedSlot).toList()) {
-                            PacketByteBuf buffer = PacketByteBufs.create();
-                            buffer.writeBlockPos(block.position);
-                            buffer.writeInt(Colour.GET_BITMASK(255, 255, 255));
-                            buffer.writeBoolean(true);
-                            ServerPlayNetworking.send(player, Packets.UNHIGHLIGHT_A_BLOCK_CLIENT, buffer);
-                        }
+        for (BorderGroup slot : slots.slots) {
+            if (slot.name.toLowerCase().equals(slotName.toLowerCase())) {
 
-                    slots.selectedSlot = slots.slots.indexOf(slot);
-
-                    for (Border block : slot.toList()) {
+                if (slots.selectedSlot > -1)
+                    for (Border block : slots.slots.get(slots.selectedSlot).toList()) {
                         PacketByteBuf buffer = PacketByteBufs.create();
                         buffer.writeBlockPos(block.position);
                         buffer.writeInt(Colour.GET_BITMASK(255, 255, 255));
                         buffer.writeBoolean(true);
-                        ServerPlayNetworking.send(player, Packets.HIGHLIGHT_A_BLOCK_CLIENT, buffer);
+                        ServerPlayNetworking.send(player, Packets.UNHIGHLIGHT_A_BLOCK_CLIENT, buffer);
                     }
 
-                    return;
+                slots.selectedSlot = slots.slots.indexOf(slot);
+
+                for (Border block : slot.toList()) {
+                    PacketByteBuf buffer = PacketByteBufs.create();
+                    buffer.writeBlockPos(block.position);
+                    buffer.writeInt(Colour.GET_BITMASK(255, 255, 255));
+                    buffer.writeBoolean(true);
+                    ServerPlayNetworking.send(player, Packets.HIGHLIGHT_A_BLOCK_CLIENT, buffer);
                 }
+
+                return;
             }
-        });
+        }
     }
-    
 }
