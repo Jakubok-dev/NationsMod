@@ -1,6 +1,8 @@
 package me.jakubok.nationsmod.map;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -8,6 +10,8 @@ import me.jakubok.nationsmod.collections.Colour;
 import me.jakubok.nationsmod.collections.Pair;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.WorldAccess;
@@ -96,20 +100,25 @@ public class MapStorage {
         return colour;
     }
 
-    public String claimersAtAsString(BlockPos pos) {
-        String result = "";
+    public List<Text> claimersAtInLines(BlockPos pos) {
+        List<Text> result = new ArrayList<>();
 
         MapBlockInfo info = this.claimersInfoLayer.get(pos);
 
         if (info == null)
             return null;
+        if (info.district != null) {
+            TranslatableText translatableText = new TranslatableText("gui.nationsmod.map_screen.district");
+            String temp = translatableText.getString() + info.district.key;
+            result.add(Text.of(temp));
+        }
+        if (info.town != null) {
+            TranslatableText translatableText = new TranslatableText("gui.nationsmod.map_screen.town");
+            String temp = translatableText.getString() + info.town.key;
+            result.add(Text.of(temp));
+        }
 
-        if (info.district != null)
-            result += info.district.key;
-        if (info.town != null)
-            result += " | " + info.town.key;
-
-        if (result == "")
+        if (result.isEmpty())
             return null;
         return result;
     }

@@ -45,5 +45,18 @@
     "gui.nationsmod.border_registrator.select_a_slot": "Please select a border slot",
     "gui.nationsmod.invalid_border": "The selected border is invalid",
     "item.nationsmod.parchment": "Parchment",
-    "item.nationsmod.district_declaration": "District declaration"
+    "item.nationsmod.district_declaration": "District declaration",
+    "gui.nationsmod.map_screen.start_drawing": "Start drawing",
+    "gui.nationsmod.map_screen.stop_drawing": "Stop drawing",
+    "gui.nationsmod.map_screen.turn_off_autocorrection": "Turn off autocorrection",
+    "gui.nationsmod.map_screen.turn_on_autocorrection": "Turn on autocorrection",
+    "gui.nationsmod.map_screen.drawing_tooltip_1": "Add/remove blocks to/from your border slot",
+    "gui.nationsmod.map_screen.drawing_tooltip_2": "by selecting them on your map.",
+    "gui.nationsmod.map_screen.drawing_tooltip_3": "In order to turn this option on",
+    "gui.nationsmod.map_screen.drawing_tooltip_4": "you need to select a border slot!",
+    "gui.nationsmod.map_screen.autocorrection_tooltip_1": "Connects selected blocks",
+    "gui.nationsmod.map_screen.autocorrection_tooltip_2": "if they are near each other",
+    "gui.nationsmod.map_screen.autocorrection_tooltip_3": "so the border is valid",
+    "gui.nationsmod.map_screen.town": "Town: ",
+    "gui.nationsmod.map_screen.district": "District: "
 }

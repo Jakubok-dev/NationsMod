@@ -1,6 +1,8 @@
 package me.jakubok.nationsmod.gui;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -29,6 +31,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
 
 public class MapScreen extends Screen {
@@ -95,13 +98,31 @@ public class MapScreen extends Screen {
     }
 
     protected void mouseHovered(MatrixStack matrices, int mouseX, int mouseY) {
+        if (mouseX >= 120 && mouseX < 240 && mouseY >= 0 && mouseY <= 20) {
+            List<Text> lines = new ArrayList<>();
+            lines.add(new TranslatableText("gui.nationsmod.map_screen.drawing_tooltip_1"));
+            lines.add(new TranslatableText("gui.nationsmod.map_screen.drawing_tooltip_2"));
+
+            if (NationsClient.selectedSlot == -1) {
+                lines.add(new TranslatableText("gui.nationsmod.map_screen.drawing_tooltip_3"));
+                lines.add(new TranslatableText("gui.nationsmod.map_screen.drawing_tooltip_4"));
+            }
+            this.renderTooltip(matrices, lines, mouseX, mouseY);
+            return;
+        } else if (mouseX >= 240 && mouseX < 380 && mouseY >= 0 && mouseY <= 20) {
+            List<Text> lines = new ArrayList<>(); 
+            lines.add(new TranslatableText("gui.nationsmod.map_screen.autocorrection_tooltip_1"));
+            lines.add(new TranslatableText("gui.nationsmod.map_screen.autocorrection_tooltip_2"));
+            lines.add(new TranslatableText("gui.nationsmod.map_screen.autocorrection_tooltip_3"));
+            this.renderTooltip(matrices, lines, mouseX, mouseY);
+            return;
+        }
         int blockx = (int)(Math.floor(mouseX / scale) + Math.floor(centreX - this.width / scale / 2));
         int blockz = (int)(Math.floor(mouseY / scale) + Math.floor(centreZ - this.height / scale / 2));
-        
-        String temp = NationsClient.map.claimersAtAsString(new BlockPos(blockx, 64, blockz));
+        List<Text> temp = NationsClient.map.claimersAtInLines(new BlockPos(blockx, 64, blockz));
         if (temp == null)
             return;
-        this.renderTooltip(matrices, Text.of(temp), mouseX, mouseY);
+        this.renderTooltip(matrices, temp, mouseX, mouseY);
     }
 
     @Override
@@ -135,7 +156,7 @@ public class MapScreen extends Screen {
             0, 
             80, 
             20, 
-            Text.of("Border slots"), 
+            new TranslatableText("gui.nationsmod.border_registrator_screen.title"), 
             t -> {
                 PlayChannelHandler responseFunction = (MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) -> {
                     NbtCompound nbt = buf.readNbt();
@@ -155,15 +176,15 @@ public class MapScreen extends Screen {
             0, 
             120, 
             20, 
-            Text.of("Start drawing"), 
+            new TranslatableText("gui.nationsmod.map_screen.start_drawing"), 
             t -> {
                 if (NationsClient.selectedSlot == -1)
                     return;
                 drawingMode = !drawingMode;
                 if (drawingMode) {
-                    this.drawing.setMessage(Text.of("Stop drawing"));
+                    this.drawing.setMessage(new TranslatableText("gui.nationsmod.map_screen.stop_drawing"));
                 } else {
-                    this.drawing.setMessage(Text.of("Start drawing"));
+                    this.drawing.setMessage(new TranslatableText("gui.nationsmod.map_screen.start_drawing"));
                 }
             }
         );
@@ -173,13 +194,13 @@ public class MapScreen extends Screen {
             0, 
             140, 
             20, 
-            Text.of("Turn off autocorrection"), 
+            new TranslatableText("gui.nationsmod.map_screen.turn_off_autocorrection"), 
             t -> {
                 autocorrection = !autocorrection;
                 if (autocorrection) {
-                    this.correction.setMessage(Text.of("Turn off autocorrection"));
+                    this.correction.setMessage(new TranslatableText("gui.nationsmod.map_screen.turn_off_autocorrection"));
                 } else {
-                    this.correction.setMessage(Text.of("Turn on autocorrection"));
+                    this.correction.setMessage(new TranslatableText("gui.nationsmod.map_screen.turn_on_autocorrection"));
                 }
             }
         );
@@ -244,7 +265,7 @@ public class MapScreen extends Screen {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (this.drawingMode)
+        if (mouseX >= 0 && mouseX <= 380 && mouseY >= 0 && mouseY <= 20)
             return super.mouseClicked(mouseX, mouseY, button);
         int blockx = (int)(Math.floor(mouseX / scale) + Math.floor(centreX - this.width / scale / 2));
         int blockz = (int)(Math.floor(mouseY / scale) + Math.floor(centreZ - this.height / scale / 2));
