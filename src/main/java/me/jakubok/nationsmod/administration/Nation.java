@@ -1,79 +1,55 @@
 package me.jakubok.nationsmod.administration;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicInteger;
 
-import dev.onyxstudios.cca.api.v3.component.ComponentV3;
 import me.jakubok.nationsmod.registries.ComponentsRegistry;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldProperties;
 
-public class Nation implements ComponentV3 {
+public class Nation extends AdministratingUnit<NationLawDescription> {
 
-    private String name;
-    private UUID id = UUID.randomUUID();
     public final WorldProperties props;
-    private UUID capitalsId;
-    private List<UUID> provincesIDs = new ArrayList<>();
     
     public Nation(String name, World world, String provinceName, Town capital) {
-        this.name = name;
+        super(new NationLawDescription());
+        this.setName(name);
         this.props = world.getLevelProperties();
-        this.capitalsId = capital.getId();
+        this.setCapitalsID(capital.getId());
 
         Province mainProvince = new Province(provinceName, capital, this, world);
-        provincesIDs.add(mainProvince.getId());
+        this.getTheListOfProvincesIDs().add(mainProvince.getId());
 
         ComponentsRegistry.NATIONS_REGISTRY.get(this.props).registerNation(this);
     }
     public Nation(NbtCompound tag, WorldProperties props) {
+        super(new NationLawDescription());
         this.props = props;
         readFromNbt(tag);
     }
 
-    public String getName() {
-        return name;
+    public UUID getCapitalsID() {
+        return (UUID)this.law.getARule(NationLawDescription.capitalsIDLabel);
     }
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public UUID getId() {
-        return id;
+    public boolean setCapitalsID(UUID id) {
+        return this.law.putARule(NationLawDescription.capitalsIDLabel, id);
     }
 
     public Town getCapital() {
-        return Town.fromUUID(capitalsId, props);
+        return Town.fromUUID(getCapitalsID(), props);
+    }
+
+    public List<UUID> getTheListOfProvincesIDs() {
+        @SuppressWarnings("unchecked")
+        List<UUID> result = (List<UUID>)this.law.getARule(NationLawDescription.listOfProvincesIDsLabel);
+        return result;
     }
 
     public List<Province> getProvinces() {
-        return provincesIDs.stream()
+        return this.getTheListOfProvincesIDs().stream()
             .map(el -> Province.fromUUID(el, props))
             .toList();
-    }
-
-    @Override
-    public void readFromNbt(NbtCompound tag) {
-        this.id = tag.getUuid("id");
-        this.name = tag.getString("name");
-        this.capitalsId = tag.getUuid("capitals_id");
-        for (int i = 1; i <= tag.getInt("provinces_ids_size"); i++)
-            provincesIDs.add(tag.getUuid("provinces_id" + i));
-    }
-
-    @Override
-    public void writeToNbt(NbtCompound tag) {
-        tag.putUuid("id", this.id);
-        tag.putString("name", this.name);
-        tag.putUuid("capitals_id", this.capitalsId);
-
-        AtomicInteger provincesIdsSize = new AtomicInteger(0);
-        for (UUID provincesID : provincesIDs)
-            tag.putUuid("provinces_id" + provincesIdsSize.incrementAndGet(), provincesID);
-        tag.putInt("provinces_ids_size", provincesIdsSize.get());
     }
     
     public static Nation fromUUID(UUID id, WorldProperties props) {

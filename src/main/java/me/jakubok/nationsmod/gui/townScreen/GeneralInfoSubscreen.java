@@ -43,18 +43,6 @@ public class GeneralInfoSubscreen {
                 true
             ),
             new Setting(
-                "Mayor:", 
-                inst.town.getARuler().name, 
-                new ChangeOfASettingScreen(
-                    Text.of("Mayor"), 
-                    instance -> {},
-                    inst
-                ),
-                inst.getClient(),
-                SimpleWindow.windowTop + 35 + 21 * 1,
-                true
-            ),
-            new Setting(
                 "Regime:", 
                 "dictatorship", 
                 new ChangeOfASettingScreen(
@@ -63,7 +51,7 @@ public class GeneralInfoSubscreen {
                     inst
                 ),
                 inst.getClient(),
-                SimpleWindow.windowTop + 35 + 21 * 2,
+                SimpleWindow.windowTop + 35 + 21 * 1,
                 true
             ),
             new Setting(
@@ -71,7 +59,7 @@ public class GeneralInfoSubscreen {
                 inst.town.getCitizens().size() + "", 
                 null, 
                 inst.getClient(),
-                SimpleWindow.windowTop + 35 + 21 * 3,
+                SimpleWindow.windowTop + 35 + 21 * 2,
                 false
             ),
             new Setting(
@@ -79,7 +67,7 @@ public class GeneralInfoSubscreen {
                 inst.town.getDistricts().size() + "", 
                 null, 
                 inst.getClient(),
-                SimpleWindow.windowTop + 35 + 21 * 4,
+                SimpleWindow.windowTop + 35 + 21 * 3,
                 false
             ),
             new Setting(
@@ -91,7 +79,7 @@ public class GeneralInfoSubscreen {
                     inst
                 ),
                 inst.getClient(),
-                SimpleWindow.windowTop + 35 + 21 * 0,
+                SimpleWindow.windowTop + 35 + 21 * 4,
                 true
             )
         });

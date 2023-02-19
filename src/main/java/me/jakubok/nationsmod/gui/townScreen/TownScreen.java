@@ -3,9 +3,7 @@ package me.jakubok.nationsmod.gui.townScreen;
 import java.util.ArrayList;
 import java.util.List;
 
-import me.jakubok.nationsmod.administration.Directive;
 import me.jakubok.nationsmod.administration.Town;
-import me.jakubok.nationsmod.collections.PlayerAccount;
 import me.jakubok.nationsmod.gui.miscellaneous.Subscreen;
 import me.jakubok.nationsmod.gui.miscellaneous.TabWindow;
 import me.jakubok.nationsmod.registries.ItemRegistry;
@@ -22,7 +20,6 @@ public class TownScreen extends TabWindow {
     public final GeneralInfoSubscreen generalInfo;
     public final PetitionsAndDirectivesSubscreen petitionsAndDirectives;
     public final ButtonWidget petitionSubmit;
-    public Directive<Town> draft;
 
     public TownScreen(Town town, Screen previousScreen) {
         super(Text.of(town.getName()), previousScreen);
@@ -71,11 +68,8 @@ public class TownScreen extends TabWindow {
     protected void init() {
         super.init();
         this.addDrawableChild(this.petitionSubmit);
-        if (this.draft == null)
-            this.draft = new Directive<>("Draft", new PlayerAccount(this.client.player), Town.class);
     }
 
     private void handlePetitionSubmit(ButtonWidget t) {
-        this.client.setScreen(new TownDirectiveCreationScreen(this.draft, this));
     }
 }

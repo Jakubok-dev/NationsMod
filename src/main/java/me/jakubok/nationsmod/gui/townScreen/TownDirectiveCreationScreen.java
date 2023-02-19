@@ -1,7 +1,5 @@
 package me.jakubok.nationsmod.gui.townScreen;
 
-import me.jakubok.nationsmod.administration.Directive;
-import me.jakubok.nationsmod.administration.Town;
 import me.jakubok.nationsmod.gui.miscellaneous.SimpleWindow;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -12,13 +10,11 @@ import net.minecraft.text.TranslatableText;
 
 public class TownDirectiveCreationScreen extends SimpleWindow {
 
-    public final Directive<Town> directive;
     public ButtonWidget submit;
     public TextFieldWidget nameField;
 
-    public TownDirectiveCreationScreen(Directive<Town> draft, Screen previousScreen) {
+    public TownDirectiveCreationScreen(Screen previousScreen) {
         super(Text.of("Directive creation"), previousScreen);
-        this.directive = draft;
     }
 
     @Override

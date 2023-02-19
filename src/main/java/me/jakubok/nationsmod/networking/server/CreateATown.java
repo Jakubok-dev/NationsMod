@@ -3,7 +3,6 @@ package me.jakubok.nationsmod.networking.server;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import me.jakubok.nationsmod.administration.Town;
-import me.jakubok.nationsmod.collections.PlayerAccount;
 import me.jakubok.nationsmod.registries.ComponentsRegistry;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking.PlayChannelHandler;
@@ -38,7 +37,7 @@ public class CreateATown implements PlayChannelHandler {
 
             if (!player.isCreative()) player.getMainHandStack().setCount(player.getMainHandStack().getCount()-1);
 
-            new Town(townName, districtName, player.getChunkPos(), player.getEntityWorld(), ComponentsRegistry.BORDER_SLOTS.get(player).getSelectedSlot(), new PlayerAccount(player));
+            new Town(townName, districtName, player.getChunkPos(), player.getEntityWorld(), ComponentsRegistry.BORDER_SLOTS.get(player).getSelectedSlot());
         });
     }
 }
