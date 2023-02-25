@@ -3,9 +3,7 @@ package me.jakubok.nationsmod.administration;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Random;
-import java.util.UUID;
 
-import dev.onyxstudios.cca.api.v3.component.ComponentV3;
 import me.jakubok.nationsmod.chunk.ChunkClaimRegistry;
 import me.jakubok.nationsmod.collections.Border;
 import me.jakubok.nationsmod.collections.BorderGroup;
@@ -18,28 +16,25 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldProperties;
 
-public abstract class TerritoryClaimer implements ComponentV3 {
+public abstract class TerritoryClaimer<D extends TerritoryClaimerLawDescription> extends LegalOrganisation<D> {
 
-    private UUID id = UUID.randomUUID();
-    private long claimedBlocksCount = 0;
     public final WorldProperties props;
-    private int minX = 2147483647, maxX = -2147483648, minZ = 2147483647, maxZ = -2147483648;
-    public Colour mapColour = new Colour(0);
     protected Queue<BlockPos> sendMapBlockInfoQ = new PriorityQueue<>();
 
-    public TerritoryClaimer(World world) {
-        this(world, null);
+    public TerritoryClaimer(D description, String name, World world) {
+        this(description, name, world, null);
     }
 
-    public TerritoryClaimer(World world, BorderGroup borderGroup) {
+    public TerritoryClaimer(D description,String name, World world, BorderGroup borderGroup) {
+        super(description, name);
         this.props = world.getLevelProperties();
         Random rng = new Random();
-        if (mapColour.getR() <= 0)
-            mapColour.setR(rng.nextInt(255));
-        if (mapColour.getG() <= 0)
-            mapColour.setG(rng.nextInt(255));
-        if (mapColour.getB() <= 0)
-            mapColour.setB(rng.nextInt(255));
+        if (this.getTheMapColour().getR() <= 0)
+            this.getTheMapColour().setR(rng.nextInt(255));
+        if (this.getTheMapColour().getG() <= 0)
+            this.getTheMapColour().setG(rng.nextInt(255));
+        if (this.getTheMapColour().getB() <= 0)
+            this.getTheMapColour().setB(rng.nextInt(255));
 
         if (borderGroup == null)
             return;
@@ -52,16 +47,21 @@ public abstract class TerritoryClaimer implements ComponentV3 {
             this.claim(elem.position, world);
         }
     }
-    public TerritoryClaimer(WorldProperties props) {
+    public TerritoryClaimer(D description, WorldProperties props, NbtCompound nbt) {
+        super(description);
         this.props = props;
-    }
-
-    public UUID getId() {
-        return id;
+        this.readFromNbt(nbt);
     }
 
     public long getClaimedBlocksCount() {
-        return claimedBlocksCount;
+        return (Long)this.law.getARule(TerritoryClaimerLawDescription.claimedBlocksCountLabel);
+    }
+    public boolean setClaimedBLocksCount(Long value) {
+        return this.law.putARule(TerritoryClaimerLawDescription.claimedBlocksCountLabel, value);
+    }
+
+    public Colour getTheMapColour() {
+        return (Colour)this.law.getARule(TerritoryClaimerLawDescription.mapColourLabel);
     }
 
     public int claim(BlockPos pos, World world) {
@@ -72,12 +72,12 @@ public abstract class TerritoryClaimer implements ComponentV3 {
             return 0;
 
         chunkClaimRegistry.addClaim(pos, this, (ServerWorld)world);
-        claimedBlocksCount++;
+        this.setClaimedBLocksCount(this.getClaimedBlocksCount()+1);
         
-        this.minX = Math.min(this.minX, pos.getX());
-        this.maxX = Math.max(this.maxX, pos.getX());
-        this.minZ = Math.min(this.minZ, pos.getZ());
-        this.maxZ = Math.max(this.maxZ, pos.getZ());
+        this.setMinX(Math.min(this.getMinX(), pos.getX()));
+        this.setMaxX(Math.min(this.getMaxX(), pos.getX()));
+        this.setMinZ(Math.min(this.getMinZ(), pos.getX()));
+        this.setMaxZ(Math.min(this.getMaxZ(), pos.getX()));
 
         this.sendMapBlockInfoQ.add(pos);
 
@@ -97,11 +97,11 @@ public abstract class TerritoryClaimer implements ComponentV3 {
 
         if (!chunkClaimRegistry.isBelonging(pos))
             return 0;
-        if (chunkClaimRegistry.claimBelonging(pos).toString() != this.id.toString())
+        if (chunkClaimRegistry.claimBelonging(pos).toString() != this.getId().toString())
             return 0;
 
         chunkClaimRegistry.removeClaim(pos, (ServerWorld)world);
-        claimedBlocksCount--;
+        this.setClaimedBLocksCount(this.getClaimedBlocksCount()-1);
         
         return 1;
     }
@@ -117,30 +117,31 @@ public abstract class TerritoryClaimer implements ComponentV3 {
     protected abstract void sendMapBlockInfo(ServerWorld world);
 
     public int getMaxX() {
-        return maxX;
+        return (Integer)this.law.getARule(TerritoryClaimerLawDescription.maxXLabel);
+    }
+    public boolean setMaxX(int value) {
+        return this.law.putARule(TerritoryClaimerLawDescription.maxXLabel, value);
     }
 
     public int getMaxZ() {
-        return maxZ;
+        return (Integer)this.law.getARule(TerritoryClaimerLawDescription.maxZLabel);
+    }
+    public boolean setMaxZ(int value) {
+        return this.law.putARule(TerritoryClaimerLawDescription.maxZLabel, value);
     }
 
     public int getMinX() {
-        return minX;
+        return (Integer)this.law.getARule(TerritoryClaimerLawDescription.minXLabel);
+    }
+    public boolean setMinX(int value) {
+        return this.law.putARule(TerritoryClaimerLawDescription.minXLabel, value);
     }
 
     public int getMinZ() {
-        return minZ;
+        return (Integer)this.law.getARule(TerritoryClaimerLawDescription.minZLabel);
     }
-
-    @Override
-    public void readFromNbt(NbtCompound tag) {
-        id = tag.getUuid("id");
-        claimedBlocksCount = tag.getLong("claimedBlocksCount");
-        this.mapColour = new Colour(tag.getCompound("mapColour"));
-        this.maxX = tag.getInt("maxX");
-        this.maxZ = tag.getInt("maxZ");
-        this.minX = tag.getInt("minX");
-        this.minZ = tag.getInt("minZ");
+    public boolean setMinZ(int value) {
+        return this.law.putARule(TerritoryClaimerLawDescription.minZLabel, value);
     }
 
     @Override
@@ -148,14 +149,10 @@ public abstract class TerritoryClaimer implements ComponentV3 {
         this.writeToNbtAndReturn(tag);
     }
 
+    @Override
     public NbtCompound writeToNbtAndReturn(NbtCompound tag) {
-        tag.putUuid("id", id);
-        tag.putLong("claimedBlocksCount", claimedBlocksCount);
-        tag.put("mapColour", this.mapColour.writeToNbtAndReturn(new NbtCompound()));
-        tag.putInt("maxX", this.maxX);
-        tag.putInt("minX", this.minX);
-        tag.putInt("maxZ", this.maxZ);
-        tag.putInt("minZ", this.minZ);
-        return tag;
+        tag.putBoolean("isADistrict", this instanceof District);
+        tag.putBoolean("isAProvince", this instanceof Province);
+        return super.writeToNbtAndReturn(tag);
     }
 }

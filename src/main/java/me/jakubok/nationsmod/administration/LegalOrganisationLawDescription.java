@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public abstract class AdministratingUnitLawDescription implements LawDescription {
+public abstract class LegalOrganisationLawDescription implements LawDescription {
 
     public static final RuleDescription Name = new RuleDescription(RuleType.STRING, "The name of the administrating unit", null);
     public static final String NameLabel = "name";

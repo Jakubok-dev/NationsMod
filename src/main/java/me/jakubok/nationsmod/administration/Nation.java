@@ -8,7 +8,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldProperties;
 
-public class Nation extends AdministratingUnit<NationLawDescription> {
+public class Nation extends LegalOrganisation<NationLawDescription> {
 
     public final WorldProperties props;
     

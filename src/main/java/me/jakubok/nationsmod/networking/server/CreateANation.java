@@ -63,7 +63,7 @@ public class CreateANation implements PlayChannelHandler {
         if (!registry.isBelonging(player.getBlockPos()))
             return null;
 
-        TerritoryClaimer claimer = ComponentsRegistry.TERRITORY_CLAIMERS_REGISTRY.get(world.getLevelProperties()).getClaimer(registry.claimBelonging(player.getBlockPos()));
+        TerritoryClaimer<?> claimer = ComponentsRegistry.TERRITORY_CLAIMERS_REGISTRY.get(world.getLevelProperties()).getClaimer(registry.claimBelonging(player.getBlockPos()));
 
         if (!(claimer instanceof District))
             return null;

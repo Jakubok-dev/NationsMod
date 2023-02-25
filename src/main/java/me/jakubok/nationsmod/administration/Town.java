@@ -13,7 +13,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldProperties;
 
 
-public class Town extends AdministratingUnit<TownLawDescription> {
+public class Town extends LegalOrganisation<TownLawDescription> {
     public final WorldProperties props;
 
     public Town(String name, String districtName, ChunkPos pos, World world, Province province, BorderGroup borderGroup) {

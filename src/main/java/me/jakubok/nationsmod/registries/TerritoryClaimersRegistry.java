@@ -13,29 +13,29 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.world.WorldProperties;
 
 public class TerritoryClaimersRegistry implements ComponentV3 {
-    private List<TerritoryClaimer> claimers = new ArrayList<>(); 
+    private List<TerritoryClaimer<?>> claimers = new ArrayList<>(); 
     public final WorldProperties props;
 
     public TerritoryClaimersRegistry(WorldProperties props) {
         this.props = props;
     }
 
-    public List<TerritoryClaimer> getClaimers() {
+    public List<TerritoryClaimer<?>> getClaimers() {
         return claimers;
     }
 
-    public TerritoryClaimer getClaimer(UUID id) {
+    public TerritoryClaimer<?> getClaimer(UUID id) {
         if (id == null)
             return null;
-        for (TerritoryClaimer claimer : claimers) {
+        for (TerritoryClaimer<?> claimer : claimers) {
             if (claimer.getId().toString().equals(id.toString()))
                 return claimer;
         }
         return null;
     }
 
-    public boolean registerClaimer(TerritoryClaimer claimer) {
-        for (TerritoryClaimer it : claimers) {
+    public boolean registerClaimer(TerritoryClaimer<?> claimer) {
+        for (TerritoryClaimer<?> it : claimers) {
             if (it.getId().toString().equals(claimer.getId().toString()))
                 return false;
         }
@@ -43,8 +43,8 @@ public class TerritoryClaimersRegistry implements ComponentV3 {
         return true;
     }
 
-    public TerritoryClaimer removeClaimer(UUID id) {
-        for (TerritoryClaimer claimer : claimers) {
+    public TerritoryClaimer<?> removeClaimer(UUID id) {
+        for (TerritoryClaimer<?> claimer : claimers) {
             if (claimer.getId().toString().equals(id.toString())) {
                 claimers.remove(claimer);
                 return claimer;
@@ -58,9 +58,9 @@ public class TerritoryClaimersRegistry implements ComponentV3 {
         claimers.clear();
         for (int i = 1; i <= tag.getInt("size"); i++) {
             NbtCompound claimerCompound = (NbtCompound)tag.get("claimer" + i);
-            if (claimerCompound.getBoolean("district"))
+            if (claimerCompound.getBoolean("isADistrict"))
                 claimers.add(new District(claimerCompound, props));
-            if (claimerCompound.getBoolean("province"))
+            if (claimerCompound.getBoolean("isAProvince"))
                 claimers.add(new Province(claimerCompound, props));
         } 
     }

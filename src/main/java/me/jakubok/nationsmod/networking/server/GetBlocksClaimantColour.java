@@ -43,7 +43,7 @@ public class GetBlocksClaimantColour implements PlayChannelHandler {
             if (district == null)
                 return;
 
-            Colour colour = new Colour(district.mapColour.getBitmask());
+            Colour colour = new Colour(district.getTheMapColour().getBitmask());
             responseBufferToRenderColour.writeInt(colour.getBitmask());
 
             ServerPlayNetworking.send(player, Packets.RENDER_CLAIMANTS_COLOUR, responseBufferToRenderColour);

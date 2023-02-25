@@ -39,7 +39,7 @@ public class CheckPosition implements PlayChannelHandler {
                 District district = District.fromUUID(registry.claimBelonging(i, j), world);
                 PacketByteBuf responseBuffer = PacketByteBufs.create();
                 responseBuffer.writeBlockPos(new BlockPos(i, 64, j));
-                Colour colour = new Colour(district.mapColour.getBitmask());
+                Colour colour = new Colour(district.getTheMapColour().getBitmask());
                 colour.changeTheShade(2);
                 responseBuffer.writeInt(colour.getBitmask());
                 responseBuffer.writeBoolean(false);
@@ -68,7 +68,7 @@ public class CheckPosition implements PlayChannelHandler {
                     continue;
                 PacketByteBuf responseBuffer = PacketByteBufs.create();
                 responseBuffer.writeBlockPos(new BlockPos(i, 64, j));
-                Colour colour = new Colour(district.mapColour.getBitmask());
+                Colour colour = new Colour(district.getTheMapColour().getBitmask());
                 colour.changeTheShade(2);
                 responseBuffer.writeInt(colour.getBitmask());
                 responseBuffer.writeBoolean(false);

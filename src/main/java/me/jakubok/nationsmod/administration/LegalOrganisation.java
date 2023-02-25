@@ -5,22 +5,22 @@ import java.util.UUID;
 import dev.onyxstudios.cca.api.v3.component.ComponentV3;
 import net.minecraft.nbt.NbtCompound;
 
-public abstract class AdministratingUnit<D extends AdministratingUnitLawDescription> implements ComponentV3 {
+public abstract class LegalOrganisation<D extends LegalOrganisationLawDescription> implements ComponentV3 {
     public final D description;
     public Law<D> law;
-    public AdministratingUnit(D description, String name) {
+    public LegalOrganisation(D description, String name) {
         this.description = description;
         this.law = new Law<>(this.description);
-        this.law.putARule(AdministratingUnitLawDescription.IdLabel, UUID.randomUUID());
+        this.law.putARule(LegalOrganisationLawDescription.IdLabel, UUID.randomUUID());
         this.setName(name);
     }
-    public AdministratingUnit(D description) {
+    public LegalOrganisation(D description) {
         this.description = description;
         this.law = new Law<>(this.description);
     }
 
     public UUID getId() {
-        return (UUID)this.law.getARule(AdministratingUnitLawDescription.IdLabel);
+        return (UUID)this.law.getARule(LegalOrganisationLawDescription.IdLabel);
     }
 
     public String getName() {

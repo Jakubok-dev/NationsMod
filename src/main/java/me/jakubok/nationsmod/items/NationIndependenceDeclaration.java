@@ -50,7 +50,7 @@ public class NationIndependenceDeclaration extends Item implements Declaration {
                 return super.use(world, user, hand);
             }
 
-            TerritoryClaimer claimer = ComponentsRegistry.TERRITORY_CLAIMERS_REGISTRY.get(world.getLevelProperties()).getClaimer(registry.claimBelonging(user.getBlockPos()));
+            TerritoryClaimer<?> claimer = ComponentsRegistry.TERRITORY_CLAIMERS_REGISTRY.get(world.getLevelProperties()).getClaimer(registry.claimBelonging(user.getBlockPos()));
 
             if (!(claimer instanceof District)) {
                 user.sendMessage(new TranslatableText("gui.nationsmod.nation_creation_screen.not_in_a_town"), false);

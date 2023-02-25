@@ -16,53 +16,29 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldProperties;
 
-public class District extends TerritoryClaimer {
-
-    private String name;
-    private UUID townId;
+public class District extends TerritoryClaimer<DistrictLawDescription> {
 
     public District(String name, Town town, World world, BorderGroup group) {
-        super(world, group);
-        this.name = name;
-        this.townId = town.getId();
+        super(new DistrictLawDescription(), name, world, group);
+        this.setTownsID(town.getId());
         ComponentsRegistry.TERRITORY_CLAIMERS_REGISTRY.get(props).registerClaimer(this);
         this.sendMapBlockInfo((ServerWorld)world);
     }
     public District(NbtCompound tag, WorldProperties props) {
-        super(props);
-        readFromNbt(tag);
-    }
-
-    public String getName() {
-        return name;
-    }
-    public void setName(String name) {
-        this.name = name;
+        super(new DistrictLawDescription(), props, tag);
     }
 
     public Town getTown() {
-        return ComponentsRegistry.TOWNS_REGISTRY.get(props).getTown(townId);
+        return ComponentsRegistry.TOWNS_REGISTRY.get(props).getTown(this.getTownsID());
     }
 
-    @Override
-    public void readFromNbt(NbtCompound tag) {
-        super.readFromNbt(tag);
-        name = tag.getString("name");
-        townId = tag.getUuid("town_id");
+    public UUID getTownsID() {
+        return (UUID)this.law.getARule(DistrictLawDescription.townIDLabel);
+    }
+    public boolean setTownsID(UUID id) {
+        return this.law.putARule(DistrictLawDescription.townIDLabel, id);
     }
 
-    @Override
-    public void writeToNbt(NbtCompound tag) {
-        super.writeToNbt(tag);
-        tag.putString("name", name);
-        tag.putUuid("town_id", townId);
-        tag.putBoolean("district", true);
-        tag.putBoolean("province", false);
-    }
-
-    public static District fromUUID(UUID id, World world) {
-        return (District)ComponentsRegistry.TERRITORY_CLAIMERS_REGISTRY.get(world.getLevelProperties()).getClaimer(id);
-    }
     @Override
     protected void sendMapBlockInfo(ServerWorld world) {
         while (!this.sendMapBlockInfoQ.isEmpty()) {
@@ -81,5 +57,9 @@ public class District extends TerritoryClaimer {
                 ServerPlayNetworking.send(playerEntity, Packets.PULL_MAP_BLOCK_INFO, buffer);
             }
         }
+    }
+
+    public static District fromUUID(UUID id, World world) {
+        return (District)ComponentsRegistry.TERRITORY_CLAIMERS_REGISTRY.get(world.getLevelProperties()).getClaimer(id);
     }
 }

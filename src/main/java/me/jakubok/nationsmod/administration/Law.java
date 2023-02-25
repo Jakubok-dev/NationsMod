@@ -65,6 +65,12 @@ public class Law<D extends LawDescription> implements ComponentV3 {
                         this.putARule(entry.getKey(), val);
                     } catch(Exception ex) {}
                     break;
+                case LONG:
+                    try {
+                        val = tag.getLong(entry.getKey());
+                        this.putARule(entry.getKey(), val);
+                    } catch(Exception ex) {}
+                    break;
                 case UUID:
                     try {
                         val = tag.getUuid(entry.getKey());
@@ -124,6 +130,9 @@ public class Law<D extends LawDescription> implements ComponentV3 {
                     break;
                 case DOUBLE:
                     tag.putDouble(entry.getKey(), (Double)entry.getValue());
+                    break;
+                case LONG:
+                    tag.putLong(entry.getKey(), (Long)entry.getValue());
                     break;
                 case UUID:
                     tag.putUuid(entry.getKey(), (UUID)entry.getValue());

@@ -48,7 +48,7 @@ public class ChunkClaimRegistry implements ComponentV3 {
         return claims;
     }
 
-    public boolean addClaim(int x, int z, TerritoryClaimer claimer, ServerWorld world) {
+    public boolean addClaim(int x, int z, TerritoryClaimer<?> claimer, ServerWorld world) {
         
         BlockPos position = new BlockPos(x, 64, z);
 
@@ -61,7 +61,7 @@ public class ChunkClaimRegistry implements ComponentV3 {
 
         return true;
     }
-    public boolean addClaim(BlockPos pos, TerritoryClaimer claimer, ServerWorld world) {
+    public boolean addClaim(BlockPos pos, TerritoryClaimer<?> claimer, ServerWorld world) {
         return addClaim(pos.getX(), pos.getZ(), claimer, world);
     }
 
@@ -81,7 +81,7 @@ public class ChunkClaimRegistry implements ComponentV3 {
         return removeClaim(pos.getX(), pos.getZ(), world);
     }
 
-    public boolean removeClaims(TerritoryClaimer claimer, ServerWorld world) {
+    public boolean removeClaims(TerritoryClaimer<?> claimer, ServerWorld world) {
         boolean result = false;
         for (BlockPos pos : claims.keySet()) {
             if (claims.get(pos).equals(claimer.getId())) {
@@ -93,7 +93,7 @@ public class ChunkClaimRegistry implements ComponentV3 {
         return result;
     }
 
-    public boolean changeClaim(int x, int z, TerritoryClaimer claimer, ServerWorld world) {
+    public boolean changeClaim(int x, int z, TerritoryClaimer<?> claimer, ServerWorld world) {
         
         BlockPos position = new BlockPos(x, 64, z);
 
@@ -108,7 +108,7 @@ public class ChunkClaimRegistry implements ComponentV3 {
         
         return true;
     }
-    public boolean changeClaim(BlockPos pos, TerritoryClaimer claimer, ServerWorld world) {
+    public boolean changeClaim(BlockPos pos, TerritoryClaimer<?> claimer, ServerWorld world) {
         return changeClaim(pos.getX(), pos.getZ(), claimer, world);
     }
 
@@ -127,10 +127,10 @@ public class ChunkClaimRegistry implements ComponentV3 {
         return isBelonging(pos.getX(), pos.getZ());
     }
 
-    public void addToPlayersMaps(ServerWorld world, BlockPos pos, TerritoryClaimer claimer) {
+    public void addToPlayersMaps(ServerWorld world, BlockPos pos, TerritoryClaimer<?> claimer) {
         PacketByteBuf buffer = PacketByteBufs.create();
         buffer.writeBlockPos(pos);
-        buffer.writeInt(claimer.mapColour.getBitmask());
+        buffer.writeInt(claimer.getTheMapColour().getBitmask());
         for (ServerPlayerEntity playerEntity : PlayerLookup.tracking(world, pos)) {
             ServerPlayNetworking.send(playerEntity, Packets.RENDER_CLAIMANTS_COLOUR, buffer);
         }

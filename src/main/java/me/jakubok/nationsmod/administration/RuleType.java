@@ -4,6 +4,7 @@ public enum RuleType {
     INTEGER("java.lang.Integer"),
     STRING("java.lang.String"),
     DOUBLE("java.lang.Double"),
+    LONG("java.lang.Long"),
     UUID("java.util.UUID"),
     COLOUR("me.jakubok.nationsmod.collections.Colour"),
     LISTOFUUID("java.util.List"),
