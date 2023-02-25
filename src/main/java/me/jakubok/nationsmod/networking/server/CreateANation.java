@@ -32,7 +32,9 @@ public class CreateANation implements PlayChannelHandler {
             // Check if the nation name is unique and if the town belongs to a province
             AtomicBoolean validated = new AtomicBoolean(true);
             
-            ComponentsRegistry.NATIONS_REGISTRY.get(player.getEntityWorld().getLevelProperties()).getNations().forEach(el -> {
+            ComponentsRegistry.LEGAL_ORGANISATIONS_REGISTRY.get(player.getEntityWorld().getLevelProperties()).getOrganisations().values().forEach(el -> {
+                if (!(el instanceof Nation))
+                    return;
                 if (el.getName().toLowerCase().equals(nationName.toLowerCase())) {
                     validated.set(false);
                     player.sendMessage(new TranslatableText("gui.nationsmod.nation_creation_screen.nation_name_not_unique"), false);
@@ -63,7 +65,7 @@ public class CreateANation implements PlayChannelHandler {
         if (!registry.isBelonging(player.getBlockPos()))
             return null;
 
-        TerritoryClaimer<?> claimer = ComponentsRegistry.TERRITORY_CLAIMERS_REGISTRY.get(world.getLevelProperties()).getClaimer(registry.claimBelonging(player.getBlockPos()));
+        TerritoryClaimer<?> claimer = (TerritoryClaimer<?>)ComponentsRegistry.LEGAL_ORGANISATIONS_REGISTRY.get(world.getLevelProperties()).get(registry.claimBelonging(player.getBlockPos()));
 
         if (!(claimer instanceof District))
             return null;

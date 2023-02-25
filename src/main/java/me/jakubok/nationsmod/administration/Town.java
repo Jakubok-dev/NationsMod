@@ -14,14 +14,11 @@ import net.minecraft.world.WorldProperties;
 
 
 public class Town extends LegalOrganisation<TownLawDescription> {
-    public final WorldProperties props;
 
     public Town(String name, String districtName, ChunkPos pos, World world, Province province, BorderGroup borderGroup) {
-        super(new TownLawDescription(), name);
-        this.props = world.getLevelProperties();
+        super(new TownLawDescription(), name, world.getLevelProperties());
         if (province != null)
             this.setProvincesID(province.getId());
-        ComponentsRegistry.TOWNS_REGISTRY.get(this.props).registerTown(this);
 
         District mainDistrict = new District(districtName, this, world, borderGroup);
 
@@ -31,9 +28,8 @@ public class Town extends LegalOrganisation<TownLawDescription> {
         this(name, districtName, pos, world, null, group);
     }
     public Town(NbtCompound tag, WorldProperties props) {
-        super(new TownLawDescription());
-        readFromNbt(tag);
-        this.props = props;
+        super(new TownLawDescription(), props);
+        this.readFromNbt(tag);
     }
 
     public List<PlayerAccount> getTheListOfPlayerAccounts() {
@@ -78,7 +74,7 @@ public class Town extends LegalOrganisation<TownLawDescription> {
 
     public List<District> getDistricts() {
         return this.getTheListOfDistrictsIDs().stream()
-        .map(el -> (District)ComponentsRegistry.TERRITORY_CLAIMERS_REGISTRY.get(props).getClaimer(el))
+        .map(el -> (District)ComponentsRegistry.LEGAL_ORGANISATIONS_REGISTRY.get(props).get(el))
         .toList();
         
     }
@@ -117,7 +113,7 @@ public class Town extends LegalOrganisation<TownLawDescription> {
     }
 
     public static Town fromUUID(UUID id, WorldProperties props) {
-        return ComponentsRegistry.TOWNS_REGISTRY.get(props).getTown(id);
+        return (Town)ComponentsRegistry.LEGAL_ORGANISATIONS_REGISTRY.get(props).get(id);
     }
 
     public static Town fromUUID(UUID id, World world) {

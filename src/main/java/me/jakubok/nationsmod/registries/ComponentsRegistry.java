@@ -16,11 +16,7 @@ import net.minecraft.util.Identifier;
 
 public class ComponentsRegistry implements LevelComponentInitializer, EntityComponentInitializer, WorldComponentInitializer {
 
-    public static final ComponentKey<TerritoryClaimersRegistry> TERRITORY_CLAIMERS_REGISTRY = ComponentRegistry.getOrCreate(new Identifier(NationsMod.MOD_ID, "territory_claimers_registry"), TerritoryClaimersRegistry.class);
-
-    public static final ComponentKey<TownsRegistry> TOWNS_REGISTRY = ComponentRegistry.getOrCreate(new Identifier(NationsMod.MOD_ID, "towns_registry"), TownsRegistry.class);
-
-    public static final ComponentKey<NationsRegistry> NATIONS_REGISTRY = ComponentRegistry.getOrCreate(new Identifier(NationsMod.MOD_ID, "nations_registry"), NationsRegistry.class);
+    public static final ComponentKey<LegalOrganisationsRegistry> LEGAL_ORGANISATIONS_REGISTRY = ComponentRegistry.getOrCreate(new Identifier(NationsMod.MOD_ID, "legal_organisations_registry"), LegalOrganisationsRegistry.class);
 
     public static final ComponentKey<ChunkBinaryTree> CHUNK_BINARY_TREE = ComponentRegistry.getOrCreate(new Identifier(NationsMod.MOD_ID, "chunk_binary_tree"), ChunkBinaryTree.class);
 
@@ -30,9 +26,7 @@ public class ComponentsRegistry implements LevelComponentInitializer, EntityComp
 
     @Override
     public void registerLevelComponentFactories(LevelComponentFactoryRegistry registry) {
-        registry.register(TERRITORY_CLAIMERS_REGISTRY, t -> new TerritoryClaimersRegistry(t));
-        registry.register(TOWNS_REGISTRY, t -> new TownsRegistry(t));
-        registry.register(NATIONS_REGISTRY, t -> new NationsRegistry(t));
+        registry.register(LEGAL_ORGANISATIONS_REGISTRY, t -> new LegalOrganisationsRegistry(t));
         registry.register(PLAYER_INFO, t -> new PlayerInfoRegistry(t));
     }
 

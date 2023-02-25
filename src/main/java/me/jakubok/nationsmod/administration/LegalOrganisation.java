@@ -3,19 +3,25 @@ package me.jakubok.nationsmod.administration;
 import java.util.UUID;
 
 import dev.onyxstudios.cca.api.v3.component.ComponentV3;
+import me.jakubok.nationsmod.registries.ComponentsRegistry;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.world.WorldProperties;
 
 public abstract class LegalOrganisation<D extends LegalOrganisationLawDescription> implements ComponentV3 {
     public final D description;
     public Law<D> law;
-    public LegalOrganisation(D description, String name) {
+    public final WorldProperties props;
+    public LegalOrganisation(D description, String name, WorldProperties props) {
         this.description = description;
         this.law = new Law<>(this.description);
         this.law.putARule(LegalOrganisationLawDescription.IdLabel, UUID.randomUUID());
         this.setName(name);
+        this.props = props;
+        ComponentsRegistry.LEGAL_ORGANISATIONS_REGISTRY.get(this.props).register(this);
     }
-    public LegalOrganisation(D description) {
+    public LegalOrganisation(D description, WorldProperties props) {
         this.description = description;
+        this.props = props;
         this.law = new Law<>(this.description);
     }
 
@@ -41,6 +47,10 @@ public abstract class LegalOrganisation<D extends LegalOrganisationLawDescriptio
     }
 
     public NbtCompound writeToNbtAndReturn(NbtCompound tag) {
+        tag.putBoolean("isADistrict", this instanceof District);
+        tag.putBoolean("isAProvince", this instanceof Province);
+        tag.putBoolean("isATown", this instanceof Town);
+        tag.putBoolean("isANation", this instanceof Nation);
         tag.put("law", this.law.writeToNbtAndReturn(new NbtCompound()));
         return tag;
     }

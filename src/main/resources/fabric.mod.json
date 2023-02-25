@@ -41,11 +41,9 @@
 
   "custom": {
     "cardinal-components": [
-      "nationsmod:towns_registry",
-      "nationsmod:territory_claimers_registry",
+      "nationsmod:legal_organisations_registry",
       "nationsmod:chunk_binary_tree",
       "nationsmod:player_info",
-      "nationsmod:nations_registry",
       "nationsmod:border_slots"
     ]
 }

@@ -3,6 +3,7 @@ package me.jakubok.nationsmod.networking.server;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import me.jakubok.nationsmod.administration.LegalOrganisation;
 import me.jakubok.nationsmod.administration.Town;
 import me.jakubok.nationsmod.networking.Packets;
 import me.jakubok.nationsmod.registries.ComponentsRegistry;
@@ -27,7 +28,9 @@ public class PrepareTownsScreen implements PlayChannelHandler {
             NbtCompound compound = new NbtCompound();
             AtomicInteger size = new AtomicInteger(0);
 
-            for (Town town : ComponentsRegistry.TOWNS_REGISTRY.get(player.getEntityWorld().getLevelProperties()).getTowns()) {
+            for (LegalOrganisation<?> town : ComponentsRegistry.LEGAL_ORGANISATIONS_REGISTRY.get(player.getEntityWorld().getLevelProperties()).getOrganisations().values()) {
+                if (!(town instanceof Town))
+                    continue;
                 compound.putString("town_name" + size.incrementAndGet(), town.getName());
                 compound.putUuid("town_id" + size.get(), town.getId());
             }

@@ -16,8 +16,6 @@ public class Province extends TerritoryClaimer<ProvinceLawDescription> {
         this.setNationsUUID(nation.getId());
         this.setCapitalsUUID(capital.getId());
         capital.setProvince(this);
-
-        ComponentsRegistry.TERRITORY_CLAIMERS_REGISTRY.get(this.props).registerClaimer(this);
     }
     public Province(NbtCompound tag, WorldProperties props) {
         super(new ProvinceLawDescription(), props, tag);
@@ -55,7 +53,7 @@ public class Province extends TerritoryClaimer<ProvinceLawDescription> {
     }
 
     public static Province fromUUID(UUID id, WorldProperties props) {
-        return (Province)ComponentsRegistry.TERRITORY_CLAIMERS_REGISTRY.get(props).getClaimer(id);
+        return (Province)ComponentsRegistry.LEGAL_ORGANISATIONS_REGISTRY.get(props).get(id);
     }
     public static Province fromUUID(UUID id, World world) {
         return fromUUID(id, world.getLevelProperties());

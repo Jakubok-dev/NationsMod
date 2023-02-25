@@ -24,7 +24,9 @@ public class CreateATown implements PlayChannelHandler {
         server.execute(() -> {
             // Check if the town name is unique
             AtomicBoolean unique = new AtomicBoolean(true);
-            ComponentsRegistry.TOWNS_REGISTRY.get(server.getOverworld().getLevelProperties()).getTowns().forEach(el -> {
+            ComponentsRegistry.LEGAL_ORGANISATIONS_REGISTRY.get(server.getOverworld().getLevelProperties()).getOrganisations().values().forEach(el -> {
+                if (!(el instanceof Town))
+                    return;
                 if (townName.toLowerCase().equals(el.getName().toLowerCase())) {
                     player.sendMessage(new TranslatableText("gui.nationsmod.town_creation_screen.town_name_not_unique"), false);
                     unique.set(false);

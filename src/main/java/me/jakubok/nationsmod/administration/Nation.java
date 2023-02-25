@@ -10,22 +10,16 @@ import net.minecraft.world.WorldProperties;
 
 public class Nation extends LegalOrganisation<NationLawDescription> {
 
-    public final WorldProperties props;
-    
     public Nation(String name, World world, String provinceName, Town capital) {
-        super(new NationLawDescription());
-        this.setName(name);
-        this.props = world.getLevelProperties();
+        super(new NationLawDescription(), name, world.getLevelProperties());
         this.setCapitalsID(capital.getId());
 
         Province mainProvince = new Province(provinceName, capital, this, world);
         this.getTheListOfProvincesIDs().add(mainProvince.getId());
 
-        ComponentsRegistry.NATIONS_REGISTRY.get(this.props).registerNation(this);
     }
     public Nation(NbtCompound tag, WorldProperties props) {
-        super(new NationLawDescription());
-        this.props = props;
+        super(new NationLawDescription(), props);
         readFromNbt(tag);
     }
 
@@ -53,7 +47,7 @@ public class Nation extends LegalOrganisation<NationLawDescription> {
     }
     
     public static Nation fromUUID(UUID id, WorldProperties props) {
-        return ComponentsRegistry.NATIONS_REGISTRY.get(props).getNation(id);
+        return (Nation)ComponentsRegistry.LEGAL_ORGANISATIONS_REGISTRY.get(props).get(id);
     }
     public static Nation fromUUID(UUID id, World world) {
         return fromUUID(id, world.getLevelProperties());

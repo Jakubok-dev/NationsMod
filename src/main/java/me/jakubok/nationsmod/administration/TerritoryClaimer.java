@@ -18,7 +18,6 @@ import net.minecraft.world.WorldProperties;
 
 public abstract class TerritoryClaimer<D extends TerritoryClaimerLawDescription> extends LegalOrganisation<D> {
 
-    public final WorldProperties props;
     protected Queue<BlockPos> sendMapBlockInfoQ = new PriorityQueue<>();
 
     public TerritoryClaimer(D description, String name, World world) {
@@ -26,8 +25,7 @@ public abstract class TerritoryClaimer<D extends TerritoryClaimerLawDescription>
     }
 
     public TerritoryClaimer(D description,String name, World world, BorderGroup borderGroup) {
-        super(description, name);
-        this.props = world.getLevelProperties();
+        super(description, name, world.getLevelProperties());
         Random rng = new Random();
         if (this.getTheMapColour().getR() <= 0)
             this.getTheMapColour().setR(rng.nextInt(255));
@@ -48,8 +46,7 @@ public abstract class TerritoryClaimer<D extends TerritoryClaimerLawDescription>
         }
     }
     public TerritoryClaimer(D description, WorldProperties props, NbtCompound nbt) {
-        super(description);
-        this.props = props;
+        super(description, props);
         this.readFromNbt(nbt);
     }
 
@@ -142,17 +139,5 @@ public abstract class TerritoryClaimer<D extends TerritoryClaimerLawDescription>
     }
     public boolean setMinZ(int value) {
         return this.law.putARule(TerritoryClaimerLawDescription.minZLabel, value);
-    }
-
-    @Override
-    public void writeToNbt(NbtCompound tag) {
-        this.writeToNbtAndReturn(tag);
-    }
-
-    @Override
-    public NbtCompound writeToNbtAndReturn(NbtCompound tag) {
-        tag.putBoolean("isADistrict", this instanceof District);
-        tag.putBoolean("isAProvince", this instanceof Province);
-        return super.writeToNbtAndReturn(tag);
     }
 }

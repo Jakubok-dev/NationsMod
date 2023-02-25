@@ -21,7 +21,7 @@ public class District extends TerritoryClaimer<DistrictLawDescription> {
     public District(String name, Town town, World world, BorderGroup group) {
         super(new DistrictLawDescription(), name, world, group);
         this.setTownsID(town.getId());
-        ComponentsRegistry.TERRITORY_CLAIMERS_REGISTRY.get(props).registerClaimer(this);
+        ComponentsRegistry.LEGAL_ORGANISATIONS_REGISTRY.get(props).register(this);
         this.sendMapBlockInfo((ServerWorld)world);
     }
     public District(NbtCompound tag, WorldProperties props) {
@@ -29,7 +29,7 @@ public class District extends TerritoryClaimer<DistrictLawDescription> {
     }
 
     public Town getTown() {
-        return ComponentsRegistry.TOWNS_REGISTRY.get(props).getTown(this.getTownsID());
+        return (Town)ComponentsRegistry.LEGAL_ORGANISATIONS_REGISTRY.get(props).get(this.getTownsID());
     }
 
     public UUID getTownsID() {
@@ -60,6 +60,6 @@ public class District extends TerritoryClaimer<DistrictLawDescription> {
     }
 
     public static District fromUUID(UUID id, World world) {
-        return (District)ComponentsRegistry.TERRITORY_CLAIMERS_REGISTRY.get(world.getLevelProperties()).getClaimer(id);
+        return (District)ComponentsRegistry.LEGAL_ORGANISATIONS_REGISTRY.get(world.getLevelProperties()).get(id);
     }
 }
