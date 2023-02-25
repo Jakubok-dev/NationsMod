@@ -1,12 +1,6 @@
 package me.jakubok.nationsmod.administration;
 
-import java.util.PriorityQueue;
-import java.util.Queue;
-import java.util.Random;
-
 import me.jakubok.nationsmod.chunk.ChunkClaimRegistry;
-import me.jakubok.nationsmod.collections.Border;
-import me.jakubok.nationsmod.collections.BorderGroup;
 import me.jakubok.nationsmod.collections.Colour;
 import me.jakubok.nationsmod.registries.ComponentsRegistry;
 import net.minecraft.nbt.NbtCompound;
@@ -18,47 +12,22 @@ import net.minecraft.world.WorldProperties;
 
 public abstract class TerritoryClaimer<D extends TerritoryClaimerLawDescription> extends LegalOrganisation<D> {
 
-    protected Queue<BlockPos> sendMapBlockInfoQ = new PriorityQueue<>();
-
-    public TerritoryClaimer(D description, String name, World world) {
-        this(description, name, world, null);
-    }
-
-    public TerritoryClaimer(D description,String name, World world, BorderGroup borderGroup) {
+    public TerritoryClaimer(D description,String name, World world) {
         super(description, name, world.getLevelProperties());
-        Random rng = new Random();
-        if (this.getTheMapColour().getR() <= 0)
-            this.getTheMapColour().setR(rng.nextInt(255));
-        if (this.getTheMapColour().getG() <= 0)
-            this.getTheMapColour().setG(rng.nextInt(255));
-        if (this.getTheMapColour().getB() <= 0)
-            this.getTheMapColour().setB(rng.nextInt(255));
-
-        if (borderGroup == null)
-            return;
-        
-        BorderGroup field = borderGroup.getField();
-        if (field == null)
-            return;
-
-        for (Border elem : field.toList()) {
-            this.claim(elem.position, world);
-        }
     }
     public TerritoryClaimer(D description, WorldProperties props, NbtCompound nbt) {
         super(description, props);
         this.readFromNbt(nbt);
     }
 
+    public abstract Colour getTheMapColour();
+    public abstract void sendMapBlockInfo(ServerWorld world, BlockPos pos);
+
     public long getClaimedBlocksCount() {
         return (Long)this.law.getARule(TerritoryClaimerLawDescription.claimedBlocksCountLabel);
     }
     public boolean setClaimedBLocksCount(Long value) {
         return this.law.putARule(TerritoryClaimerLawDescription.claimedBlocksCountLabel, value);
-    }
-
-    public Colour getTheMapColour() {
-        return (Colour)this.law.getARule(TerritoryClaimerLawDescription.mapColourLabel);
     }
 
     public int claim(BlockPos pos, World world) {
@@ -76,7 +45,7 @@ public abstract class TerritoryClaimer<D extends TerritoryClaimerLawDescription>
         this.setMinZ(Math.min(this.getMinZ(), pos.getX()));
         this.setMaxZ(Math.min(this.getMaxZ(), pos.getX()));
 
-        this.sendMapBlockInfoQ.add(pos);
+        this.sendMapBlockInfo((ServerWorld)world, pos);
 
         return 1;
     }
@@ -110,8 +79,6 @@ public abstract class TerritoryClaimer<D extends TerritoryClaimerLawDescription>
         }
         return result;
     }
-
-    protected abstract void sendMapBlockInfo(ServerWorld world);
 
     public int getMaxX() {
         return (Integer)this.law.getARule(TerritoryClaimerLawDescription.maxXLabel);

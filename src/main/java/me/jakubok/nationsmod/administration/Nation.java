@@ -8,7 +8,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldProperties;
 
-public class Nation extends LegalOrganisation<NationLawDescription> {
+public class Nation extends AdministratingUnit<NationLawDescription> {
 
     public Nation(String name, World world, String provinceName, Town capital) {
         super(new NationLawDescription(), name, world.getLevelProperties());

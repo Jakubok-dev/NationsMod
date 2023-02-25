@@ -11,7 +11,6 @@ import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking.PlayChannelHandler;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
@@ -48,14 +47,7 @@ public class GetBlocksClaimantColour implements PlayChannelHandler {
 
             ServerPlayNetworking.send(player, Packets.RENDER_CLAIMANTS_COLOUR, responseBufferToRenderColour);
 
-            NbtCompound nbt = new NbtCompound();
-            nbt.putString("townsName", district.getTown().getName());
-            nbt.putString("districtsName", district.getName());
-            nbt.putUuid("townsUUID", district.getTown().getId());
-            nbt.putUuid("districtsUUID", districtID);
-            responseBufferToPushInfo.writeNbt(nbt);
-
-            ServerPlayNetworking.send(player, Packets.PULL_MAP_BLOCK_INFO, responseBufferToPushInfo);
+            district.sendMapBlockInfo(player.getWorld(), pos);
         });
     }
 }

@@ -3,9 +3,11 @@ package me.jakubok.nationsmod.administration;
 import java.util.List;
 import java.util.UUID;
 
+import me.jakubok.nationsmod.collections.Colour;
 import me.jakubok.nationsmod.registries.ComponentsRegistry;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldProperties;
 
@@ -58,10 +60,11 @@ public class Province extends TerritoryClaimer<ProvinceLawDescription> {
     public static Province fromUUID(UUID id, World world) {
         return fromUUID(id, world.getLevelProperties());
     }
-
     @Override
-    protected void sendMapBlockInfo(ServerWorld world) {
-        // TODO Implement later
-        
+    public Colour getTheMapColour() {
+        return this.getNation().getTheMapColour();
+    }
+    @Override
+    public void sendMapBlockInfo(ServerWorld world, BlockPos pos) {
     }
 }

@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import me.jakubok.nationsmod.collections.PlayerAccount;
 
-public class TownLawDescription extends LegalOrganisationLawDescription{
+public class TownLawDescription extends AdministratingUnitLawDescription{
     public static final RuleDescription provincesID = new RuleDescription(RuleType.UUID, "The id of the province in which the town is", null);
     public static final String provincesIDLabel = "provincesId"; 
     public static final RuleDescription listOfDistrictsIDs = new RuleDescription(RuleType.LISTOFUUID, "The list of UUIDs of districts which belong to the town", new ArrayList<UUID>());
