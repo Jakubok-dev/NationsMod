@@ -21,7 +21,7 @@ public class EntityRegistry {
     );
 
     static {
-        FabricDefaultAttributeRegistry.register(HUMAN, HumanEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(HUMAN, HumanEntity.getHumanAttributes());
     }
 
     public static void init() {}
