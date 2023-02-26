@@ -4,6 +4,8 @@
     "item.nationsmod.town_independence_declaration": "Town independence declaration",
     "item.nationsmod.nation_independence_declaration": "Nation independence declaration",
     "item.nationsmod.border_registrator": "Border registrator",
+    "item.nationsmod.human_spawn_egg": "Human Spawn Egg",
+    "entity.nationsmod.human": "Human",
     "block.nationsmod.border_sign": "Border sign",
     "gui.nationsmod.town_creation_screen.title": "Town creation screen",
     "gui.nationsmod.town_creation_screen.town_name": "Town name:",

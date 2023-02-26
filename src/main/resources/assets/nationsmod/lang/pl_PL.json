@@ -4,6 +4,8 @@
     "item.nationsmod.town_independence_declaration": "Deklaracja niepodległości miasta",
     "item.nationsmod.nation_independence_declaration": "Deklaracja niepodległości państwa",
     "item.nationsmod.border_registrator": "Rejestrator granicy",
+    "item.nationsmod.human_spawn_egg": "Jajko przyzywające człowieka",
+    "entity.nationsmod.human": "Człowiek",
     "block.nationsmod.border_sign": "Znak graniczny",
     "gui.nationsmod.town_creation_screen.title": "Panel tworzenia miasta",
     "gui.nationsmod.town_creation_screen.town_name": "Nazwa miasta:",

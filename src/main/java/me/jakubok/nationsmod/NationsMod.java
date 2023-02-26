@@ -2,6 +2,7 @@ package me.jakubok.nationsmod;
 
 import me.jakubok.nationsmod.networking.ServerNetworking;
 import me.jakubok.nationsmod.registries.BlockRegistry;
+import me.jakubok.nationsmod.registries.EntityRegistry;
 import me.jakubok.nationsmod.registries.ItemRegistry;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
@@ -26,6 +27,7 @@ public class NationsMod implements ModInitializer {
 		System.out.println("The nations mod is initialising...");
 		ItemRegistry.init();
 		BlockRegistry.init();
+		EntityRegistry.init();
 		ServerNetworking.register();
 	}
 }
