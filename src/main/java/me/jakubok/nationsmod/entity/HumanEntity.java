@@ -3,19 +3,23 @@ package me.jakubok.nationsmod.entity;
 import java.util.Random;
 import java.util.UUID;
 
-import net.minecraft.entity.EntityPose;
+import me.jakubok.nationsmod.NationsMod;
+import me.jakubok.nationsmod.collections.Name;
+import me.jakubok.nationsmod.entity.goal.HumanAttackGoal;
+import net.minecraft.client.render.entity.PlayerModelPart;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.ActiveTargetGoal;
 import net.minecraft.entity.ai.goal.LookAroundGoal;
 import net.minecraft.entity.ai.goal.LookAtEntityGoal;
-import net.minecraft.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.entity.ai.goal.SwimGoal;
 import net.minecraft.entity.ai.goal.WanderAroundFarGoal;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.Angerable;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.text.Text;
 import net.minecraft.util.TimeHelper;
 import net.minecraft.util.math.intprovider.UniformIntProvider;
 import net.minecraft.world.World;
@@ -24,30 +28,34 @@ import net.minecraft.entity.attribute.DefaultAttributeContainer.Builder;
 
 public class HumanEntity extends PathAwareEntity implements Angerable {
 
+    //protected static final TrackedData<Byte> HUMAN_MODEL_PARTS = DataTracker.registerData(HumanEntity.class, TrackedDataHandlerRegistry.BYTE);
+
     public Random random = new Random();
     private static final UniformIntProvider ANGER_TIME_RANGE = TimeHelper.betweenSeconds(20, 39);
     private int angerTime = 0;
     private UUID angryAt = null;
+    public Name name;
 
     public HumanEntity(EntityType<? extends PathAwareEntity> entityType, World world) {
         super(entityType, world);
+        this.name = new Name();
+        this.setCanPickUpLoot(true);
     }
     
     @Override
     protected void initGoals() {
         super.initGoals();
-        this.goalSelector.add(1, new LookAtEntityGoal(this, PlayerEntity.class, 8.0f));
-        this.goalSelector.add(1, new LookAroundGoal(this));
-        this.goalSelector.add(1, new WanderAroundFarGoal(this, 1f));
+        this.goalSelector.add(2, new LookAtEntityGoal(this, PlayerEntity.class, 8.0f));
+        this.goalSelector.add(2, new LookAroundGoal(this));
+        this.goalSelector.add(2, new WanderAroundFarGoal(this, 2f));
         this.goalSelector.add(0, new SwimGoal(this));
-        this.goalSelector.add(1, new MeleeAttackGoal(this, 1f, false));
+        this.goalSelector.add(1, new HumanAttackGoal(this, 3f, false));
         this.targetSelector.add(1, new ActiveTargetGoal<LivingEntity>(this, LivingEntity.class, false, this::shouldAngerAt));
     }
 
     @Override
-    public void tick() {
-        super.tick();
-        this.updatePose();
+    public Text getName() {
+        return name.getText();
     }
 
     @Override
@@ -84,22 +92,30 @@ public class HumanEntity extends PathAwareEntity implements Angerable {
         return super.damage(source, amount);
     }
 
-    public static Builder getHumanAttributes() {
-        return createMobAttributes().add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 1.0).add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.1f).add(EntityAttributes.GENERIC_ATTACK_SPEED).add(EntityAttributes.GENERIC_LUCK);
-    }
-
     @Override
     public void animateDamage() {
         this.hurtTime = this.maxHurtTime = 10;
         this.knockbackVelocity = 0.0f;
     }
 
-    protected void updatePose() {
-        if (!this.wouldPoseNotCollide(EntityPose.SWIMMING)) {
-            return;
-        }
-        EntityPose entityPose = this.isFallFlying() ? EntityPose.FALL_FLYING : (this.isSleeping() ? EntityPose.SLEEPING : (this.isSwimming() ? EntityPose.SWIMMING : (this.isUsingRiptide() ? EntityPose.SPIN_ATTACK : (this.isSneaking() ? EntityPose.CROUCHING : EntityPose.STANDING))));
-        EntityPose entityPose2 = this.isSpectator() || this.hasVehicle() || this.wouldPoseNotCollide(entityPose) ? entityPose : (this.wouldPoseNotCollide(EntityPose.CROUCHING) ? EntityPose.CROUCHING : EntityPose.SWIMMING);
-        this.setPose(entityPose2);
+    public boolean isPartVisible(PlayerModelPart modelPart) {
+        //return (this.getDataTracker().get(HUMAN_MODEL_PARTS) & modelPart.getBitFlag()) == modelPart.getBitFlag();
+        return true;
+    }
+
+    @Override
+    public void readCustomDataFromNbt(NbtCompound nbt) {
+        super.readCustomDataFromNbt(nbt);
+        this.name = new Name(nbt.getCompound(NationsMod.MOD_ID + "_name"));
+    }
+
+    @Override
+    public void writeCustomDataToNbt(NbtCompound nbt) {
+        super.writeCustomDataToNbt(nbt);
+        nbt.put(NationsMod.MOD_ID + "_name", this.name.writeToNbtAndReturn(new NbtCompound()));
+    }
+
+    public static Builder getHumanAttributes() {
+        return createMobAttributes().add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 1.0).add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.1f).add(EntityAttributes.GENERIC_ATTACK_SPEED).add(EntityAttributes.GENERIC_LUCK);
     }
 }
