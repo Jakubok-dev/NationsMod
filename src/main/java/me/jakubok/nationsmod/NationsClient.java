@@ -2,7 +2,7 @@ package me.jakubok.nationsmod;
 
 import me.jakubok.nationsmod.collections.BorderGroup;
 import me.jakubok.nationsmod.collections.ClientBorderDrawer;
-import me.jakubok.nationsmod.entity.HumanEntityRenderer;
+import me.jakubok.nationsmod.entity.human.HumanEntityRenderer;
 import me.jakubok.nationsmod.map.MapStorage;
 import me.jakubok.nationsmod.networking.ClientNetworking;
 import me.jakubok.nationsmod.registries.EntityRegistry;

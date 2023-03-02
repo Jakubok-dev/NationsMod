@@ -1,11 +1,13 @@
 package me.jakubok.nationsmod;
 
+import me.jakubok.nationsmod.entity.human.HumanData;
 import me.jakubok.nationsmod.networking.ServerNetworking;
 import me.jakubok.nationsmod.registries.BlockRegistry;
 import me.jakubok.nationsmod.registries.EntityRegistry;
 import me.jakubok.nationsmod.registries.ItemRegistry;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
+import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
@@ -29,5 +31,6 @@ public class NationsMod implements ModInitializer {
 		BlockRegistry.init();
 		EntityRegistry.init();
 		ServerNetworking.register();
+		TrackedDataHandlerRegistry.register(HumanData.HUMAN_DATA_HANDLER);
 	}
 }

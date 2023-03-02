@@ -1,7 +1,7 @@
 package me.jakubok.nationsmod.registries;
 
 import me.jakubok.nationsmod.NationsMod;
-import me.jakubok.nationsmod.entity.HumanEntity;
+import me.jakubok.nationsmod.entity.human.HumanEntity;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.entity.EntityDimensions;

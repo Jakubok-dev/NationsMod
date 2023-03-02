@@ -1,4 +1,4 @@
-package me.jakubok.nationsmod.entity;
+package me.jakubok.nationsmod.entity.human;
 
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.OverlayTexture;
