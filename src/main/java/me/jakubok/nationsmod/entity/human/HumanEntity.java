@@ -14,7 +14,7 @@ import net.minecraft.entity.ai.goal.ActiveTargetGoal;
 import net.minecraft.entity.ai.goal.LookAroundGoal;
 import net.minecraft.entity.ai.goal.LookAtEntityGoal;
 import net.minecraft.entity.ai.goal.SwimGoal;
-import net.minecraft.entity.ai.goal.WanderAroundFarGoal;
+import net.minecraft.entity.ai.goal.WanderAroundGoal;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
@@ -50,7 +50,7 @@ public class HumanEntity extends PathAwareEntity implements Angerable {
         super.initGoals();
         this.goalSelector.add(2, new LookAtEntityGoal(this, PlayerEntity.class, 8.0f));
         this.goalSelector.add(2, new LookAroundGoal(this));
-        this.goalSelector.add(2, new WanderAroundFarGoal(this, 2f));
+        this.goalSelector.add(2, new WanderAroundGoal(this, 2f));
         this.goalSelector.add(0, new SwimGoal(this));
         this.goalSelector.add(1, new HumanAttackGoal(this, 3f, false));
         this.targetSelector.add(1, new ActiveTargetGoal<LivingEntity>(this, LivingEntity.class, false, this::shouldAngerAt));
@@ -182,6 +182,27 @@ public class HumanEntity extends PathAwareEntity implements Angerable {
         HumanInventory.Entry entry = inv.hoes.peek();
         this.equipItemFromTheInventory(entry.getValue());
         return true;
+    }
+
+    @Override
+    public boolean shouldAngerAt(LivingEntity entity) {
+        boolean result = Angerable.super.shouldAngerAt(entity);
+        if (result)
+            return true;
+
+        switch(this.getHumanData().xenophobia) {
+            case 0:
+            case 1:
+                return false;
+            case 2:
+            case 3:
+                if (entity instanceof PlayerEntity || entity instanceof HumanEntity)
+                    return true;
+                return false;
+            default:
+                return true;
+        }
+        
     }
 
     public boolean isPartVisible(PlayerModelPart modelPart) {

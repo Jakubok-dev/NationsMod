@@ -10,6 +10,7 @@ public class HumanData implements ComponentV3 {
 
     public Name name = new Name();
     public HumanInventory inventory = new HumanInventory(27);
+    public int xenophobia = 0;
 
     public HumanData() {}
     public HumanData(NbtCompound nbt) {
@@ -32,6 +33,10 @@ public class HumanData implements ComponentV3 {
             if (this.inventory == null)
                 this.inventory = new HumanInventory(27);
         }
+
+        try {
+            this.xenophobia = nbt.getInt("xenophobia");
+        } catch(Exception ex) {}
     }
 
     @Override
@@ -42,6 +47,7 @@ public class HumanData implements ComponentV3 {
     public NbtCompound writeToNbtAndReturn(NbtCompound nbt) {
         nbt.put("name", this.name.writeToNbtAndReturn(new NbtCompound()));
         nbt.put("inventory", this.inventory.writeToNbtAndReturn(new NbtCompound()));
+        nbt.putInt("xenophobia", xenophobia);
         return nbt;
     }
 

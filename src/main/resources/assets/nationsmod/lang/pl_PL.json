@@ -7,6 +7,7 @@
     "item.nationsmod.human_spawn_egg": "Jajko przyzywające człowieka",
     "entity.nationsmod.human": "Człowiek",
     "block.nationsmod.border_sign": "Znak graniczny",
+    "effect.nationsmod.xenophobia": "Ksenofobia",
     "gui.nationsmod.town_creation_screen.title": "Panel tworzenia miasta",
     "gui.nationsmod.town_creation_screen.town_name": "Nazwa miasta:",
     "gui.nationsmod.town_creation_screen.district_name": "Nazwa dzielnicy:",

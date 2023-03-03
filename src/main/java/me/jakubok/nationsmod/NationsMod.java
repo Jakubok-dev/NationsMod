@@ -5,6 +5,7 @@ import me.jakubok.nationsmod.networking.ServerNetworking;
 import me.jakubok.nationsmod.registries.BlockRegistry;
 import me.jakubok.nationsmod.registries.EntityRegistry;
 import me.jakubok.nationsmod.registries.ItemRegistry;
+import me.jakubok.nationsmod.registries.StatusEffectRegistry;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
@@ -30,6 +31,7 @@ public class NationsMod implements ModInitializer {
 		ItemRegistry.init();
 		BlockRegistry.init();
 		EntityRegistry.init();
+		StatusEffectRegistry.init();
 		ServerNetworking.register();
 		TrackedDataHandlerRegistry.register(HumanData.HUMAN_DATA_HANDLER);
 	}

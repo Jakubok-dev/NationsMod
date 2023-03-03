@@ -7,6 +7,7 @@
     "item.nationsmod.human_spawn_egg": "Human Spawn Egg",
     "entity.nationsmod.human": "Human",
     "block.nationsmod.border_sign": "Border sign",
+    "effect.nationsmod.xenophobia": "Xenophobia",
     "gui.nationsmod.town_creation_screen.title": "Town creation screen",
     "gui.nationsmod.town_creation_screen.town_name": "Town name:",
     "gui.nationsmod.town_creation_screen.district_name": "District name:",
