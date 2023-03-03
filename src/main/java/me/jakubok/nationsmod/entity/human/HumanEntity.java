@@ -1,5 +1,6 @@
 package me.jakubok.nationsmod.entity.human;
 
+import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
@@ -23,8 +24,11 @@ import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.TimeHelper;
+import net.minecraft.util.TypeFilter;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.intprovider.UniformIntProvider;
 import net.minecraft.world.World;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -105,8 +109,50 @@ public class HumanEntity extends PathAwareEntity implements Angerable {
         if (source.getAttacker() instanceof LivingEntity) {
             this.setAngryAt(source.getAttacker().getUuid());
             this.chooseRandomAngerTime();
+
+            if (!this.world.isClient) {
+                ServerWorld world = this.getServer().getWorld(this.world.getRegistryKey());
+                List<? extends HumanEntity> witnesses = world.getEntitiesByType(TypeFilter.instanceOf(HumanEntity.class), (HumanEntity human) -> {
+                    if (this.getDistance(this.getBlockPos(), human.getBlockPos()) > 64)
+                        return false;
+                    switch (this.getHumanData().aggressiveness) {
+                        case 0:
+                        case 1:
+                            return true;
+                        case 2:
+                        case 3:
+                        case 4:
+                        case 5:
+                            return false;
+                        default:
+                            return true;
+                    }
+                });
+
+                witnesses.forEach(el -> {
+                    if (el instanceof HumanEntity)
+                        ((HumanEntity)el).answerHelpRequest((LivingEntity)source.getAttacker());
+                });
+            }
         }
         return super.damage(source, amount);
+    }
+
+    protected double getDistance(BlockPos first, BlockPos second) {
+        return Math.sqrt(
+            Math.pow(Math.abs((double)(second.getX() - first.getX())), 2) +
+            Math.pow(Math.abs((double)(second.getY() - first.getY())), 2) +
+            Math.pow(Math.abs((double)(second.getZ() - first.getZ())), 2)
+        );
+    }
+
+    public void answerHelpRequest(LivingEntity entity) {
+        switch (this.getHumanData().aggressiveness) {
+            case -5:
+                this.setAngryAt(entity.getUuid());
+            default:
+                return;
+        }
     }
 
     @Override
@@ -190,17 +236,20 @@ public class HumanEntity extends PathAwareEntity implements Angerable {
         if (result)
             return true;
 
-        switch(this.getHumanData().xenophobia) {
+        switch(this.getHumanData().aggressiveness) {
             case 0:
             case 1:
                 return false;
             case 2:
             case 3:
+            case 4:
                 if (entity instanceof PlayerEntity || entity instanceof HumanEntity)
                     return true;
                 return false;
-            default:
+            case 5:
                 return true;
+            default:
+                return false;
         }
         
     }
