@@ -2,15 +2,16 @@ package me.jakubok.nationsmod.entity.human;
 
 import java.util.PriorityQueue;
 
+import dev.onyxstudios.cca.api.v3.component.ComponentV3;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.AxeItem;
 import net.minecraft.item.HoeItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ShovelItem;
 import net.minecraft.item.SwordItem;
-import net.minecraft.nbt.NbtList;
+import net.minecraft.nbt.NbtCompound;
 
-public class HumanInventory extends SimpleInventory {
+public class HumanInventory extends SimpleInventory implements ComponentV3 {
     PriorityQueue<Entry> swords = new PriorityQueue<>();
     PriorityQueue<Entry> axes = new PriorityQueue<>();
     PriorityQueue<Entry> shovels = new PriorityQueue<>();
@@ -62,9 +63,28 @@ public class HumanInventory extends SimpleInventory {
     }
 
     @Override
-    public void readNbtList(NbtList nbtList) {
-        super.readNbtList(nbtList);
+    public void readFromNbt(NbtCompound tag) {
+        for (int i = 0; i < tag.getInt("size"); ++i) {
+            ItemStack itemStack = ItemStack.fromNbt(tag.getCompound("item" + i));
+            if (itemStack.isEmpty()) continue;
+            this.addStack(itemStack);
+        }
         this.refreshTheQueues();
+    }
+
+    @Override
+    public void writeToNbt(NbtCompound tag) {
+        this.writeToNbtAndReturn(tag);
+    }
+
+    public NbtCompound writeToNbtAndReturn(NbtCompound nbt) {
+        for (int i = 0; i < this.size(); ++i) {
+            ItemStack itemStack = this.getStack(i);
+            if (itemStack.isEmpty()) continue;
+            nbt.put("item" + i, itemStack.writeNbt(new NbtCompound()));
+        }
+        nbt.putInt("size", this.size());
+        return nbt;
     }
 
     public class Entry implements Comparable<Entry> {

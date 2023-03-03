@@ -27,7 +27,7 @@ public class HumanData implements ComponentV3 {
 
         try {
             this.inventory = new HumanInventory(27);
-            this.inventory.readNbtList(nbt.getList("inventory", 0));
+            this.inventory.readFromNbt(nbt.getCompound("inventory"));
         } catch(Exception ex) {
             if (this.inventory == null)
                 this.inventory = new HumanInventory(27);
@@ -41,7 +41,7 @@ public class HumanData implements ComponentV3 {
     
     public NbtCompound writeToNbtAndReturn(NbtCompound nbt) {
         nbt.put("name", this.name.writeToNbtAndReturn(new NbtCompound()));
-        nbt.put("inventory", this.inventory.toNbtList());
+        nbt.put("inventory", this.inventory.writeToNbtAndReturn(new NbtCompound()));
         return nbt;
     }
 
