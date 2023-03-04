@@ -1,5 +1,9 @@
 package me.jakubok.nationsmod.entity.human;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 import dev.onyxstudios.cca.api.v3.component.ComponentV3;
 import me.jakubok.nationsmod.collections.Name;
 import net.minecraft.entity.data.TrackedDataHandler;
@@ -10,7 +14,8 @@ public class HumanData implements ComponentV3 {
 
     public Name name = new Name();
     public HumanInventory inventory = new HumanInventory(27);
-    public int aggressiveness = 0;
+    public int aggressiveness = -2;
+    public List<UUID> relatives = new ArrayList<>();
 
     public HumanData() {}
     public HumanData(NbtCompound nbt) {
@@ -37,6 +42,14 @@ public class HumanData implements ComponentV3 {
         try {
             this.aggressiveness = nbt.getInt("aggressiveness");
         } catch(Exception ex) {}
+
+        try {
+            NbtCompound relatives = nbt.getCompound("relatives");
+            this.relatives.clear();
+            for (int i = 0; i < relatives.getInt("size"); i++) {
+                this.relatives.add(relatives.getUuid("element" + i));
+            }
+        } catch(Exception ex) {}
     }
 
     @Override
@@ -48,6 +61,13 @@ public class HumanData implements ComponentV3 {
         nbt.put("name", this.name.writeToNbtAndReturn(new NbtCompound()));
         nbt.put("inventory", this.inventory.writeToNbtAndReturn(new NbtCompound()));
         nbt.putInt("aggressiveness", aggressiveness);
+
+        NbtCompound relatives = new NbtCompound();
+        relatives.putInt("size", this.relatives.size());
+        for (int i = 0; i < this.relatives.size(); i++)
+            relatives.putUuid("element" + i, this.relatives.get(i));
+        nbt.put("relatives", relatives);
+        
         return nbt;
     }
 

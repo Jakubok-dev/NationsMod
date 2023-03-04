@@ -3,10 +3,13 @@ package me.jakubok.nationsmod.entity.human;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 
 import me.jakubok.nationsmod.NationsMod;
 import me.jakubok.nationsmod.entity.goal.HumanAttackGoal;
+import me.jakubok.nationsmod.entity.goal.HumanMeetGoal;
 import net.minecraft.client.render.entity.PlayerModelPart;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.ItemEntity;
@@ -24,6 +27,8 @@ import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.particle.ParticleEffect;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.TimeHelper;
@@ -55,6 +60,7 @@ public class HumanEntity extends PathAwareEntity implements Angerable {
         this.goalSelector.add(2, new LookAtEntityGoal(this, PlayerEntity.class, 8.0f));
         this.goalSelector.add(2, new LookAroundGoal(this));
         this.goalSelector.add(2, new WanderAroundGoal(this, 2f));
+        this.goalSelector.add(2, new HumanMeetGoal(this));
         this.goalSelector.add(0, new SwimGoal(this));
         this.goalSelector.add(1, new HumanAttackGoal(this, 3f, false));
         this.targetSelector.add(1, new ActiveTargetGoal<LivingEntity>(this, LivingEntity.class, false, this::shouldAngerAt));
@@ -106,6 +112,7 @@ public class HumanEntity extends PathAwareEntity implements Angerable {
 
     @Override
     public boolean damage(DamageSource source, float amount) {
+        this.produceParticles(ParticleTypes.ANGRY_VILLAGER);
         if (source.getAttacker() instanceof LivingEntity) {
             this.setAngryAt(source.getAttacker().getUuid());
             this.chooseRandomAngerTime();
@@ -131,7 +138,7 @@ public class HumanEntity extends PathAwareEntity implements Angerable {
 
                 witnesses.forEach(el -> {
                     if (el instanceof HumanEntity)
-                        ((HumanEntity)el).answerHelpRequest((LivingEntity)source.getAttacker());
+                        ((HumanEntity)el).answerHelpRequest((LivingEntity)source.getAttacker(), this);
                 });
             }
         }
@@ -146,13 +153,25 @@ public class HumanEntity extends PathAwareEntity implements Angerable {
         );
     }
 
-    public void answerHelpRequest(LivingEntity entity) {
+    public void answerHelpRequest(LivingEntity attacker, HumanEntity requester) {
         switch (this.getHumanData().aggressiveness) {
             case -5:
-                this.setAngryAt(entity.getUuid());
+                this.setAngryAt(attacker.getUuid());
+                this.chooseRandomAngerTime();
+                return;
+            case -2:
+                if (this.isARelative(requester)) {
+                    this.setAngryAt(attacker.getUuid());
+                    this.chooseRandomAngerTime();
+                }
+                return;
             default:
                 return;
         }
+    }
+
+    public boolean isARelative(HumanEntity entity) {
+        return this.getHumanData().relatives.stream().filter(el -> el.equals(entity.getUuid())).findAny().isPresent();
     }
 
     @Override
@@ -252,6 +271,75 @@ public class HumanEntity extends PathAwareEntity implements Angerable {
                 return false;
         }
         
+    }
+
+    protected void produceParticles(ParticleEffect parameters) {
+        for (int i = 0; i < 5; ++i) {
+            double d = this.random.nextGaussian() * 0.02;
+            double e = this.random.nextGaussian() * 0.02;
+            double f = this.random.nextGaussian() * 0.02;
+            this.world.addParticle(parameters, this.getParticleX(1.0), this.getRandomBodyY() + 1.0, this.getParticleZ(1.0), d, e, f);
+        }
+    }
+
+    public boolean canHangOut(HumanEntity other) {
+        if (other == this)
+            return false;
+        if (this.getHumanData().aggressiveness > 2)
+            return false;
+        Random rng = new Random();
+        double chance = 1d/(double)(1 + this.getHumanData().relatives.size());
+        if (rng.nextDouble(1d) > chance)
+            return false;
+        
+        if (this.getDistance(this.getBlockPos(), other.getBlockPos()) > 64)
+            return false;
+
+        List<UUID> relatives = this.getHumanData().relatives;
+        for (int i = 0; i < relatives.size(); i++) {
+            if (relatives.get(i).equals(other.getUuid()))
+                return false;
+        }
+
+        return true;
+    }
+
+    public void hangOut(HumanEntity entity) {
+        this.getHumanData().relatives.add(entity.getUuid());
+        entity.getHumanData().relatives.add(this.getUuid());
+        this.produceParticles(ParticleTypes.HAPPY_VILLAGER);
+    }
+
+    @Override
+    public void handleStatus(byte status) {
+        if (status == 4) {
+            this.produceParticles(ParticleTypes.HAPPY_VILLAGER);
+        }
+        super.handleStatus(status);
+    }
+
+    @Override
+    public void onDeath(DamageSource source) {
+        super.onDeath(source);
+        if (!this.world.isClient) {
+            this.getHumanData().relatives.forEach(el -> {
+                try {
+                    ((HumanEntity)searchWorldsForAnEntity(el)).getHumanData().relatives.remove(this.getUuid());
+                } catch (Exception ex) {}
+            });
+        }
+    }
+
+    public Entity searchWorldsForAnEntity(UUID id) {
+        if (this.world.isClient)
+            return null;
+        AtomicReference<Entity> result = new AtomicReference<>();
+        this.world.getServer().getWorlds().forEach(el -> {
+            if (result.get() != null)
+                return;
+            result.set(el.getEntity(id));
+        });
+        return result.get();
     }
 
     public boolean isPartVisible(PlayerModelPart modelPart) {
