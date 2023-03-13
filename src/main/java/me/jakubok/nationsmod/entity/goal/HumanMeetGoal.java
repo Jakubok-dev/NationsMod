@@ -19,6 +19,8 @@ public class HumanMeetGoal extends Goal {
 
     @Override
     public boolean canStart() {
+        if (instance.getHumanData().aggressiveness >= 2)
+            return false;
         if (requestTimer > 0) {
             requestTimer--;
             return false;

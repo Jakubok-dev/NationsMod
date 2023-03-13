@@ -285,7 +285,7 @@ public class HumanEntity extends PathAwareEntity implements Angerable {
     public boolean canHangOut(HumanEntity other) {
         if (other == this)
             return false;
-        if (this.getHumanData().aggressiveness > 2)
+        if (this.getHumanData().aggressiveness >= 2)
             return false;
         Random rng = new Random();
         double chance = 1d/(double)(1 + this.getHumanData().relatives.size());

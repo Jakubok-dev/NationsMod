@@ -8,8 +8,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import me.jakubok.nationsmod.entity.human.HumanEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.ActiveTargetGoal;
+import net.minecraft.entity.mob.CreeperEntity;
+import net.minecraft.entity.mob.EndermanEntity;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.mob.PathAwareEntity;
+import net.minecraft.entity.mob.ZombifiedPiglinEntity;
 import net.minecraft.world.World;
 
 @Mixin(HostileEntity.class)
@@ -24,7 +27,12 @@ public abstract class HostileEntityMixin extends PathAwareEntity {
     private void angerAtHumans(CallbackInfo info) {
         if (_nationsMod_Init) {
             _nationsMod_Init = false;
-            this.targetSelector.add(3, new ActiveTargetGoal<HumanEntity>(this, HumanEntity.class, true));
-        }
+            if (
+                !((PathAwareEntity)this instanceof ZombifiedPiglinEntity) &&
+                !((PathAwareEntity)this instanceof CreeperEntity) &&
+                !((PathAwareEntity)this instanceof EndermanEntity)
+            )
+                this.targetSelector.add(3, new ActiveTargetGoal<HumanEntity>(this, HumanEntity.class, true));
+        } 
     }
 }
