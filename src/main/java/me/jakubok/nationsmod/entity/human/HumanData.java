@@ -5,10 +5,12 @@ import java.util.List;
 import java.util.UUID;
 
 import dev.onyxstudios.cca.api.v3.component.ComponentV3;
+import me.jakubok.nationsmod.administration.Town;
 import me.jakubok.nationsmod.collections.Name;
 import net.minecraft.entity.data.TrackedDataHandler;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.world.WorldProperties;
 
 public class HumanData implements ComponentV3 {
 
@@ -16,10 +18,24 @@ public class HumanData implements ComponentV3 {
     public HumanInventory inventory = new HumanInventory(27);
     public int aggressiveness = -2;
     public List<UUID> relatives = new ArrayList<>();
+    protected UUID citizenship;
 
     public HumanData() {}
     public HumanData(NbtCompound nbt) {
         this.readFromNbt(nbt);
+    }
+
+    public UUID getCitizenship() {
+        return citizenship;
+    }
+    public boolean setCitizenship(UUID citizenship, WorldProperties props) {
+        if (Town.fromUUID(citizenship, props) == null)
+            return false;
+        this.citizenship = citizenship;
+        return true;
+    }
+    public void removeCitizenship() {
+        this.citizenship = null;
     }
 
     @Override
@@ -50,6 +66,10 @@ public class HumanData implements ComponentV3 {
                 this.relatives.add(relatives.getUuid("element" + i));
             }
         } catch(Exception ex) {}
+
+        try {
+            this.citizenship = nbt.getUuid("citizenship");
+        } catch(Exception ex) {}
     }
 
     @Override
@@ -67,7 +87,8 @@ public class HumanData implements ComponentV3 {
         for (int i = 0; i < this.relatives.size(); i++)
             relatives.putUuid("element" + i, this.relatives.get(i));
         nbt.put("relatives", relatives);
-        
+        if (this.citizenship != null)
+            nbt.putUuid("citizenship", this.citizenship);
         return nbt;
     }
 

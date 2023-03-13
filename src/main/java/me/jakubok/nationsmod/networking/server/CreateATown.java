@@ -39,7 +39,8 @@ public class CreateATown implements PlayChannelHandler {
 
             if (!player.isCreative()) player.getMainHandStack().setCount(player.getMainHandStack().getCount()-1);
 
-            new Town(townName, districtName, player.getChunkPos(), player.getEntityWorld(), ComponentsRegistry.BORDER_SLOTS.get(player).getSelectedSlot());
+            Town town = new Town(townName, districtName, player.getChunkPos(), player.getEntityWorld(), ComponentsRegistry.BORDER_SLOTS.get(player).getSelectedSlot());
+            town.addAMember(player);
         });
     }
 }

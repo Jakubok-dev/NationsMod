@@ -32,7 +32,7 @@ public class ComponentsRegistry implements LevelComponentInitializer, EntityComp
 
     @Override
     public void registerEntityComponentFactories(EntityComponentFactoryRegistry registry) {
-        registry.registerForPlayers(BORDER_SLOTS, p -> new BorderSlots(), RespawnCopyStrategy.ALWAYS_COPY);  
+        registry.registerForPlayers(BORDER_SLOTS, p -> new BorderSlots(), RespawnCopyStrategy.ALWAYS_COPY);
     }
 
     @Override

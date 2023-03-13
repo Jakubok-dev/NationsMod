@@ -1,14 +1,17 @@
 package me.jakubok.nationsmod.administration;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
+import me.jakubok.nationsmod.collections.PlayerAccount;
 import me.jakubok.nationsmod.registries.ComponentsRegistry;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldProperties;
 
-public class Nation extends AdministratingUnit<NationLawDescription> {
+public class Nation extends AdministratingUnit<NationLawDescription> implements Joinable {
 
     public Nation(String name, World world, String provinceName, Town capital) {
         super(new NationLawDescription(), name, world.getLevelProperties());
@@ -21,6 +24,27 @@ public class Nation extends AdministratingUnit<NationLawDescription> {
     public Nation(NbtCompound tag, WorldProperties props) {
         super(new NationLawDescription(), props);
         readFromNbt(tag);
+    }
+
+    @Override
+    public Set<PlayerAccount> getPlayerMembers() {
+        Set<PlayerAccount> result = new HashSet<>();
+        for (Province province : this.getProvinces()) {
+            for (Town town : province.getTowns()) {
+                result.addAll(town.getPlayerMembers());
+            }
+        }
+        return result;
+    }
+    @Override
+    public Set<UUID> getAIMembers() {
+        Set<UUID> result = new HashSet<>();
+        for (Province province : this.getProvinces()) {
+            for (Town town : province.getTowns()) {
+                result.addAll(town.getAIMembers());
+            }
+        }
+        return result;
     }
 
     public UUID getCapitalsID() {

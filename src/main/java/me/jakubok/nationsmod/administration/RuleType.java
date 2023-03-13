@@ -8,7 +8,8 @@ public enum RuleType {
     UUID("java.util.UUID"),
     COLOUR("me.jakubok.nationsmod.collections.Colour"),
     LISTOFUUID("java.util.List"),
-    LISTOFPLAYERACOUNT("java.util.List");
+    SETOFUUID("java.util.Set"),
+    SETOFPLAYERACOUNT("java.util.Set");
 
     private String cl;
     RuleType(String cl) {

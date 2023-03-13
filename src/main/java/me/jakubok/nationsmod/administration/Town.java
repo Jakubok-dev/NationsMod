@@ -1,19 +1,23 @@
 package me.jakubok.nationsmod.administration;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import me.jakubok.nationsmod.collections.BorderGroup;
 import me.jakubok.nationsmod.collections.PlayerAccount;
 import me.jakubok.nationsmod.collections.PlayerInfo;
+import me.jakubok.nationsmod.entity.human.HumanData;
+import me.jakubok.nationsmod.entity.human.HumanEntity;
 import me.jakubok.nationsmod.registries.ComponentsRegistry;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldProperties;
 
 
-public class Town extends AdministratingUnit<TownLawDescription> {
+public class Town extends AdministratingUnit<TownLawDescription> implements Joinable {
 
     public Town(String name, String districtName, ChunkPos pos, World world, Province province, BorderGroup borderGroup) {
         super(new TownLawDescription(), name, world.getLevelProperties());
@@ -32,44 +36,55 @@ public class Town extends AdministratingUnit<TownLawDescription> {
         this.readFromNbt(tag);
     }
 
-    public List<PlayerAccount> getTheListOfPlayerAccounts() {
+    @Override
+    public Set<PlayerAccount> getPlayerMembers() {
         @SuppressWarnings("unchecked")
-        List<PlayerAccount> result = (List<PlayerAccount>)this.law.getARule(TownLawDescription.listOfPlayerAccountsLabel);
+        Set<PlayerAccount> result = (Set<PlayerAccount>)this.law.getARule(TownLawDescription.setOfPlayerMembersLabel);
         return result;
+    }
+    @Override
+    public Set<UUID> getAIMembers() {
+        @SuppressWarnings("unchecked")
+        Set<UUID> result = (Set<UUID>)this.law.getARule(TownLawDescription.setOfAIMembersLabel);
+        return result;
+    }
+
+    public boolean addAMember(PlayerEntity entity) {
+        if (this.getPlayerMembers().contains(new PlayerAccount(entity)))
+            return false;
+        PlayerInfo info = ComponentsRegistry.PLAYER_INFO.get(this.props).getAPlayer(new PlayerAccount(entity));
+        if (info.getCitizenship() != null)
+            Town.fromUUID(info.getCitizenship(), this.props).removeAMember(entity);
+        
+        info.setCitizenship(this.getId());
+        this.getPlayerMembers().add(new PlayerAccount(entity));
+
+        return true;
+    }
+    public boolean removeAMember(PlayerEntity entity) {
+        return this.getPlayerMembers().remove(new PlayerAccount(entity));
+    }
+
+    public boolean addAMember(HumanEntity entity) {
+        if (this.getAIMembers().contains(entity.getUuid()))
+            return false;
+        HumanData data = entity.getHumanData();
+        if (data.getCitizenship() != null)
+            Town.fromUUID(data.getCitizenship(), this.props).removeAMember(entity);
+        
+        data.setCitizenship(this.getId(), this.props);
+        this.getAIMembers().add(entity.getUuid());
+        
+        return true;
+    }
+    public boolean removeAMember(HumanEntity entity) {
+        return this.getAIMembers().remove(entity.getUuid());
     }
 
     public List<UUID> getTheListOfDistrictsIDs() {
         @SuppressWarnings("unchecked")
         List<UUID> result = (List<UUID>)this.law.getARule(TownLawDescription.listOfDistrictsIDsLabel);
         return result;
-    }
-
-    public boolean addACitizen(PlayerAccount account) {
-        PlayerInfo info = PlayerInfo.fromAccount(account, this.props);
-
-        if (info.getCitizenInfo().addCitizenship(this)) {
-            this.getTheListOfPlayerAccounts().add(account);
-            return true;
-        }
-        return false;
-    }
-
-    public boolean removeACitizen(PlayerAccount account) {
-        PlayerInfo info = PlayerInfo.fromAccount(account, this.props);
-
-        for (int i = 0; i < this.getTheListOfPlayerAccounts().size(); i++) {
-            if (this.getTheListOfPlayerAccounts().get(i).equals(account)) {
-                this.getTheListOfPlayerAccounts().remove(i);
-                return info.getCitizenInfo().removeCitizenship(this);
-            }
-        }
-        return false;
-    }
-
-    public List<PlayerInfo> getCitizens() {
-        return this.getTheListOfPlayerAccounts().stream()
-            .map(el -> PlayerInfo.fromAccount(el, this.props))
-            .toList();
     }
 
     public List<District> getDistricts() {
@@ -93,19 +108,6 @@ public class Town extends AdministratingUnit<TownLawDescription> {
 
     public void setProvince(Province province) {
         this.setProvincesID(province.getId());
-        for (int i = 0; i < this.getTheListOfPlayerAccounts().size(); i++) {
-            PlayerInfo info = PlayerInfo.fromAccount(this.getTheListOfPlayerAccounts().get(i), this.props);
-            if (!info.getCitizenInfo().setNationality(province.getNation()))
-                this.removeACitizen(this.getTheListOfPlayerAccounts().get(i));
-        }
-    }
-
-    public void changeCitizensNationality() {
-        for (int i = 0; i < this.getTheListOfPlayerAccounts().size(); i++) {
-            PlayerInfo info = PlayerInfo.fromAccount(this.getTheListOfPlayerAccounts().get(i), this.props);
-            if (!info.getCitizenInfo().setNationality(this.getProvince().getNation()))
-                this.removeACitizen(this.getTheListOfPlayerAccounts().get(i));
-        }
     }
 
     public boolean hasProvince() {

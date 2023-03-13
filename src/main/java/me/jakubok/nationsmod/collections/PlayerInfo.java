@@ -24,8 +24,9 @@ public class PlayerInfo implements ComponentV3 {
     public UUID currentProvince;
     public UUID currentNation;
 
+    protected UUID citizenship;
+
     protected PlayerAccount account;
-    protected CitizenInfo citizenInfo;
     public final WorldProperties props;
 
     public boolean online = false;
@@ -33,21 +34,14 @@ public class PlayerInfo implements ComponentV3 {
     public PlayerInfo(NbtCompound compound, WorldProperties props) {
         this.props = props;
         this.readFromNbt(compound);
-        citizenInfo = new CitizenInfo(this.props);
     }
     public PlayerInfo(PlayerEntity entity, WorldProperties props) {
         this.account = new PlayerAccount(entity);
         this.props = props;
-        citizenInfo = new CitizenInfo(this.props);
     }
     public PlayerInfo(PlayerAccount account, WorldProperties props) {
         this.account = account;
         this.props = props;
-        citizenInfo = new CitizenInfo(this.props);
-    }
-
-    public CitizenInfo getCitizenInfo() {
-        return citizenInfo;
     }
 
     public PlayerAccount getPlayerAccount() {
@@ -59,6 +53,19 @@ public class PlayerInfo implements ComponentV3 {
             return;
         
         this.account = account;
+    }
+
+    public UUID getCitizenship() {
+        return citizenship;
+    }
+    public boolean setCitizenship(UUID citizenship) {
+        if (Town.fromUUID(citizenship, this.props) == null)
+            return false;
+        this.citizenship = citizenship;
+        return true;
+    }
+    public void removeCitizenship() {
+        this.citizenship = null;
     }
 
     public Text getToolBarText(PlayerEntity player) {
@@ -155,7 +162,9 @@ public class PlayerInfo implements ComponentV3 {
             this.currentNation = tag.getUuid("current_nation");
 
         this.account = new PlayerAccount(tag.getCompound("account"));
-        this.citizenInfo = new CitizenInfo(tag.getCompound("citizen_info"), this.props);
+
+        if (!tag.getBoolean("is_citizenship_null"))
+            this.citizenship = tag.getUuid("citizenship");
     }
 
     @Override
@@ -179,7 +188,10 @@ public class PlayerInfo implements ComponentV3 {
         tag.putBoolean("is_current_nation_null", this.currentNation == null);
 
         tag.put("account", this.account.writeToNbtAndReturn(new NbtCompound()));
-        tag.put("citizen_info", this.citizenInfo.writeToNbtAndReturn(new NbtCompound()));
+
+        if (this.citizenship != null)
+            tag.putUuid("citizenship", this.citizenship);
+        tag.putBoolean("is_citizenship_null", this.citizenship == null);
     }
     
     public static PlayerInfo fromAccount(PlayerAccount account, WorldProperties props) {

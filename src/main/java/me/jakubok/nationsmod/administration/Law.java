@@ -2,8 +2,10 @@ package me.jakubok.nationsmod.administration;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import dev.onyxstudios.cca.api.v3.component.ComponentV3;
@@ -92,13 +94,22 @@ public class Law<D extends LawDescription> implements ComponentV3 {
                         this.putARule(entry.getKey(), list);
                     } catch(Exception ex) {}
                     break;
-                case LISTOFPLAYERACOUNT:
+                case SETOFUUID:
                     try {
                         int size = tag.getInt(entry.getKey() + "Size");
-                        List<PlayerAccount> list = new ArrayList<>();
+                        Set<UUID> set = new HashSet<>();
                         for (int i = 0; i < size; i++)
-                            list.add(new PlayerAccount(tag.getCompound(entry.getKey() + i)));
-                        this.putARule(entry.getKey(), list);
+                            set.add(tag.getUuid(entry.getKey() + i));
+                        this.putARule(entry.getKey(), set);
+                    } catch(Exception ex) {}
+                    break;
+                case SETOFPLAYERACOUNT:
+                    try {
+                        int size = tag.getInt(entry.getKey() + "Size");
+                        Set<PlayerAccount> set = new HashSet<>();
+                        for (int i = 0; i < size; i++)
+                            set.add(new PlayerAccount(tag.getCompound(entry.getKey() + i)));
+                        this.putARule(entry.getKey(), set);
                     } catch(Exception ex) {}
                     break;
                 default:
@@ -147,12 +158,19 @@ public class Law<D extends LawDescription> implements ComponentV3 {
                     for (int i = 0; i < listOfUUID.size(); i++)
                         tag.putUuid(entry.getKey() + i, listOfUUID.get(i));
                     break;
-                case LISTOFPLAYERACOUNT:
+                case SETOFUUID:
                     @SuppressWarnings("unchecked")
-                    List<PlayerAccount> listOfPlayerAccount = (List<PlayerAccount>)entry.getValue();
-                    tag.putInt(entry.getKey() + "Size", listOfPlayerAccount.size());
-                    for (int i = 0; i < listOfPlayerAccount.size(); i++)
-                        tag.put(entry.getKey() + i, listOfPlayerAccount.get(i).writeToNbtAndReturn(new NbtCompound()));
+                    UUID[] arrayOfUUID = ((Set<UUID>)entry.getValue()).toArray(new UUID[]{});
+                    tag.putInt(entry.getKey() + "Size", arrayOfUUID.length);
+                    for (int i = 0; i < arrayOfUUID.length; i++)
+                        tag.putUuid(entry.getKey() + i, arrayOfUUID[i]);
+                    break;
+                case SETOFPLAYERACOUNT:
+                    @SuppressWarnings("unchecked")
+                    PlayerAccount[] arrayOfPlayerAccount = ((Set<PlayerAccount>)entry.getValue()).toArray(new PlayerAccount[]{});
+                    tag.putInt(entry.getKey() + "Size", arrayOfPlayerAccount.length);
+                    for (int i = 0; i < arrayOfPlayerAccount.length; i++)
+                        tag.put(entry.getKey() + i, arrayOfPlayerAccount[i].writeToNbtAndReturn(new NbtCompound()));
                     break;
                 default:
                     System.out.print(entry + "of an unserialisable type");

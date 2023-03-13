@@ -56,7 +56,7 @@ public class GeneralInfoSubscreen {
             ),
             new Setting(
                 "Citizens:", 
-                inst.town.getCitizens().size() + "", 
+                inst.town.getAIMembers().size() + inst.town.getPlayerMembers().size() + "", 
                 null, 
                 inst.getClient(),
                 SimpleWindow.windowTop + 35 + 21 * 2,
