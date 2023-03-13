@@ -1,9 +1,7 @@
-# Fabric Example Mod
+# Nations mod
 
-## Setup
+## What is it?
+Well... It will be a fabric mod which adds nations, towns and citizens to the game. The name of the mod will probably change.
 
-For setup instructions please see the [fabric wiki page](https://fabricmc.net/wiki/tutorial:setup) that relates to the IDE that you are using.
-
-## License
-
-This template is available under the CC0 license. Feel free to learn from it and incorporate it in your own projects.
+## Licence
+The mod is distributed on the MIT licence.
