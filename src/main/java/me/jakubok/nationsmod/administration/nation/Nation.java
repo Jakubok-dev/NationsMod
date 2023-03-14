@@ -1,17 +1,20 @@
-package me.jakubok.nationsmod.administration;
+package me.jakubok.nationsmod.administration.nation;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import me.jakubok.nationsmod.administration.abstractEntities.AdministratingUnit;
+import me.jakubok.nationsmod.administration.province.Province;
+import me.jakubok.nationsmod.administration.town.Town;
 import me.jakubok.nationsmod.collections.PlayerAccount;
 import me.jakubok.nationsmod.registries.ComponentsRegistry;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldProperties;
 
-public class Nation extends AdministratingUnit<NationLawDescription> implements Joinable {
+public class Nation extends AdministratingUnit<NationLawDescription> {
 
     public Nation(String name, World world, String provinceName, Town capital) {
         super(new NationLawDescription(), name, world.getLevelProperties());

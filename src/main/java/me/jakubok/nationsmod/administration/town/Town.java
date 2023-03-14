@@ -1,9 +1,12 @@
-package me.jakubok.nationsmod.administration;
+package me.jakubok.nationsmod.administration.town;
 
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import me.jakubok.nationsmod.administration.abstractEntities.AdministratingUnit;
+import me.jakubok.nationsmod.administration.district.District;
+import me.jakubok.nationsmod.administration.province.Province;
 import me.jakubok.nationsmod.collections.BorderGroup;
 import me.jakubok.nationsmod.collections.PlayerAccount;
 import me.jakubok.nationsmod.collections.PlayerInfo;
@@ -17,7 +20,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldProperties;
 
 
-public class Town extends AdministratingUnit<TownLawDescription> implements Joinable {
+public class Town extends AdministratingUnit<TownLawDescription> {
 
     public Town(String name, String districtName, ChunkPos pos, World world, Province province, BorderGroup borderGroup) {
         super(new TownLawDescription(), name, world.getLevelProperties());

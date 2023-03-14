@@ -1,7 +1,10 @@
-package me.jakubok.nationsmod.administration;
+package me.jakubok.nationsmod.administration.nation;
 
 import java.util.ArrayList;
 import java.util.UUID;
+
+import me.jakubok.nationsmod.administration.abstractEntities.AdministratingUnitLawDescription;
+import me.jakubok.nationsmod.administration.law.RuleType;
 
 public class NationLawDescription extends AdministratingUnitLawDescription {
     public static final RuleDescription capitalsID = new RuleDescription(RuleType.UUID, "The id of the nation's capital", true, null);

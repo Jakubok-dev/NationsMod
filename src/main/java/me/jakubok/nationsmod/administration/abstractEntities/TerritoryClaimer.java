@@ -1,4 +1,4 @@
-package me.jakubok.nationsmod.administration;
+package me.jakubok.nationsmod.administration.abstractEntities;
 
 import me.jakubok.nationsmod.chunk.ChunkClaimRegistry;
 import me.jakubok.nationsmod.collections.Colour;

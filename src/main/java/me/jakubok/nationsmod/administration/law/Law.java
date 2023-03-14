@@ -1,4 +1,4 @@
-package me.jakubok.nationsmod.administration;
+package me.jakubok.nationsmod.administration.law;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,14 +9,14 @@ import java.util.Set;
 import java.util.UUID;
 
 import dev.onyxstudios.cca.api.v3.component.ComponentV3;
-import me.jakubok.nationsmod.administration.LawDescription.RuleDescription;
+import me.jakubok.nationsmod.administration.law.LawDescription.RuleDescription;
 import me.jakubok.nationsmod.collections.Colour;
 import me.jakubok.nationsmod.collections.PlayerAccount;
 import net.minecraft.nbt.NbtCompound;
 
 public class Law<D extends LawDescription> implements ComponentV3 {
     public final D description;
-    private Map<String, Object> law = new HashMap<>();
+    protected Map<String, Object> law = new HashMap<>();
     public Law(D description) {
         this.description = description;
         for (Map.Entry<String, RuleDescription> ruleDescription : this.description.getRulesDescriptions().entrySet()) {

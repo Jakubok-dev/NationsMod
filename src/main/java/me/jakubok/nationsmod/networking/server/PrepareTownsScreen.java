@@ -3,8 +3,8 @@ package me.jakubok.nationsmod.networking.server;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import me.jakubok.nationsmod.administration.LegalOrganisation;
-import me.jakubok.nationsmod.administration.Town;
+import me.jakubok.nationsmod.administration.abstractEntities.LegalOrganisation;
+import me.jakubok.nationsmod.administration.town.Town;
 import me.jakubok.nationsmod.networking.Packets;
 import me.jakubok.nationsmod.registries.ComponentsRegistry;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;

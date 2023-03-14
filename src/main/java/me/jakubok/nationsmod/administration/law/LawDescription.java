@@ -1,4 +1,4 @@
-package me.jakubok.nationsmod.administration;
+package me.jakubok.nationsmod.administration.law;
 
 import java.util.Map;
 

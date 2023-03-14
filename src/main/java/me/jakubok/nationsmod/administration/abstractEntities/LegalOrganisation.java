@@ -1,8 +1,14 @@
-package me.jakubok.nationsmod.administration;
+package me.jakubok.nationsmod.administration.abstractEntities;
 
 import java.util.UUID;
 
 import dev.onyxstudios.cca.api.v3.component.ComponentV3;
+import me.jakubok.nationsmod.administration.district.District;
+import me.jakubok.nationsmod.administration.law.Law;
+import me.jakubok.nationsmod.administration.nation.Nation;
+import me.jakubok.nationsmod.administration.province.Province;
+import me.jakubok.nationsmod.administration.town.Town;
+import me.jakubok.nationsmod.administration.town.TownLawDescription;
 import me.jakubok.nationsmod.registries.ComponentsRegistry;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.world.WorldProperties;

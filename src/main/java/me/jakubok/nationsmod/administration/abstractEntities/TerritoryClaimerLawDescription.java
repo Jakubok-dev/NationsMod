@@ -1,4 +1,6 @@
-package me.jakubok.nationsmod.administration;
+package me.jakubok.nationsmod.administration.abstractEntities;
+
+import me.jakubok.nationsmod.administration.law.RuleType;
 
 public abstract class TerritoryClaimerLawDescription extends LegalOrganisationLawDescription  {
     public static final RuleDescription claimedBlocksCount = new RuleDescription(RuleType.LONG, "The total amount of blocks the territory claimer has", false, Long.valueOf(0));

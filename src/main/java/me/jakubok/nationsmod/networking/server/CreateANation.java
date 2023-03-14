@@ -2,10 +2,10 @@ package me.jakubok.nationsmod.networking.server;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import me.jakubok.nationsmod.administration.District;
-import me.jakubok.nationsmod.administration.Nation;
-import me.jakubok.nationsmod.administration.TerritoryClaimer;
-import me.jakubok.nationsmod.administration.Town;
+import me.jakubok.nationsmod.administration.abstractEntities.TerritoryClaimer;
+import me.jakubok.nationsmod.administration.district.District;
+import me.jakubok.nationsmod.administration.nation.Nation;
+import me.jakubok.nationsmod.administration.town.Town;
 import me.jakubok.nationsmod.chunk.ChunkClaimRegistry;
 import me.jakubok.nationsmod.registries.ComponentsRegistry;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;

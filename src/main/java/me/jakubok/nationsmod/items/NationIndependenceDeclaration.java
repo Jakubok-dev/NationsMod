@@ -1,8 +1,8 @@
 package me.jakubok.nationsmod.items;
 
 import me.jakubok.nationsmod.NationsMod;
-import me.jakubok.nationsmod.administration.District;
-import me.jakubok.nationsmod.administration.TerritoryClaimer;
+import me.jakubok.nationsmod.administration.abstractEntities.TerritoryClaimer;
+import me.jakubok.nationsmod.administration.district.District;
 import me.jakubok.nationsmod.chunk.ChunkClaimRegistry;
 import me.jakubok.nationsmod.networking.Packets;
 import me.jakubok.nationsmod.registries.ComponentsRegistry;

@@ -2,7 +2,7 @@ package me.jakubok.nationsmod.networking.server;
 
 import java.util.UUID;
 
-import me.jakubok.nationsmod.administration.District;
+import me.jakubok.nationsmod.administration.district.District;
 import me.jakubok.nationsmod.chunk.ChunkClaimRegistry;
 import me.jakubok.nationsmod.collections.Colour;
 import me.jakubok.nationsmod.networking.Packets;

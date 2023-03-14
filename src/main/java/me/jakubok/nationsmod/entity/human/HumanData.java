@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import dev.onyxstudios.cca.api.v3.component.ComponentV3;
-import me.jakubok.nationsmod.administration.Town;
+import me.jakubok.nationsmod.administration.town.Town;
 import me.jakubok.nationsmod.collections.Name;
 import net.minecraft.entity.data.TrackedDataHandler;
 import net.minecraft.nbt.NbtCompound;

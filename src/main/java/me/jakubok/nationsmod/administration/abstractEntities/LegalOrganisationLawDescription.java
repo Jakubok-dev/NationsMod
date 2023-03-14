@@ -1,8 +1,11 @@
-package me.jakubok.nationsmod.administration;
+package me.jakubok.nationsmod.administration.abstractEntities;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+
+import me.jakubok.nationsmod.administration.law.LawDescription;
+import me.jakubok.nationsmod.administration.law.RuleType;
 
 public abstract class LegalOrganisationLawDescription implements LawDescription {
 

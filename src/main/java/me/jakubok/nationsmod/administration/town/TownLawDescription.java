@@ -1,9 +1,11 @@
-package me.jakubok.nationsmod.administration;
+package me.jakubok.nationsmod.administration.town;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.UUID;
 
+import me.jakubok.nationsmod.administration.abstractEntities.AdministratingUnitLawDescription;
+import me.jakubok.nationsmod.administration.law.RuleType;
 import me.jakubok.nationsmod.collections.PlayerAccount;
 
 public class TownLawDescription extends AdministratingUnitLawDescription{

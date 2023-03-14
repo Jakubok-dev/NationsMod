@@ -1,8 +1,11 @@
-package me.jakubok.nationsmod.administration;
+package me.jakubok.nationsmod.administration.abstractEntities;
 
 import java.util.Random;
+import java.util.Set;
+import java.util.UUID;
 
 import me.jakubok.nationsmod.collections.Colour;
+import me.jakubok.nationsmod.collections.PlayerAccount;
 import net.minecraft.world.WorldProperties;
 
 public abstract class AdministratingUnit<D extends AdministratingUnitLawDescription> extends LegalOrganisation<D> {
@@ -24,4 +27,7 @@ public abstract class AdministratingUnit<D extends AdministratingUnitLawDescript
     public Colour getTheMapColour() {
         return (Colour)this.law.getARule(AdministratingUnitLawDescription.mapColourLabel);
     }
+
+    public abstract Set<PlayerAccount> getPlayerMembers();
+    public abstract Set<UUID> getAIMembers();
 }

@@ -6,7 +6,7 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import dev.onyxstudios.cca.api.v3.component.ComponentV3;
-import me.jakubok.nationsmod.administration.TerritoryClaimer;
+import me.jakubok.nationsmod.administration.abstractEntities.TerritoryClaimer;
 import me.jakubok.nationsmod.networking.Packets;
 import me.jakubok.nationsmod.registries.ComponentsRegistry;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;

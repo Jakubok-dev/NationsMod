@@ -9,7 +9,7 @@ import java.util.UUID;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import me.jakubok.nationsmod.NationsClient;
-import me.jakubok.nationsmod.administration.Town;
+import me.jakubok.nationsmod.administration.town.Town;
 import me.jakubok.nationsmod.collections.Border;
 import me.jakubok.nationsmod.collections.Colour;
 import me.jakubok.nationsmod.gui.townScreen.TownScreen;

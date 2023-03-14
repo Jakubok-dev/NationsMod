@@ -1,8 +1,11 @@
-package me.jakubok.nationsmod.administration;
+package me.jakubok.nationsmod.administration.province;
 
 import java.util.List;
 import java.util.UUID;
 
+import me.jakubok.nationsmod.administration.abstractEntities.TerritoryClaimer;
+import me.jakubok.nationsmod.administration.nation.Nation;
+import me.jakubok.nationsmod.administration.town.Town;
 import me.jakubok.nationsmod.collections.Colour;
 import me.jakubok.nationsmod.registries.ComponentsRegistry;
 import net.minecraft.nbt.NbtCompound;

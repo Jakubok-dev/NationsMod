@@ -3,7 +3,7 @@ package me.jakubok.nationsmod.gui.townScreen;
 import java.util.ArrayList;
 import java.util.List;
 
-import me.jakubok.nationsmod.administration.Town;
+import me.jakubok.nationsmod.administration.town.Town;
 import me.jakubok.nationsmod.gui.miscellaneous.Subscreen;
 import me.jakubok.nationsmod.gui.miscellaneous.TabWindow;
 import me.jakubok.nationsmod.registries.ItemRegistry;

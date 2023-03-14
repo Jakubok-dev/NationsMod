@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import me.jakubok.nationsmod.administration.Town;
+import me.jakubok.nationsmod.administration.town.Town;
 import me.jakubok.nationsmod.gui.miscellaneous.SimpleWindow;
 import me.jakubok.nationsmod.gui.townScreen.TownScreen;
 import me.jakubok.nationsmod.networking.ClientNetworking;

@@ -1,7 +1,9 @@
-package me.jakubok.nationsmod.administration;
+package me.jakubok.nationsmod.administration.district;
 
 import java.util.UUID;
 
+import me.jakubok.nationsmod.administration.abstractEntities.TerritoryClaimer;
+import me.jakubok.nationsmod.administration.town.Town;
 import me.jakubok.nationsmod.collections.Border;
 import me.jakubok.nationsmod.collections.BorderGroup;
 import me.jakubok.nationsmod.collections.Colour;

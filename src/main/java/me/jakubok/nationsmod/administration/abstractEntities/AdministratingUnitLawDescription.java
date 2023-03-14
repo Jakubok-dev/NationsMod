@@ -1,5 +1,6 @@
-package me.jakubok.nationsmod.administration;
+package me.jakubok.nationsmod.administration.abstractEntities;
 
+import me.jakubok.nationsmod.administration.law.RuleType;
 import me.jakubok.nationsmod.collections.Colour;
 
 public class AdministratingUnitLawDescription extends LegalOrganisationLawDescription {

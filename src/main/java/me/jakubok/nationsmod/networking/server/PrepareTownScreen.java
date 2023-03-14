@@ -2,7 +2,7 @@ package me.jakubok.nationsmod.networking.server;
 
 import java.util.UUID;
 
-import me.jakubok.nationsmod.administration.Town;
+import me.jakubok.nationsmod.administration.town.Town;
 import me.jakubok.nationsmod.networking.Packets;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;

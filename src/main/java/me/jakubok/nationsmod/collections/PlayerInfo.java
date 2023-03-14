@@ -3,10 +3,10 @@ package me.jakubok.nationsmod.collections;
 import java.util.UUID;
 
 import dev.onyxstudios.cca.api.v3.component.ComponentV3;
-import me.jakubok.nationsmod.administration.District;
-import me.jakubok.nationsmod.administration.Nation;
-import me.jakubok.nationsmod.administration.Province;
-import me.jakubok.nationsmod.administration.Town;
+import me.jakubok.nationsmod.administration.district.District;
+import me.jakubok.nationsmod.administration.nation.Nation;
+import me.jakubok.nationsmod.administration.province.Province;
+import me.jakubok.nationsmod.administration.town.Town;
 import me.jakubok.nationsmod.chunk.ChunkClaimRegistry;
 import me.jakubok.nationsmod.registries.ComponentsRegistry;
 import net.minecraft.entity.player.PlayerEntity;
