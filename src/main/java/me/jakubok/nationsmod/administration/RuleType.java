@@ -1,22 +1,29 @@
 package me.jakubok.nationsmod.administration;
 
-public enum RuleType {
-    INTEGER("java.lang.Integer"),
-    STRING("java.lang.String"),
-    DOUBLE("java.lang.Double"),
-    LONG("java.lang.Long"),
-    UUID("java.util.UUID"),
-    COLOUR("me.jakubok.nationsmod.collections.Colour"),
-    LISTOFUUID("java.util.List"),
-    SETOFUUID("java.util.Set"),
-    SETOFPLAYERACOUNT("java.util.Set");
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
+import java.util.function.Function;
 
-    private String cl;
-    RuleType(String cl) {
-        this.cl = cl;
+import me.jakubok.nationsmod.collections.Colour;
+
+public enum RuleType {
+    INTEGER(obj -> obj instanceof Integer),
+    STRING(obj -> obj instanceof String),
+    DOUBLE(obj -> obj instanceof Double),
+    LONG(obj -> obj instanceof Long),
+    UUID(obj -> obj instanceof UUID),
+    COLOUR(obj -> obj instanceof Colour),
+    LISTOFUUID(obj -> obj instanceof List),
+    SETOFUUID(obj -> obj instanceof Set),
+    SETOFPLAYERACOUNT(obj -> obj instanceof Set);
+
+    private final Function<Object, Boolean> isInstance;
+    RuleType(Function<Object, Boolean> isInstance) {
+        this.isInstance = isInstance;
     }
 
-    public boolean fits(Object obj) throws ClassNotFoundException {
-        return Class.forName(cl).isInstance(obj);
+    public boolean fits(Object obj) {
+        return isInstance.apply(obj);
     }
 }
