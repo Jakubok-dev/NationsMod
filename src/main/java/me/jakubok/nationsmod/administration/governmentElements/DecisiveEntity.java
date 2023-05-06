@@ -1,25 +1,51 @@
 package me.jakubok.nationsmod.administration.governmentElements;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
-import java.util.function.Consumer;
+import java.util.concurrent.atomic.AtomicInteger;
 
+import dev.onyxstudios.cca.api.v3.component.ComponentV3;
 import me.jakubok.nationsmod.administration.abstractEntities.AdministratingUnit;
-import me.jakubok.nationsmod.collections.Pair;
+import net.minecraft.nbt.NbtCompound;
 
-public abstract class DecisiveEntity {
+public abstract class DecisiveEntity implements ComponentV3 {
 
     public final AdministratingUnit<?> administratedUnit;
-    public final FormOfGovernment<?, ?, ?> formOfGovernment;
+    public final FormOfGovernment<?, ?, ?, ?> formOfGovernment;
+    public final Set<UUID> deliberatedDirectives = new HashSet<>();
 
-    public DecisiveEntity(AdministratingUnit<?> administratedUnit, FormOfGovernment<?, ?, ?> formOfGovernment) {
+    public DecisiveEntity(AdministratingUnit<?> administratedUnit, FormOfGovernment<?, ?, ?, ?> formOfGovernment) {
         this.administratedUnit = administratedUnit;
         this.formOfGovernment = formOfGovernment;
     }
 
-    public abstract void putUnderDeliberation(UUID directivesID, Consumer<Pair<DecisiveEntitysVerdict, UUID>> listener);
+    public boolean putUnderDeliberation(UUID directivesID) {
+        return this.deliberatedDirectives.add(directivesID);
+    }
 
     public enum DecisiveEntitysVerdict {
         APPROVED,
         REJECTED
+    }
+
+    @Override
+    public void readFromNbt(NbtCompound tag) {
+        this.deliberatedDirectives.clear();
+        for (int i = 0; i < tag.getInt("Size"); i++)
+            this.deliberatedDirectives.add(tag.getUuid("directivesID" + i));
+    }
+
+    public NbtCompound writeToNbtAndReturn(NbtCompound tag) {
+        AtomicInteger size = new AtomicInteger(0);
+        for (UUID id : this.deliberatedDirectives)
+            tag.putUuid("directivesID" + size.getAndIncrement(), id);
+        tag.putInt("Size", size.get());
+        return tag;
+    }
+
+    @Override
+    public void writeToNbt(NbtCompound tag) {
+        this.writeToNbtAndReturn(tag);
     }
 }

@@ -6,6 +6,8 @@ import java.util.UUID;
 
 import me.jakubok.nationsmod.administration.abstractEntities.AdministratingUnit;
 import me.jakubok.nationsmod.administration.district.District;
+import me.jakubok.nationsmod.administration.governmentElements.formsOfGovernment.AbsoluteMonarchy;
+import me.jakubok.nationsmod.administration.law.Directive;
 import me.jakubok.nationsmod.administration.province.Province;
 import me.jakubok.nationsmod.collections.BorderGroup;
 import me.jakubok.nationsmod.collections.PlayerAccount;
@@ -15,6 +17,8 @@ import me.jakubok.nationsmod.entity.human.HumanEntity;
 import me.jakubok.nationsmod.registries.ComponentsRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.util.crash.CrashException;
+import net.minecraft.util.crash.CrashReport;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldProperties;
@@ -38,7 +42,7 @@ public class Town extends AdministratingUnit<TownLawDescription> {
         super(new TownLawDescription(), props);
         this.readFromNbt(tag);
     }
-
+    
     @Override
     public Set<PlayerAccount> getPlayerMembers() {
         @SuppressWarnings("unchecked")
@@ -115,6 +119,17 @@ public class Town extends AdministratingUnit<TownLawDescription> {
 
     public boolean hasProvince() {
         return getProvince() != null;
+    }
+
+    @Override
+    public void readTheFormOfGovernment(NbtCompound nbt) {
+        switch (nbt.getString("formOfGovernment")) {
+            case "absolute_monarchy":
+                this.formOfGovernment = new AbsoluteMonarchy<Town, TownLawDescription>(this, () -> new Directive<>(this.description));
+                break;
+            default:
+                throw new CrashException(CrashReport.create(new Throwable(), "Unknown form of government"));
+        }
     }
 
     public static Town fromUUID(UUID id, WorldProperties props) {

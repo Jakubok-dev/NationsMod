@@ -43,10 +43,10 @@ public class GeneralInfoSubscreen {
                 true
             ),
             new Setting(
-                "Regime:", 
-                "dictatorship", 
+                "Government:", 
+                inst.town.formOfGovernment.getDisplayName().getString(), 
                 new ChangeOfASettingScreen(
-                    Text.of("Regime"), 
+                    Text.of("Form of government:"), 
                     instance -> {},
                     inst
                 ),
