@@ -16,7 +16,7 @@ import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 
 public class MainScreen extends Screen {
 
@@ -30,14 +30,14 @@ public class MainScreen extends Screen {
     protected final int windowCenterVertical = (windowTop + windowBottom) / 2;
 
     public MainScreen() {
-        super(new TranslatableText("gui.nationsmod.main_screen.title"));
+        super(Text.translatable("gui.nationsmod.main_screen.title"));
     }
 
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         this.renderBackground(matrices);
 
-        drawCenteredText(
+        drawCenteredTextWithShadow(
             matrices, 
             this.textRenderer, 
             this.title, 
@@ -56,23 +56,20 @@ public class MainScreen extends Screen {
         // windowCenterHorizontal - 100, 
         // windowCenterVertical - 12,
 
-        this.addDrawableChild(new ButtonWidget(
-            windowCenterHorizontal - 100, 
-            windowCenterVertical - 12, 
-            200, 
-            20, 
-            new TranslatableText("gui.nationsmod.main_screen.map_button"), 
+        this.addDrawableChild(ButtonWidget.builder(
+            Text.translatable("gui.nationsmod.main_screen.map_button"), 
             b -> {
                 this.client.setScreen(new MapScreen(this.client, this));
             }
-        ));
-
-        this.addDrawableChild(new ButtonWidget(
-            this.windowCenterHorizontal - 100, 
-            windowCenterVertical + 12, 
+        ).dimensions(
+            windowCenterHorizontal - 100, 
+            windowCenterVertical - 12, 
             200, 
-            20, 
-            new TranslatableText("gui.nationsmod.main_screen.towns_button"), 
+            20
+        ).build());
+
+        this.addDrawableChild(ButtonWidget.builder(
+            Text.translatable("gui.nationsmod.main_screen.towns_button"), 
             b -> {
                 PlayChannelHandler response = (MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) -> {
                     NbtCompound compound = buf.readNbt();
@@ -88,15 +85,21 @@ public class MainScreen extends Screen {
 
                 ClientNetworking.makeARequest(Packets.PREPARE_TOWNS_SCREEN, PacketByteBufs.create(), response);
             }
-        ));
+        ).dimensions(
+            this.windowCenterHorizontal - 100, 
+            windowCenterVertical + 12, 
+            200, 
+            20
+        ).build());
 
-        this.addDrawableChild(new ButtonWidget(
+        this.addDrawableChild(ButtonWidget.builder(
+            Text.translatable("gui.nationsmod.main_screen.nations_button"), 
+            b -> {}
+        ).dimensions(
             windowCenterHorizontal - 100, 
             windowCenterVertical + 36, 
             200, 
-            20, 
-            new TranslatableText("gui.nationsmod.main_screen.nations_button"), 
-            b -> {}
-        ));
+            20
+        ).build());
     }
 }

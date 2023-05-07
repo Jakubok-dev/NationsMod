@@ -3,6 +3,8 @@ package me.jakubok.nationsmod.collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.joml.Matrix4f;
+
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.MinecraftClient;
@@ -14,7 +16,6 @@ import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.render.VertexFormat.DrawMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Vec3d;
 
 public class ClientBorderDrawer {
@@ -59,7 +60,6 @@ public class ClientBorderDrawer {
         RenderSystem.lineWidth(2.0f);
         
         RenderSystem.disableDepthTest();
-        RenderSystem.disableTexture();
         RenderSystem.disableBlend();
 
         stack.push();
@@ -69,7 +69,7 @@ public class ClientBorderDrawer {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
 
-        RenderSystem.setShader(GameRenderer::getPositionColorShader);
+        RenderSystem.setShader(GameRenderer::getPositionColorProgram);
         buffer.begin(DrawMode.DEBUG_LINE_STRIP, VertexFormats.POSITION_COLOR);
 
         buffer.vertex(model, blockPosition.getX(), blockPosition.getY(), blockPosition.getZ()).color((float)colour.getR()/255f, (float)colour.getG()/255f, (float)colour.getB()/255f, 1.0f)
@@ -114,7 +114,6 @@ public class ClientBorderDrawer {
         
         tessellator.draw();
 
-        RenderSystem.enableTexture();
         RenderSystem.lineWidth(1.0f);
         RenderSystem.enableBlend();
         RenderSystem.enableDepthTest();

@@ -10,7 +10,6 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 
 public class BorderSlotCreationScreen extends SimpleWindow {
 
@@ -18,7 +17,7 @@ public class BorderSlotCreationScreen extends SimpleWindow {
     protected ButtonWidget submit;
 
     public BorderSlotCreationScreen(Screen previousScreen) {
-        super(new TranslatableText("gui.nationsmod.border_slot_creator_screen.title"), previousScreen);
+        super(Text.translatable("gui.nationsmod.border_slot_creator_screen.title"), previousScreen);
     }
 
     @Override
@@ -26,10 +25,10 @@ public class BorderSlotCreationScreen extends SimpleWindow {
         
         super.render(matrices, mouseX, mouseY, delta);
 
-        drawCenteredText(
+        drawCenteredTextWithShadow(
             matrices, 
             this.textRenderer, 
-            new TranslatableText("gui.nationsmod.border_slot_creator_screen.name"), 
+            Text.translatable("gui.nationsmod.border_slot_creator_screen.name"), 
             windowCenterHorizontal - 75, 
             windowCenterVertical - 10, 
             0xffffff
@@ -49,12 +48,8 @@ public class BorderSlotCreationScreen extends SimpleWindow {
         );
         this.addDrawableChild(this.nameField);
 
-        this.submit = new ButtonWidget(
-            windowCenterHorizontal - 50,
-            windowBottom - 25,
-            100,
-            20, 
-            new TranslatableText("gui.nationsmod.submit"),
+        this.submit = ButtonWidget.builder(
+            Text.translatable("gui.nationsmod.submit"),
             t -> {
 
                 if (this.nameField.getText().trim() == "" || this.nameField.getText().trim() == "+")
@@ -68,7 +63,12 @@ public class BorderSlotCreationScreen extends SimpleWindow {
                 t.active = false;
                 this.client.setScreen(null);
             }
-        );
+        ).dimensions(
+            windowCenterHorizontal - 50,
+            windowBottom - 25,
+            100,
+            20
+        ).build();
         this.addDrawableChild(this.submit);
 
         super.init();

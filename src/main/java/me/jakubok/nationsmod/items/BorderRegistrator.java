@@ -1,6 +1,5 @@
 package me.jakubok.nationsmod.items;
 
-import me.jakubok.nationsmod.NationsMod;
 import me.jakubok.nationsmod.collections.BorderSlots;
 import me.jakubok.nationsmod.collections.PlayerAccount;
 import me.jakubok.nationsmod.collections.PlayerInfo;
@@ -23,7 +22,7 @@ import net.minecraft.world.World;
 public class BorderRegistrator extends Item {
 
     public BorderRegistrator() {
-        super(new FabricItemSettings().group(NationsMod.ITEM_GROUP).maxCount(1));
+        super(new FabricItemSettings().maxCount(1));
     }
 
     @Override

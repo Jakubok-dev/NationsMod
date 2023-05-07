@@ -9,7 +9,6 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 
 public class BorderSlotDeletionScreen extends SimpleWindow {
 
@@ -27,19 +26,19 @@ public class BorderSlotDeletionScreen extends SimpleWindow {
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         super.render(matrices, mouseX, mouseY, delta);
 
-        drawCenteredText(
+        drawCenteredTextWithShadow(
             matrices, 
             textRenderer, 
-            new TranslatableText("gui.nationsmod.delete_a_border_slot_screen.1"), 
+            Text.translatable("gui.nationsmod.delete_a_border_slot_screen.1"), 
             windowCenterHorizontal,
             windowCenterVertical - 20, 
             0xa5081a
         );
 
-        drawCenteredText(
+        drawCenteredTextWithShadow(
             matrices, 
             textRenderer, 
-            new TranslatableText("gui.nationsmod.delete_a_border_slot_screen.2"), 
+            Text.translatable("gui.nationsmod.delete_a_border_slot_screen.2"), 
             windowCenterHorizontal,
             windowCenterVertical, 
             0xa5081a
@@ -50,12 +49,8 @@ public class BorderSlotDeletionScreen extends SimpleWindow {
     protected void init() {
         super.init();
 
-        this.yes = new ButtonWidget(
-            windowLeft + 7,
-            windowBottom - 25, 
-            windowCenterHorizontal / 2 - 5, 
-            20,
-            new TranslatableText("gui.nationsmod.yes"), 
+        this.yes = ButtonWidget.builder(
+            Text.translatable("gui.nationsmod.yes"), 
             t -> {
                 if (this.parent.isSelected())
                     this.parent.makeUnselected();
@@ -66,17 +61,23 @@ public class BorderSlotDeletionScreen extends SimpleWindow {
                 ClientPlayNetworking.send(Packets.DELETE_A_BORDER_SLOT, buffer);
                 this.client.setScreen(null);
             }
-        );
+        ).dimensions(
+            windowLeft + 7,
+            windowBottom - 25, 
+            windowCenterHorizontal / 2 - 5, 
+            20
+        ).build();
         this.addDrawableChild(this.yes);
 
-        this.no = new ButtonWidget(
+        this.no = ButtonWidget.builder(
+            Text.translatable("gui.nationsmod.no"), 
+            t -> this.client.setScreen(parent)
+        ).dimensions(
             windowCenterHorizontal,
             windowBottom - 25, 
             windowCenterHorizontal / 2 - 5, 
-            20,
-            new TranslatableText("gui.nationsmod.no"), 
-            t -> this.client.setScreen(parent)
-        );
+            20
+        ).build();
         this.addDrawableChild(this.no);
     }
     

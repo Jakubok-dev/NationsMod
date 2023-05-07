@@ -6,7 +6,6 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 
 public class TownDirectiveCreationScreen extends SimpleWindow {
 
@@ -20,7 +19,7 @@ public class TownDirectiveCreationScreen extends SimpleWindow {
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         super.render(matrices, mouseX, mouseY, delta);
-        drawCenteredText(
+        drawCenteredTextWithShadow(
             matrices,
             textRenderer, 
             Text.of("Directive name:"), 
@@ -34,14 +33,15 @@ public class TownDirectiveCreationScreen extends SimpleWindow {
     protected void init() {
         super.init();
 
-        this.submit = new ButtonWidget(
+        this.submit = ButtonWidget.builder(
+            Text.translatable("gui.nationsmod.submit"),
+            t -> {}
+        ).dimensions(
             windowCenterHorizontal - 64, 
             windowBottom - 25, 
             128, 
-            20, 
-            new TranslatableText("gui.nationsmod.submit"),
-            t -> {}
-        );
+            20
+        ).build();
 
         this.nameField = new TextFieldWidget(
             textRenderer,

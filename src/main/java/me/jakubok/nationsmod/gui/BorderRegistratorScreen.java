@@ -20,7 +20,6 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 
 public class BorderRegistratorScreen extends SimpleWindow {
 
@@ -37,7 +36,7 @@ public class BorderRegistratorScreen extends SimpleWindow {
     List<ButtonWidget> slotsButtons = new ArrayList<>();
 
     public BorderRegistratorScreen(Map<String, Integer> slots, Screen previousScreen) {
-        super(new TranslatableText("gui.nationsmod.border_registrator_screen.title"), previousScreen);
+        super(Text.translatable("gui.nationsmod.border_registrator_screen.title"), previousScreen);
         this.slots = slots;
         this.slotsNames.addAll(this.slots.keySet());
         Collections.sort(this.slotsNames);
@@ -60,11 +59,7 @@ public class BorderRegistratorScreen extends SimpleWindow {
         for (int i = 1; i <= 4 && (page*4)+i <= this.filteredSlotsNames.size(); i++) {
             final int temp = i;
 
-            this.slotsButtons.add(new ButtonWidget(
-                windowCenterHorizontal - 73,
-                windowTop + 28*i,
-                150,
-                20,
+            this.slotsButtons.add(ButtonWidget.builder(
                 Text.of(this.filteredSlotsNames.get((page*4) + i - 1)),
                 b -> {
                     PacketByteBuf buffer = PacketByteBufs.create();
@@ -81,7 +76,12 @@ public class BorderRegistratorScreen extends SimpleWindow {
 
                     ClientNetworking.makeARequest(Packets.PREPARE_BORDER_SLOT_SCREEN, buffer, response);
                 }
-            ));
+            ).dimensions(
+                windowCenterHorizontal - 73,
+                windowTop + 28*i,
+                150,
+                20
+            ).build());
             this.addDrawableChild(this.slotsButtons.get(i-1));
         }
     }
@@ -109,30 +109,32 @@ public class BorderRegistratorScreen extends SimpleWindow {
         });
         this.addDrawableChild(this.searchBox);
         
-        this.left = new ButtonWidget(
-            windowLeft + 5,
-            windowCenterVertical - 10, 
-            20, 
-            20, 
+        this.left = ButtonWidget.builder(
             Text.of("<"), 
             b -> {
                 page--;
                 this.drawSlots();
             }
-        );
-        this.addDrawableChild(this.left);
-
-        this.right = new ButtonWidget(
-            windowRight - 25,
+        ).dimensions(
+            windowLeft + 5,
             windowCenterVertical - 10, 
             20, 
-            20, 
+            20
+        ).build();
+        this.addDrawableChild(this.left);
+
+        this.right = ButtonWidget.builder(
             Text.of(">"), 
             b -> {
                 page++;
                 this.drawSlots();
             }
-        );
+        ).dimensions(
+            windowRight - 25,
+            windowCenterVertical - 10, 
+            20, 
+            20
+        ).build();
         this.addDrawableChild(this.right);
 
         this.drawSlots();

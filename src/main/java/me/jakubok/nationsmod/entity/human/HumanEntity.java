@@ -43,7 +43,6 @@ public class HumanEntity extends PathAwareEntity implements Angerable {
 
     //protected static final TrackedData<Byte> HUMAN_MODEL_PARTS = DataTracker.registerData(HumanEntity.class, TrackedDataHandlerRegistry.BYTE);
 
-    public Random random = new Random();
     private static final UniformIntProvider ANGER_TIME_RANGE = TimeHelper.betweenSeconds(20, 39);
     private int angerTime = 0;
     private UUID angryAt = null; 
@@ -175,9 +174,8 @@ public class HumanEntity extends PathAwareEntity implements Angerable {
     }
 
     @Override
-    public void animateDamage() {
+    public void animateDamage(float jaw) {
         this.hurtTime = this.maxHurtTime = 10;
-        this.knockbackVelocity = 0.0f;
     }
 
     @Override

@@ -1,6 +1,5 @@
 package me.jakubok.nationsmod.items;
 
-import me.jakubok.nationsmod.NationsMod;
 import me.jakubok.nationsmod.collections.BorderSlots;
 import me.jakubok.nationsmod.collections.PlayerAccount;
 import me.jakubok.nationsmod.collections.PlayerInfo;
@@ -14,7 +13,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Rarity;
 import net.minecraft.util.TypedActionResult;
@@ -26,7 +25,6 @@ public class TownIndependenceDeclaration extends Item implements Declaration {
         super(
             new FabricItemSettings()
             .rarity(Rarity.RARE)
-            .group(NationsMod.ITEM_GROUP)
             .maxCount(1)
         );
     }
@@ -43,12 +41,12 @@ public class TownIndependenceDeclaration extends Item implements Declaration {
             MinecraftServer server = ((ServerWorld)world).getServer();
             BorderSlots slots = PlayerInfo.fromAccount(new PlayerAccount(user), server).slots;
             if (slots.selectedSlot == -1) {
-                user.sendMessage(new TranslatableText("gui.nationsmod.border_registrator.select_a_slot"), false);
+                user.sendMessage(Text.translatable("gui.nationsmod.border_registrator.select_a_slot"), false);
                 return super.use(world, user, hand);
             }
 
             if (slots.getSelectedSlot().getField() == null) {
-                user.sendMessage(new TranslatableText("gui.nationsmod.invalid_border"), false);
+                user.sendMessage(Text.translatable("gui.nationsmod.invalid_border"), false);
                 return super.use(world, user, hand);
             }
             

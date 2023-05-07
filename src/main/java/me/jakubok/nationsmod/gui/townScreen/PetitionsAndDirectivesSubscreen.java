@@ -18,34 +18,36 @@ public class PetitionsAndDirectivesSubscreen {
     public PetitionsAndDirectivesSubscreen(TownScreen inst) {
         this.subscreen = new Subscreen<>(
             Text.of("Petitions & directives"), 
-            new ItemStack(ItemRegistry.DOCUMENT_PAPER), 
+            new ItemStack(ItemRegistry.PARCHMENT), 
             (MatrixStack matrices, int mouseX, int mouseY, float delta, TabWindow instance) -> this.render(matrices, mouseX, mouseY, delta, instance), 
             instance -> this.init(instance) 
         );
 
-        this.up = new ButtonWidget(
-            SimpleWindow.windowLeft + 5, 
-            SimpleWindow.windowTop + 5, 
-            20, 
-            20, 
+        this.up = ButtonWidget.builder(
             Text.of("▲"), 
             t -> {
                 page--;
                 inst.reload();
             }
-        );
-
-        this.down = new ButtonWidget(
+        ).dimensions(
             SimpleWindow.windowLeft + 5, 
-            SimpleWindow.windowBottom - 25, 
+            SimpleWindow.windowTop + 5, 
             20, 
-            20, 
+            20
+        ).build();
+
+        this.down = ButtonWidget.builder(
             Text.of("▼"), 
             t -> {
                 page++;
                 inst.reload();
             }
-        );
+        ).dimensions(
+            SimpleWindow.windowLeft + 5, 
+            SimpleWindow.windowBottom - 25, 
+            20, 
+            20
+        ).build();
     }
 
     protected void render(MatrixStack matrices, int mouseX, int mouseY, float delta, TabWindow instance) {

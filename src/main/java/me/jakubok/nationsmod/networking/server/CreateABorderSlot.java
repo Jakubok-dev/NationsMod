@@ -10,7 +10,7 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 
 public class CreateABorderSlot implements PlayChannelHandler {
 
@@ -28,7 +28,7 @@ public class CreateABorderSlot implements PlayChannelHandler {
                     ||
                     name.equals("+")
                 ) {
-                    player.sendMessage(new TranslatableText("gui.nationsmod.border_slot_creator_screen.name_not_unique"), false);
+                    player.sendMessage(Text.translatable("gui.nationsmod.border_slot_creator_screen.name_not_unique"), false);
                     return;
                 }
             }

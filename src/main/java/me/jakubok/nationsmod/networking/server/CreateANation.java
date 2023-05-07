@@ -17,7 +17,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 
 public class CreateANation implements PlayChannelHandler {
 
@@ -38,14 +38,14 @@ public class CreateANation implements PlayChannelHandler {
                     return;
                 if (el.getName().toLowerCase().equals(nationName.toLowerCase())) {
                     validated.set(false);
-                    player.sendMessage(new TranslatableText("gui.nationsmod.nation_creation_screen.nation_name_not_unique"), false);
+                    player.sendMessage(Text.translatable("gui.nationsmod.nation_creation_screen.nation_name_not_unique"), false);
                 }
             });
 
             Town nationCapital = getTown(player.getWorld(), player);
 
             if (nationCapital == null) {
-                player.sendMessage(new TranslatableText("gui.nationsmod.nation_creation_screen.not_in_a_town"), false);
+                player.sendMessage(Text.translatable("gui.nationsmod.nation_creation_screen.not_in_a_town"), false);
                 validated.set(false);
                 return;
             }

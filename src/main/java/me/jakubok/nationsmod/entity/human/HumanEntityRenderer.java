@@ -14,10 +14,10 @@ import net.minecraft.client.render.entity.feature.HeldItemFeatureRenderer;
 import net.minecraft.client.render.entity.feature.StuckArrowsFeatureRenderer;
 import net.minecraft.client.render.entity.feature.StuckStingersFeatureRenderer;
 import net.minecraft.client.render.entity.feature.TridentRiptideFeatureRenderer;
+import net.minecraft.client.render.entity.model.ArmorEntityModel;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.client.render.entity.model.EntityModelLayers;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
-import net.minecraft.client.util.DefaultSkinHelper;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.CrossbowItem;
 import net.minecraft.item.ItemStack;
@@ -27,25 +27,62 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.UseAction;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3f;
 
 public class HumanEntityRenderer extends LivingEntityRenderer<HumanEntity, PlayerEntityModel<HumanEntity>> {
     private static boolean slim = false;
     public HumanEntityRenderer(Context ctx) {
         super(ctx, new PlayerEntityModel<>(ctx.getPart(EntityModelLayers.PLAYER), slim), 0.5f);
-        this.addFeature(new ArmorFeatureRenderer<HumanEntity, PlayerEntityModel<HumanEntity>, BipedEntityModel<HumanEntity>>(this, new BipedEntityModel<HumanEntity>(ctx.getPart(EntityModelLayers.PLAYER_INNER_ARMOR)), new BipedEntityModel<HumanEntity>(ctx.getPart(EntityModelLayers.PLAYER_OUTER_ARMOR))));
-        this.addFeature(new HeldItemFeatureRenderer<HumanEntity, PlayerEntityModel<HumanEntity>>(this));
+        this.addFeature(new ArmorFeatureRenderer<HumanEntity, PlayerEntityModel<HumanEntity>, BipedEntityModel<HumanEntity>>(this, new ArmorEntityModel<HumanEntity>(ctx.getPart(slim ? EntityModelLayers.PLAYER_SLIM_INNER_ARMOR : EntityModelLayers.PLAYER_INNER_ARMOR)), new ArmorEntityModel<HumanEntity>(ctx.getPart(slim ? EntityModelLayers.PLAYER_SLIM_OUTER_ARMOR : EntityModelLayers.PLAYER_OUTER_ARMOR)), ctx.getModelManager()));
+        this.addFeature(new HeldItemFeatureRenderer<HumanEntity, PlayerEntityModel<HumanEntity>>(this, ctx.getHeldItemRenderer()));
         this.addFeature(new StuckArrowsFeatureRenderer<HumanEntity, PlayerEntityModel<HumanEntity>>(ctx, this));
-        this.addFeature(new HeadFeatureRenderer<HumanEntity, PlayerEntityModel<HumanEntity>>(this, ctx.getModelLoader()));
+        this.addFeature(new HeadFeatureRenderer<HumanEntity, PlayerEntityModel<HumanEntity>>(this, ctx.getModelLoader(), ctx.getHeldItemRenderer()));
         this.addFeature(new ElytraFeatureRenderer<HumanEntity, PlayerEntityModel<HumanEntity>>(this, ctx.getModelLoader()));
         this.addFeature(new TridentRiptideFeatureRenderer<HumanEntity>(this, ctx.getModelLoader()));
         this.addFeature(new StuckStingersFeatureRenderer<HumanEntity, PlayerEntityModel<HumanEntity>>(this));
+    } 
+
+    Skin[] SKINS = new Skin[] {
+        new Skin("textures/entity/player/slim/alex.png", Model.SLIM), 
+        new Skin("textures/entity/player/slim/ari.png", Model.SLIM), 
+        new Skin("textures/entity/player/slim/efe.png", Model.SLIM), 
+        new Skin("textures/entity/player/slim/kai.png", Model.SLIM), 
+        new Skin("textures/entity/player/slim/makena.png", Model.SLIM), 
+        new Skin("textures/entity/player/slim/noor.png", Model.SLIM), 
+        new Skin("textures/entity/player/slim/steve.png", Model.SLIM), 
+        new Skin("textures/entity/player/slim/sunny.png", Model.SLIM), 
+        new Skin("textures/entity/player/slim/zuri.png", Model.SLIM), 
+        new Skin("textures/entity/player/wide/alex.png", Model.WIDE), 
+        new Skin("textures/entity/player/wide/ari.png", Model.WIDE), 
+        new Skin("textures/entity/player/wide/efe.png", Model.WIDE), 
+        new Skin("textures/entity/player/wide/kai.png", Model.WIDE), 
+        new Skin("textures/entity/player/wide/makena.png", Model.WIDE), 
+        new Skin("textures/entity/player/wide/noor.png", Model.WIDE), 
+        new Skin("textures/entity/player/wide/steve.png", Model.WIDE), 
+        new Skin("textures/entity/player/wide/sunny.png", Model.WIDE), 
+        new Skin("textures/entity/player/wide/zuri.png", Model.WIDE)
+    };
+    record Skin(Identifier texture, Model model) {
+        public Skin(String texture, Model model) {
+            this(new Identifier(texture), model);
+        }
+    }
+
+    static enum Model {
+        SLIM("slim"),
+        WIDE("default");
+
+        final String name;
+
+        private Model(String name) {
+            this.name = name;
+        }
     }
 
     @Override
     public Identifier getTexture(HumanEntity var1) {
-        return DefaultSkinHelper.getTexture();
+        return SKINS[Math.floorMod(var1.getUuid().hashCode(), SKINS.length / 2) + SKINS.length / 2].texture;
     }
 
     @Override
@@ -76,7 +113,7 @@ public class HumanEntityRenderer extends LivingEntityRenderer<HumanEntity, Playe
             float j = (float)human.getRoll() + h;
             float k = MathHelper.clamp(j * j / 100.0f, 0.0f, 1.0f);
             if (!human.isUsingRiptide()) {
-                matrixStack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(k * (-90.0f - human.getPitch())));
+                matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(k * (-90.0f - human.getPitch())));
             }
             Vec3d vec3d = human.getRotationVec(h);
             Vec3d vec3d2 = human.getVelocity();
@@ -85,15 +122,15 @@ public class HumanEntityRenderer extends LivingEntityRenderer<HumanEntity, Playe
             if (d > 0.0 && e > 0.0) {
                 double l = (vec3d2.x * vec3d.x + vec3d2.z * vec3d.z) / Math.sqrt(d * e);
                 double m = vec3d2.x * vec3d.z - vec3d2.z * vec3d.x;
-                matrixStack.multiply(Vec3f.POSITIVE_Y.getRadialQuaternion((float)(Math.signum(m) * Math.acos(l))));
+                matrixStack.multiply(RotationAxis.POSITIVE_Y.rotation((float)(Math.signum(m) * Math.acos(l))));
             }
         } else if (i > 0.0f) {
             super.setupTransforms(human, matrixStack, f, g, h);
             float j = human.isTouchingWater() ? -90.0f - human.getPitch() : -90.0f;
             float k = MathHelper.lerp(i, 0.0f, j);
-            matrixStack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(k));
+            matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(k));
             if (human.isInSwimmingPose()) {
-                matrixStack.translate(0.0, -1.0, 0.3f);
+                matrixStack.translate(0.0f, -1.0f, 0.3f);
             }
         } else {
             super.setupTransforms(human, matrixStack, f, g, h);

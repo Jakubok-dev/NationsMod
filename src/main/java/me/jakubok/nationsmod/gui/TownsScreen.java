@@ -24,7 +24,6 @@ import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 
 public class TownsScreen extends SimpleWindow {
 
@@ -41,7 +40,7 @@ public class TownsScreen extends SimpleWindow {
     protected boolean isPageAtRight() { return (page+1)*4 < this.filteredTownsNames.size(); }
     
     public TownsScreen(Map<String, UUID> towns, Screen previousScreen) {
-        super(new TranslatableText("gui.nationsmod.towns_screen.title"), previousScreen);
+        super(Text.translatable("gui.nationsmod.towns_screen.title"), previousScreen);
         this.towns = towns;
         townsNames.addAll(towns.keySet());
         Collections.sort(townsNames);
@@ -60,11 +59,7 @@ public class TownsScreen extends SimpleWindow {
         for (int i = 1; i <= 4 && (page*4)+i <= this.filteredTownsNames.size(); i++) {
             final int temp = i;
 
-            townButtons.add(new ButtonWidget(
-                windowCenterHorizontal - 73,
-                windowTop + 28*i,
-                150,
-                20,
+            townButtons.add(ButtonWidget.builder(
                 Text.of(filteredTownsNames.get((page*4) + i - 1)),
                 b -> {
                     PacketByteBuf buffer = PacketByteBufs.create();
@@ -81,7 +76,12 @@ public class TownsScreen extends SimpleWindow {
                     };
                     ClientNetworking.makeARequest(Packets.PREPARE_TOWN_SCREEN, buffer, response);
                 }
-            ));
+            ).dimensions(
+                windowCenterHorizontal - 73,
+                windowTop + 28*i,
+                150,
+                20
+            ).build());
             this.addDrawableChild(townButtons.get(i-1));
         }
     }
@@ -109,30 +109,32 @@ public class TownsScreen extends SimpleWindow {
         });
         this.addDrawableChild(this.searchBox);
         
-        this.left = new ButtonWidget(
-            windowLeft + 5,
-            windowCenterVertical - 10, 
-            20, 
-            20, 
+        this.left = ButtonWidget.builder( 
             Text.of("<"), 
             b -> {
                 page--;
                 this.drawTowns();
             }
-        );
-        this.addDrawableChild(this.left);
-
-        this.right = new ButtonWidget(
-            windowRight - 25,
+        ).dimensions(
+            windowLeft + 5,
             windowCenterVertical - 10, 
             20, 
-            20, 
+            20
+        ).build();
+        this.addDrawableChild(this.left);
+
+        this.right = ButtonWidget.builder(
             Text.of(">"), 
             b -> {
                 page++;
                 this.drawTowns();
             }
-        );
+        ).dimensions(
+            windowRight - 25,
+            windowCenterVertical - 10, 
+            20, 
+            20
+        ).build();
         this.addDrawableChild(this.right);
 
         this.drawTowns();

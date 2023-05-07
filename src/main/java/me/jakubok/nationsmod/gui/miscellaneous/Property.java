@@ -21,7 +21,7 @@ public class Property {
             0xFFFFFF
         );
         
-        Screen.drawCenteredText(
+        Screen.drawCenteredTextWithShadow(
             matrices,
             textRenderer,
             value,

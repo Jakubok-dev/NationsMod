@@ -31,7 +31,6 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
 
 public class MapScreen extends Screen {
@@ -101,20 +100,20 @@ public class MapScreen extends Screen {
     protected void mouseHovered(MatrixStack matrices, int mouseX, int mouseY) {
         if (mouseX >= 120 && mouseX < 240 && mouseY >= 0 && mouseY <= 20) {
             List<Text> lines = new ArrayList<>();
-            lines.add(new TranslatableText("gui.nationsmod.map_screen.drawing_tooltip_1"));
-            lines.add(new TranslatableText("gui.nationsmod.map_screen.drawing_tooltip_2"));
+            lines.add(Text.translatable("gui.nationsmod.map_screen.drawing_tooltip_1"));
+            lines.add(Text.translatable("gui.nationsmod.map_screen.drawing_tooltip_2"));
 
             if (NationsClient.selectedSlot == -1) {
-                lines.add(new TranslatableText("gui.nationsmod.map_screen.drawing_tooltip_3"));
-                lines.add(new TranslatableText("gui.nationsmod.map_screen.drawing_tooltip_4"));
+                lines.add(Text.translatable("gui.nationsmod.map_screen.drawing_tooltip_3"));
+                lines.add(Text.translatable("gui.nationsmod.map_screen.drawing_tooltip_4"));
             }
             this.renderTooltip(matrices, lines, mouseX, mouseY);
             return;
         } else if (mouseX >= 240 && mouseX < 380 && mouseY >= 0 && mouseY <= 20) {
             List<Text> lines = new ArrayList<>(); 
-            lines.add(new TranslatableText("gui.nationsmod.map_screen.autocorrection_tooltip_1"));
-            lines.add(new TranslatableText("gui.nationsmod.map_screen.autocorrection_tooltip_2"));
-            lines.add(new TranslatableText("gui.nationsmod.map_screen.autocorrection_tooltip_3"));
+            lines.add(Text.translatable("gui.nationsmod.map_screen.autocorrection_tooltip_1"));
+            lines.add(Text.translatable("gui.nationsmod.map_screen.autocorrection_tooltip_2"));
+            lines.add(Text.translatable("gui.nationsmod.map_screen.autocorrection_tooltip_3"));
             this.renderTooltip(matrices, lines, mouseX, mouseY);
             return;
         }
@@ -130,34 +129,32 @@ public class MapScreen extends Screen {
     protected void init() {
         super.init();
 
-        this.plus = new ButtonWidget(
-            0, 
-            0, 
-            20, 
-            20, 
+        this.plus = ButtonWidget.builder(
             Text.of("+"), 
             t -> {
                 scale = scale * 1.25d;
             }
-        );
-        this.addDrawableChild(this.plus);
-        this.minus = new ButtonWidget(
-            20, 
+        ).dimensions(
+            0, 
             0, 
             20, 
-            20, 
+            20
+        ).build();
+        this.addDrawableChild(this.plus);
+        this.minus = ButtonWidget.builder(
             Text.of("-"), 
             t -> {
                 scale = scale / 1.25d;
             }
-        );
-        this.addDrawableChild(this.minus);
-        this.borderSlots = new ButtonWidget(
-            40, 
-            0, 
-            80, 
+        ).dimensions(
             20, 
-            new TranslatableText("gui.nationsmod.border_registrator_screen.title"), 
+            0, 
+            20, 
+            20
+        ).build();
+        this.addDrawableChild(this.minus);
+        this.borderSlots = ButtonWidget.builder(
+            Text.translatable("gui.nationsmod.border_registrator_screen.title"), 
             t -> {
                 PlayChannelHandler responseFunction = (MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) -> {
                     NbtCompound nbt = buf.readNbt();
@@ -170,50 +167,57 @@ public class MapScreen extends Screen {
                 };
                 ClientNetworking.makeARequest(Packets.PREPARE_BORDER_REGISTRATOR_SCREEN, PacketByteBufs.create(), responseFunction);
             }
-        );
-        this.addDrawableChild(this.borderSlots);
-        this.drawing = new ButtonWidget(
-            120, 
+        ).dimensions(
+            40, 
             0, 
-            120, 
-            20, 
+            80, 
+            20
+        ).build();
+        this.addDrawableChild(this.borderSlots);
+        this.drawing = ButtonWidget.builder(
             null, 
             t -> {
                 if (NationsClient.selectedSlot == -1)
                     return;
                 drawingMode = !drawingMode;
                 if (drawingMode) {
-                    this.drawing.setMessage(new TranslatableText("gui.nationsmod.map_screen.stop_drawing"));
+                    this.drawing.setMessage(Text.translatable("gui.nationsmod.map_screen.stop_drawing"));
                 } else {
-                    this.drawing.setMessage(new TranslatableText("gui.nationsmod.map_screen.start_drawing"));
+                    this.drawing.setMessage(Text.translatable("gui.nationsmod.map_screen.start_drawing"));
                 }
             }
-        );
+        ).dimensions(
+            120, 
+            0, 
+            120, 
+            20
+        ).build();
         if (drawingMode) {
-            this.drawing.setMessage(new TranslatableText("gui.nationsmod.map_screen.stop_drawing"));
+            this.drawing.setMessage(Text.translatable("gui.nationsmod.map_screen.stop_drawing"));
         } else {
-            this.drawing.setMessage(new TranslatableText("gui.nationsmod.map_screen.start_drawing"));
+            this.drawing.setMessage(Text.translatable("gui.nationsmod.map_screen.start_drawing"));
         }
         this.addDrawableChild(this.drawing);
-        this.correction = new ButtonWidget(
-            240, 
-            0, 
-            140, 
-            20, 
+        this.correction = ButtonWidget.builder(
             null, 
             t -> {
                 autocorrection = !autocorrection;
                 if (autocorrection) {
-                    this.correction.setMessage(new TranslatableText("gui.nationsmod.map_screen.turn_off_autocorrection"));
+                    this.correction.setMessage(Text.translatable("gui.nationsmod.map_screen.turn_off_autocorrection"));
                 } else {
-                    this.correction.setMessage(new TranslatableText("gui.nationsmod.map_screen.turn_on_autocorrection"));
+                    this.correction.setMessage(Text.translatable("gui.nationsmod.map_screen.turn_on_autocorrection"));
                 }
             }
-        );
+        ).dimensions(
+            240, 
+            0, 
+            140, 
+            20
+        ).build();
         if (autocorrection) {
-            this.correction.setMessage(new TranslatableText("gui.nationsmod.map_screen.turn_off_autocorrection"));
+            this.correction.setMessage(Text.translatable("gui.nationsmod.map_screen.turn_off_autocorrection"));
         } else {
-            this.correction.setMessage(new TranslatableText("gui.nationsmod.map_screen.turn_on_autocorrection"));
+            this.correction.setMessage(Text.translatable("gui.nationsmod.map_screen.turn_on_autocorrection"));
         }
         this.addDrawableChild(this.correction);
     }
@@ -322,7 +326,7 @@ public class MapScreen extends Screen {
     }
 
     @Override
-    public void onClose() {
+    public void close() {
         this.client.setScreen(previousScreen);
     }
 

@@ -1,5 +1,6 @@
 package me.jakubok.nationsmod.collections;
 
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 import net.minecraft.entity.player.PlayerEntity;
@@ -15,7 +16,7 @@ public class PlayerAccount implements Serialisable {
         this.name = name;
     }
     public PlayerAccount(PlayerEntity player) {
-        this(player.getGameProfile().getId(), PlayerEntity.getOfflinePlayerUuid(player.getGameProfile().getName()), player.getGameProfile().getName());
+        this(player.getGameProfile().getId(), UUID.nameUUIDFromBytes(("OfflinePlayer:" + player.getGameProfile().getName()).getBytes(StandardCharsets.UTF_8)), player.getGameProfile().getName());
     }
     public PlayerAccount(NbtCompound tag) {
         this.readFromNbt(tag);

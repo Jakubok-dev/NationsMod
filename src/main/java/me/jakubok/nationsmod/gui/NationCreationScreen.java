@@ -10,7 +10,7 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 
 public class NationCreationScreen extends SimpleWindow {
 
@@ -18,7 +18,7 @@ public class NationCreationScreen extends SimpleWindow {
     ButtonWidget submit;
 
     public NationCreationScreen(Screen previousScreen) {
-        super(new TranslatableText("gui.nationsmod.nation_creation_screen.title"), previousScreen);
+        super(Text.translatable("gui.nationsmod.nation_creation_screen.title"), previousScreen);
     }
     
     @Override
@@ -26,20 +26,20 @@ public class NationCreationScreen extends SimpleWindow {
         super.render(matrices, mouseX, mouseY, delta);
 
         // Nation name:
-        drawCenteredText(
+        drawCenteredTextWithShadow(
             matrices,
             textRenderer, 
-            new TranslatableText("gui.nationsmod.nation_creation_screen.nation_name"), 
+            Text.translatable("gui.nationsmod.nation_creation_screen.nation_name"), 
             windowCenterHorizontal - 75, 
             windowCenterVertical - 20, 
             0xffffff
         );
 
         // Province name:
-        drawCenteredText(
+        drawCenteredTextWithShadow(
             matrices,
             textRenderer, 
-            new TranslatableText("gui.nationsmod.nation_creation_screen.province_name"), 
+            Text.translatable("gui.nationsmod.nation_creation_screen.province_name"), 
             windowCenterHorizontal - 75, 
             windowCenterVertical + 5, 
             0xffffff
@@ -56,7 +56,7 @@ public class NationCreationScreen extends SimpleWindow {
             windowCenterVertical - 25,
             100,
             20,
-            new TranslatableText("gui.nationsmod.nation_creation_screen.nation_name")
+            Text.translatable("gui.nationsmod.nation_creation_screen.nation_name")
         );
         this.addDrawableChild(this.nationName);
 
@@ -66,16 +66,12 @@ public class NationCreationScreen extends SimpleWindow {
             windowCenterVertical,
             100, 
             20, 
-            new TranslatableText("gui.nationsmod.nation_creation_screen.province_name")
+            Text.translatable("gui.nationsmod.nation_creation_screen.province_name")
         );
         this.addDrawableChild(this.provinceName);
 
-        this.submit = new ButtonWidget(
-            windowCenterHorizontal - 64, 
-            windowBottom - 25, 
-            128, 
-            20, 
-            new TranslatableText("gui.nationsmod.submit"),
+        this.submit = ButtonWidget.builder(
+            Text.translatable("gui.nationsmod.submit"),
             b -> {
                 if (this.provinceName.getText().length() <= 0 || this.nationName.getText().length() <= 0)
                     return;
@@ -93,7 +89,12 @@ public class NationCreationScreen extends SimpleWindow {
                 b.active = false;
                 this.client.setScreen(null);
             }
-        );
+        ).dimensions(
+            windowCenterHorizontal - 64, 
+            windowBottom - 25, 
+            128, 
+            20
+        ).build();
         this.addDrawableChild(this.submit);
     }
 }

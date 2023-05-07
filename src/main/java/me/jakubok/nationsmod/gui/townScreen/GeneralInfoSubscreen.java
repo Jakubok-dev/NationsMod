@@ -96,29 +96,31 @@ public class GeneralInfoSubscreen {
             )
         });
 
-        settingsUp = new ButtonWidget(
-            SimpleWindow.windowLeft + 5, 
-            SimpleWindow.windowTop + 5, 
-            20, 
-            20, 
+        settingsUp = ButtonWidget.builder(
             Text.of("▲"), 
             t -> {
                 page--;
                 inst.reload();
             }
-        );
-
-        settingsDown = new ButtonWidget(
+        ).dimensions(
             SimpleWindow.windowLeft + 5, 
-            SimpleWindow.windowBottom - 25, 
+            SimpleWindow.windowTop + 5, 
             20, 
-            20, 
+            20
+        ).build();
+
+        settingsDown = ButtonWidget.builder(
             Text.of("▼"), 
             t -> {
                 page++;
                 inst.reload();
             }
-        );
+        ).dimensions(
+            SimpleWindow.windowLeft + 5, 
+            SimpleWindow.windowBottom - 25, 
+            20, 
+            20
+        ).build();
     }
 
     protected void getTheProvince(TownScreen inst) {

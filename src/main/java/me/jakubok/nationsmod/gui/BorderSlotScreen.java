@@ -11,7 +11,6 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 
 public class BorderSlotScreen extends SimpleWindow {
 
@@ -33,12 +32,12 @@ public class BorderSlotScreen extends SimpleWindow {
 
     public void makeSelected() {
         this.selected = true;
-        this.select.setMessage(new TranslatableText("gui.nationsmod.border_slot_screen.unselect"));
+        this.select.setMessage(Text.translatable("gui.nationsmod.border_slot_screen.unselect"));
     }
 
     public void makeUnselected() {
         this.selected = false;
-        this.select.setMessage(new TranslatableText("gui.nationsmod.border_slot_screen.select"));
+        this.select.setMessage(Text.translatable("gui.nationsmod.border_slot_screen.select"));
         NationsClient.drawer.emptyStorage();
     }
 
@@ -46,7 +45,7 @@ public class BorderSlotScreen extends SimpleWindow {
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         super.render(matrices, mouseX, mouseY, delta);
 
-        drawCenteredText(
+        drawCenteredTextWithShadow(
             matrices, 
             textRenderer, 
             Text.of("Blocks:"), 
@@ -55,7 +54,7 @@ public class BorderSlotScreen extends SimpleWindow {
             0xffffff
         );
 
-        drawCenteredText(
+        drawCenteredTextWithShadow(
             matrices, 
             textRenderer, 
             Text.of(this.slot.getBorderSize() + ""), 
@@ -69,12 +68,8 @@ public class BorderSlotScreen extends SimpleWindow {
     protected void init() {
         super.init();
 
-        this.select = new ButtonWidget(
-            (windowLeft) + 5,
-            windowBottom - 25, 
-            (windowRight - windowLeft) / 3 - 5,
-            20,
-            new TranslatableText("gui.nationsmod.border_slot_screen.select"), 
+        this.select = ButtonWidget.builder(
+            Text.translatable("gui.nationsmod.border_slot_screen.select"), 
             t -> {
                 if (this.selected) {
 
@@ -95,31 +90,38 @@ public class BorderSlotScreen extends SimpleWindow {
 
                 this.makeSelected();
             }
-        );
+        ).dimensions(
+            (windowLeft) + 5,
+            windowBottom - 25, 
+            (windowRight - windowLeft) / 3 - 5,
+            20
+        ).build();
 
         if (this.selected)
             this.makeSelected();
 
         this.addDrawableChild(this.select);
 
-        this.remove = new ButtonWidget(
+        this.remove = ButtonWidget.builder(
+            Text.translatable("gui.nationsmod.border_slot_screen.remove"), 
+            t -> this.client.setScreen(new BorderSlotDeletionScreen(this, slot.name, this))
+        ).dimensions(
             (windowLeft + (windowRight - windowLeft) / 3) + 1,
             windowBottom - 25,
             (windowRight - windowLeft) / 3 - 2,
-            20,
-            new TranslatableText("gui.nationsmod.border_slot_screen.remove"), 
-            t -> this.client.setScreen(new BorderSlotDeletionScreen(this, slot.name, this))
-        );
+            20
+        ).build();
         this.addDrawableChild(this.remove);
 
-        this.close = new ButtonWidget(
+        this.close = ButtonWidget.builder(
+            Text.translatable("gui.nationsmod.border_slot_screen.close"),
+            t -> this.close()
+        ).dimensions(
             (windowLeft + ((windowRight - windowLeft) / 3)*2) + 2,
             windowBottom - 25,
             (windowRight - windowLeft) / 3 - 5,
-            20,
-            new TranslatableText("gui.nationsmod.border_slot_screen.close"),
-            t -> this.onClose()
-        );
+            20
+        ).build();
         this.addDrawableChild(this.close);
     }
     

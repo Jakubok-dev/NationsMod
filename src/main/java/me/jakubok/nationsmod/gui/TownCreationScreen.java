@@ -12,7 +12,7 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 
 public class TownCreationScreen extends SimpleWindow {
 
@@ -23,7 +23,7 @@ public class TownCreationScreen extends SimpleWindow {
     protected MinecraftClient client;
 
     public TownCreationScreen(MinecraftClient client, Screen previousScreen) {
-        super(new TranslatableText("gui.nationsmod.town_creation_screen.title"), previousScreen);
+        super(Text.translatable("gui.nationsmod.town_creation_screen.title"), previousScreen);
         this.client = client;
     }
 
@@ -32,20 +32,20 @@ public class TownCreationScreen extends SimpleWindow {
         super.render(matrices, mouseX, mouseY, delta);
 
         // Town name:
-        drawCenteredText(
+        drawCenteredTextWithShadow(
             matrices,
             textRenderer, 
-            new TranslatableText("gui.nationsmod.town_creation_screen.town_name"), 
+            Text.translatable("gui.nationsmod.town_creation_screen.town_name"), 
             windowCenterHorizontal - 75, 
             windowCenterVertical - 20, 
             0xffffff
         );
 
         // District name:
-        drawCenteredText(
+        drawCenteredTextWithShadow(
             matrices,
             textRenderer, 
-            new TranslatableText("gui.nationsmod.town_creation_screen.district_name"), 
+            Text.translatable("gui.nationsmod.town_creation_screen.district_name"), 
             windowCenterHorizontal - 75, 
             windowCenterVertical + 5, 
             0xffffff
@@ -62,7 +62,7 @@ public class TownCreationScreen extends SimpleWindow {
             windowCenterVertical - 25,
             100,
             20,
-            new TranslatableText("gui.nationsmod.town_creation_screen.town_name")
+            Text.translatable("gui.nationsmod.town_creation_screen.town_name")
         );
         this.addDrawableChild(townName);
 
@@ -72,16 +72,12 @@ public class TownCreationScreen extends SimpleWindow {
             windowCenterVertical,
             100, 
             20, 
-            new TranslatableText("gui.nationsmod.town_creation_screen.district_name")
+            Text.translatable("gui.nationsmod.town_creation_screen.district_name")
         );
         this.addDrawableChild(mainDistrictName);
 
-        this.submit = new ButtonWidget(
-            windowCenterHorizontal - 64, 
-            windowBottom - 25, 
-            128, 
-            20, 
-            new TranslatableText("gui.nationsmod.submit"), 
+        this.submit = ButtonWidget.builder(
+            Text.translatable("gui.nationsmod.submit"), 
             b -> {
 
                 if (this.mainDistrictName.getText().length() <= 0 || this.townName.getText().length() <= 0)
@@ -100,7 +96,12 @@ public class TownCreationScreen extends SimpleWindow {
                 b.active = false;
                 this.client.setScreen(null);
             }
-        );
+        ).dimensions(
+            windowCenterHorizontal - 64, 
+            windowBottom - 25, 
+            128, 
+            20
+        ).build();
         this.addDrawableChild(this.submit);
     }
 }

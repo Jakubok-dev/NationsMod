@@ -66,21 +66,21 @@ public abstract class TabWindow extends SimpleWindow {
     }
 
     protected boolean isClickInTab(int index, double mouseX, double mouseY) {
-        if (index / 9 == 0)
-            return mouseX >= windowLeft - 22 + 29*index &&
-            mouseX <= windowLeft + 6 + 29*index &&
+        if (index / 10 == 0)
+            return mouseX >= windowLeft - 22 + 26*index &&
+            mouseX <= windowLeft + 6 + 26*index &&
             mouseY >= windowTop - 28 &&
             mouseY <= windowTop + 4;
         else 
-            return mouseX >= windowLeft - 22 + 29*(index % 8) &&
-            mouseX <= windowLeft + 6 + 29*(index % 8) &&
+            return mouseX >= windowLeft - 22 + 26*(index % 9) &&
+            mouseX <= windowLeft + 6 + 26*(index % 9) &&
             mouseY >= windowBottom - 3 &&
             mouseY <= windowBottom + 25;
     }
 
     protected void drawASelectedTab(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShader(GameRenderer::getPositionTexProgram);
         RenderSystem.setShaderTexture(0, this.TABS_TEXTURE);
 
         this.renderTabIcon(matrices, this.getTabs().get(selectedTab), selectedTab + 1, true);
@@ -94,10 +94,10 @@ public abstract class TabWindow extends SimpleWindow {
 
         drawTexture(matrices, 120, 50, 0, 0, 256, 256, 256, 256);
 
-        drawCenteredText(
+        drawCenteredTextWithShadow(
             matrices, 
             this.textRenderer, 
-            Text.of(this.title.asString() + " - " + this.getTabs().get(this.selectedTab).name.asString()), 
+            Text.of(this.title.getString() + " - " + this.getTabs().get(this.selectedTab).name.getString()), 
             windowCenterHorizontal,
             windowTop + 10,
             0xffffff
@@ -117,7 +117,7 @@ public abstract class TabWindow extends SimpleWindow {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
         for(int i = 0; i < this.getTabs().size(); i++) {
-            RenderSystem.setShader(GameRenderer::getPositionTexShader);
+            RenderSystem.setShader(GameRenderer::getPositionTexProgram);
             RenderSystem.setShaderTexture(0, this.TABS_TEXTURE);
             if (i != selectedTab) {
                 this.renderTabIcon(matrices, this.getTabs().get(i), i + 1, false);
@@ -128,51 +128,53 @@ public abstract class TabWindow extends SimpleWindow {
     protected void renderTabIcon(MatrixStack matrices, Subscreen<TabWindow> option, int iteration, boolean selected) {
 
         int textureHeight;
-        if (selected && iteration / 9 == 0)
+        if (selected && iteration / 10 == 0)
             textureHeight = 32;
-        else if (selected && iteration / 9 != 0)
+        else if (selected && iteration / 10 != 0)
             textureHeight = 96;
-        else if (!selected && iteration / 9 == 0)
+        else if (!selected && iteration / 10 == 0)
             textureHeight = 0;
         else
             textureHeight = 64;
 
         int height;
-        if (iteration / 9 == 0)
+        if (iteration / 10 == 0)
             height = windowTop - 28;
         else
             height = windowBottom - 3;
 
         int width;
-        if (iteration / 9 == 0)
-            width = windowLeft - 22 + 29*iteration;
+        if (iteration / 10 == 0)
+            width = windowLeft - 22 + 26*iteration;
         else
-            width = windowLeft - 22 + 29*(iteration % 8);
+            width = windowLeft - 22 + 26*(iteration % 9);
 
-        this.drawTexture(
+        drawTexture(
             matrices, 
             width, 
             height, 
-            28, 
+            26, 
             textureHeight, 
-            28, 
+            26, 
             32
         );
-
-        this.itemRenderer.zOffset = 100.0F;
+        
+        //this.itemRenderer.zOffset = 100.0F;
         ItemStack itemStack = option.icon;
         this.itemRenderer.renderInGuiWithOverrides(
+            matrices,
             itemStack, 
-            width + 6, 
+            width + 5, 
             height + 8
         );
         this.itemRenderer.renderGuiItemOverlay(
+            matrices,
             this.textRenderer, 
             itemStack, 
-            width + 6,
+            width + 5,
             height + 8
         );
-        this.itemRenderer.zOffset = 0.0F;
+        //this.itemRenderer.zOffset = 0.0F;
     } 
 
     @Override

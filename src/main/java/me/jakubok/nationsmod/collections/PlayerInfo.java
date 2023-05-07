@@ -13,7 +13,6 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 
 public class PlayerInfo implements Serialisable {
 
@@ -136,7 +135,7 @@ public class PlayerInfo implements Serialisable {
             this.currentTown = null;
             this.currentProvince = null;
             this.currentNation = null;
-            return new TranslatableText("nationsmod.wilderness");
+            return Text.translatable("nationsmod.wilderness");
         }
         return null;
     }

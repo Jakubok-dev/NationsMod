@@ -13,7 +13,7 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 
 public class CreateATown implements PlayChannelHandler {
     @Override
@@ -30,7 +30,7 @@ public class CreateATown implements PlayChannelHandler {
                 if (!(el instanceof Town))
                     return;
                 if (townName.toLowerCase().equals(el.getName().toLowerCase())) {
-                    player.sendMessage(new TranslatableText("gui.nationsmod.town_creation_screen.town_name_not_unique"), false);
+                    player.sendMessage(Text.translatable("gui.nationsmod.town_creation_screen.town_name_not_unique"), false);
                     unique.set(false);
                     return;
                 }

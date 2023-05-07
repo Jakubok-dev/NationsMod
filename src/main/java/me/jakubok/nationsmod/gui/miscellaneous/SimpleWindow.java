@@ -35,7 +35,7 @@ public abstract class SimpleWindow extends Screen {
 
         drawTexture(matrices, 120, 50, 0, 0, 256, 256, 256, 256);
 
-        drawCenteredText(
+        drawCenteredTextWithShadow(
             matrices, 
             this.textRenderer, 
             this.title, 
@@ -56,7 +56,7 @@ public abstract class SimpleWindow extends Screen {
     }
 
     @Override
-    public void onClose() {
+    public void close() {
         this.client.setScreen(previousScreen);
     }
 }

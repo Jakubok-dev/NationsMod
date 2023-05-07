@@ -11,7 +11,6 @@ import me.jakubok.nationsmod.collections.Pair;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.WorldAccess;
@@ -25,7 +24,7 @@ public class MapStorage {
 
     public void renderBlockLayer(WorldAccess world, int blockx, int blockz) {
         final int blockHeight = world.getTopY(Heightmap.Type.MOTION_BLOCKING, blockx, blockz) - 1;
-        Biome biome = world.getBiome(new BlockPos(blockx, blockHeight, blockz));
+        Biome biome = world.getBiome(new BlockPos(blockx, blockHeight, blockz)).value();
         Block block = world.getBlockState(new BlockPos(blockx, blockHeight, blockz)).getBlock();
 
         Colour colour;
@@ -108,12 +107,12 @@ public class MapStorage {
         if (info == null)
             return null;
         if (info.district != null) {
-            TranslatableText translatableText = new TranslatableText("gui.nationsmod.map_screen.district");
+            Text translatableText = Text.translatable("gui.nationsmod.map_screen.district");
             String temp = translatableText.getString() + info.district.key;
             result.add(Text.of(temp));
         }
         if (info.town != null) {
-            TranslatableText translatableText = new TranslatableText("gui.nationsmod.map_screen.town");
+            Text translatableText = Text.translatable("gui.nationsmod.map_screen.town");
             String temp = translatableText.getString() + info.town.key;
             result.add(Text.of(temp));
         }

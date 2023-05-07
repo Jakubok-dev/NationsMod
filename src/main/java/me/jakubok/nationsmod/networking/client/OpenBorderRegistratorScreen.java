@@ -17,7 +17,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 
@@ -39,10 +38,10 @@ public class OpenBorderRegistratorScreen implements PlayChannelHandler {
             }
     
             HitResult hit = client.crosshairTarget;
-            BlockPos position = new BlockPos(hit.getPos());
+            BlockPos position = new BlockPos((int)hit.getPos().x, (int)hit.getPos().y, (int)hit.getPos().z);
     
             if (slots.getSelectedSlot() == null) {
-                client.player.sendMessage(new TranslatableText("gui.nationsmod.border_registrator.select_a_slot"), true);
+                client.player.sendMessage(Text.translatable("gui.nationsmod.border_registrator.select_a_slot"), true);
                 return;
             }
     
@@ -56,9 +55,9 @@ public class OpenBorderRegistratorScreen implements PlayChannelHandler {
                 NationsClient.map.clearTheBorderRegistratorLayer(slots.getSelectedSlot().get(position).position);
                 NationsClient.borderSlot.delete(slots.getSelectedSlot().get(position).position.getX(), slots.getSelectedSlot().get(position).position.getZ());
     
-                TranslatableText firstUnmarkMessage = new TranslatableText("gui.nationsmod.border_registrator.unmark.1");
-                TranslatableText secondUnmarkMessage = new TranslatableText("gui.nationsmod.border_registrator.unmark.2");
-                TranslatableText thirdUnmarkMessage = new TranslatableText("gui.nationsmod.border_registrator.unmark.3");
+                Text firstUnmarkMessage = Text.translatable("gui.nationsmod.border_registrator.unmark.1");
+                Text secondUnmarkMessage = Text.translatable("gui.nationsmod.border_registrator.unmark.2");
+                Text thirdUnmarkMessage = Text.translatable("gui.nationsmod.border_registrator.unmark.3");
     
                 Text unmarkMessage = Text.of(
                     firstUnmarkMessage.getString() + " " +
@@ -80,9 +79,9 @@ public class OpenBorderRegistratorScreen implements PlayChannelHandler {
                 buffer.writeBlockPos(border.position);
                 ClientPlayNetworking.send(Packets.HIGHLIGHT_A_BLOCK_SERVER, buffer);
     
-                TranslatableText firstMarkMessage = new TranslatableText("gui.nationsmod.border_registrator.mark.1");
-                TranslatableText secondMarkMessage = new TranslatableText("gui.nationsmod.border_registrator.mark.2");
-                TranslatableText thirdMarkMessage = new TranslatableText("gui.nationsmod.border_registrator.mark.3");
+                Text firstMarkMessage = Text.translatable("gui.nationsmod.border_registrator.mark.1");
+                Text secondMarkMessage = Text.translatable("gui.nationsmod.border_registrator.mark.2");
+                Text thirdMarkMessage = Text.translatable("gui.nationsmod.border_registrator.mark.3");
     
                 Text markMessage = Text.of(
                     firstMarkMessage.getString() + " " +
