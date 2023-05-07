@@ -112,6 +112,11 @@ public class Law<D extends LawDescription> implements ComponentV3 {
                         this.putARule(entry.getKey(), set);
                     } catch(Exception ex) {}
                     break;
+                case LAWAPPROVEMENT:
+                    try {
+                        this.putARule(entry.getKey(), LawApprovement.values()[tag.getInt(entry.getKey())]);
+                    } catch(Exception ex) {}
+                    break;
                 default:
                     System.out.print(entry + "of an unserialisable type");
                     break;
@@ -171,6 +176,9 @@ public class Law<D extends LawDescription> implements ComponentV3 {
                     tag.putInt(entry.getKey() + "Size", arrayOfPlayerAccount.length);
                     for (int i = 0; i < arrayOfPlayerAccount.length; i++)
                         tag.put(entry.getKey() + i, arrayOfPlayerAccount[i].writeToNbtAndReturn(new NbtCompound()));
+                    break;
+                case LAWAPPROVEMENT:
+                    tag.putInt(entry.getKey(), ((LawApprovement)entry.getValue()).value);
                     break;
                 default:
                     System.out.print(entry + "of an unserialisable type");

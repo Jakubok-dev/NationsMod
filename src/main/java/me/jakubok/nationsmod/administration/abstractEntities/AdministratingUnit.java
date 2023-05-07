@@ -7,6 +7,7 @@ import java.util.UUID;
 import me.jakubok.nationsmod.administration.governmentElements.FormOfGovernment;
 import me.jakubok.nationsmod.administration.governmentElements.formsOfGovernment.AbsoluteMonarchy;
 import me.jakubok.nationsmod.administration.law.Directive;
+import me.jakubok.nationsmod.administration.law.LawApprovement;
 import me.jakubok.nationsmod.collections.Colour;
 import me.jakubok.nationsmod.collections.PlayerAccount;
 import net.minecraft.nbt.NbtCompound;
@@ -34,6 +35,14 @@ public abstract class AdministratingUnit<D extends AdministratingUnitLawDescript
 
     public Colour getTheMapColour() {
         return (Colour)this.law.getARule(AdministratingUnitLawDescription.mapColourLabel);
+    }
+
+    public int getThePetitionSupport() {
+        return (int)this.law.getARule(AdministratingUnitLawDescription.petitionSupportLabel);
+    }
+
+    public LawApprovement getTheCitizenshipApprovement() {
+        return (LawApprovement)this.law.getARule(AdministratingUnitLawDescription.citizenshipApprovementLabel);
     }
 
     public abstract Set<PlayerAccount> getPlayerMembers();

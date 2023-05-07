@@ -44,4 +44,7 @@ public class Packets {
     public static final Identifier PULL_MAP_BLOCK_INFO = new Identifier(NationsMod.MOD_ID, "pull_map_block_info");
 
     public static final Identifier PREPARE_BORDER_REGISTRATOR_SCREEN = new Identifier(NationsMod.MOD_ID, "prepare_border_registrator_screen");
+
+    public static final Identifier GET_A_NATION = new Identifier(NationsMod.MOD_ID, "get_a_nation");
+    public static final Identifier GET_A_PROVINCE = new Identifier(NationsMod.MOD_ID, "get_a_province");
 }

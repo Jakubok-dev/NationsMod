@@ -5,7 +5,6 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.function.Function;
 
-import me.jakubok.nationsmod.administration.governmentElements.FormOfGovernment;
 import me.jakubok.nationsmod.collections.Colour;
 
 public enum RuleType {
@@ -18,7 +17,7 @@ public enum RuleType {
     LISTOFUUID(obj -> obj instanceof List),
     SETOFUUID(obj -> obj instanceof Set),
     SETOFPLAYERACOUNT(obj -> obj instanceof Set),
-    FORMOFGOVERNMENT(obj -> obj instanceof FormOfGovernment);
+    LAWAPPROVEMENT(obj -> obj instanceof LawApprovement);
 
     private final Function<Object, Boolean> isInstance;
     RuleType(Function<Object, Boolean> isInstance) {

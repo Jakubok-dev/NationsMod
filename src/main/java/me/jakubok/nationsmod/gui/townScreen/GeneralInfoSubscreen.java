@@ -3,23 +3,33 @@ package me.jakubok.nationsmod.gui.townScreen;
 import java.util.Arrays;
 import java.util.List;
 
-import me.jakubok.nationsmod.gui.miscellaneous.ChangeOfASettingScreen;
-import me.jakubok.nationsmod.gui.miscellaneous.Setting;
+import me.jakubok.nationsmod.administration.nation.Nation;
+import me.jakubok.nationsmod.administration.province.Province;
+import me.jakubok.nationsmod.gui.miscellaneous.Property;
 import me.jakubok.nationsmod.gui.miscellaneous.SimpleWindow;
 import me.jakubok.nationsmod.gui.miscellaneous.Subscreen;
 import me.jakubok.nationsmod.gui.miscellaneous.TabWindow;
+import me.jakubok.nationsmod.networking.ClientNetworking;
+import me.jakubok.nationsmod.networking.Packets;
 import me.jakubok.nationsmod.registries.ItemRegistry;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
 
 public class GeneralInfoSubscreen {
     public final Subscreen<TabWindow> subscreen;
 
-    public final List<Setting> settings;
+    public final List<Property> properties;
     int page = 0;
     public final ButtonWidget settingsUp, settingsDown; 
+    public Province province; public Nation nation;
 
     public GeneralInfoSubscreen(TownScreen inst) {
         this.subscreen = new Subscreen<TabWindow>(
@@ -29,58 +39,60 @@ public class GeneralInfoSubscreen {
             instance -> init(instance)
         );
 
-        settings = Arrays.asList(new Setting[] {
-            new Setting(
-                "Name:", 
-                inst.town.getName(), 
-                new ChangeOfASettingScreen(
-                    Text.of("Name"), 
-                    instance -> {},
-                    inst
-                ), 
+        if (inst.town.getProvincesID() == null) {
+            province = null; nation = null;
+        } else {
+            this.getTheProvince(inst);
+        }
+        
+        this.properties = Arrays.asList(new Property[] {
+            new Property(
+                Text.of("Name:"), 
+                Text.of(inst.town.getName()), 
                 inst.getClient(),
-                SimpleWindow.windowTop + 35 + 21 * 0,
-                true
+                SimpleWindow.windowTop + 35 + 21 * 0
             ),
-            new Setting(
-                "Government:", 
-                inst.town.formOfGovernment.getDisplayName().getString(), 
-                new ChangeOfASettingScreen(
-                    Text.of("Form of government:"), 
-                    instance -> {},
-                    inst
-                ),
+            new Property(
+                Text.of("Government:"), 
+                inst.town.formOfGovernment.getDisplayName(), 
                 inst.getClient(),
-                SimpleWindow.windowTop + 35 + 21 * 1,
-                true
+                SimpleWindow.windowTop + 35 + 21 * 1
             ),
-            new Setting(
-                "Citizens:", 
-                inst.town.getAIMembers().size() + inst.town.getPlayerMembers().size() + "", 
-                null, 
+            new Property(
+                Text.of("Citizens:"), 
+                Text.of(inst.town.getAIMembers().size() + inst.town.getPlayerMembers().size() + ""), 
                 inst.getClient(),
-                SimpleWindow.windowTop + 35 + 21 * 2,
-                false
+                SimpleWindow.windowTop + 35 + 21 * 2
             ),
-            new Setting(
-                "Districts:", 
-                inst.town.getDistricts().size() + "", 
-                null, 
+            new Property(
+                Text.of("Districts:"), 
+                Text.of(inst.town.getDistricts().size() + ""), 
                 inst.getClient(),
-                SimpleWindow.windowTop + 35 + 21 * 3,
-                false
+                SimpleWindow.windowTop + 35 + 21 * 3
             ),
-            new Setting(
-                "Petition support:", 
-                "10 %", 
-                new ChangeOfASettingScreen(
-                    Text.of("Petition support"), 
-                    instance -> {},
-                    inst
-                ),
+            new Property(
+                Text.of("Province:"),
+                Text.of("-"),
                 inst.getClient(),
-                SimpleWindow.windowTop + 35 + 21 * 4,
-                true
+                SimpleWindow.windowTop + 35 + 21 * 4
+            ),
+            new Property(
+                Text.of("Nation:"),
+                Text.of("-"),
+                inst.getClient(),
+                SimpleWindow.windowTop + 35 + 21 * 0
+            ),
+            new Property(
+                Text.of("Petition support:"), 
+                Text.of(inst.town.getThePetitionSupport() + "%"),
+                inst.getClient(),
+                SimpleWindow.windowTop + 35 + 21 * 1
+            ),
+            new Property(
+                Text.of("Citizenship:"), 
+                inst.town.getTheCitizenshipApprovement().displayText,
+                inst.getClient(),
+                SimpleWindow.windowTop + 35 + 21 * 2
             )
         });
 
@@ -109,9 +121,40 @@ public class GeneralInfoSubscreen {
         );
     }
 
+    protected void getTheProvince(TownScreen inst) {
+        PacketByteBuf buffer = PacketByteBufs.create();
+        NbtCompound nbt = new NbtCompound();
+        nbt.putUuid("id", inst.town.getProvincesID());
+        buffer.writeNbt(nbt);
+        ClientNetworking.makeARequest(Packets.GET_A_PROVINCE, buffer,
+        (MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) -> {
+            NbtCompound nbtresponse = buf.readNbt();
+            client.execute(() -> {
+                this.province = new Province(nbtresponse, client.world.getLevelProperties());
+                this.properties.get(4).value = Text.of(this.province.getName());
+                this.getTheNation(inst);
+            });
+        });
+    }
+
+    protected void getTheNation(TownScreen inst) {
+        PacketByteBuf buffer = PacketByteBufs.create();
+        NbtCompound nbt = new NbtCompound();
+        nbt.putUuid("id", this.province.getNationsUUID());
+        buffer.writeNbt(nbt);
+        ClientNetworking.makeARequest(Packets.GET_A_NATION, buffer,
+        (MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) -> {
+            NbtCompound nbtresponse = buf.readNbt();
+            client.execute(() -> {
+                this.nation = new Nation(nbtresponse, client.world.getLevelProperties());
+                this.properties.get(5).value = Text.of(this.nation.getName());
+            });
+        });
+    }
+
     protected void render(MatrixStack matrices, int mouseX, int mouseY, float delta, TabWindow instance) {
-        for (int i = page*5; i < 5*(page + 1) && i < this.settings.size(); i++) {
-            this.settings.get(i).render(matrices, instance, instance.getTextRenderer(), mouseX, mouseY, delta);
+        for (int i = page*5; i < 5*(page + 1) && i < this.properties.size(); i++) {
+            this.properties.get(i).render(matrices, instance, instance.getTextRenderer(), mouseX, mouseY, delta);
         }
     }
 
@@ -120,10 +163,8 @@ public class GeneralInfoSubscreen {
         this.settingsDown.active = isDownActive();
         instance.addDrawableChild(this.settingsUp);
         instance.addDrawableChild(this.settingsDown);
-        for (int i = page*5; i < 5*(page + 1) && i < this.settings.size(); i++) {
-            this.settings.get(i).client = instance.getClient();
-            if (this.settings.get(i).changable)
-                instance.addDrawableChild(this.settings.get(i).changeButton);
+        for (int i = page*5; i < 5*(page + 1) && i < this.properties.size(); i++) {
+            this.properties.get(i).client = instance.getClient();
         }
     }
 
@@ -136,6 +177,6 @@ public class GeneralInfoSubscreen {
     }
 
     public boolean isDownActive() {
-        return (this.page + 1) * 5 < this.settings.size();
+        return (this.page + 1) * 5 < this.properties.size();
     }
 }

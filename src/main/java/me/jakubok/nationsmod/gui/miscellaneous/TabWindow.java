@@ -61,6 +61,7 @@ public abstract class TabWindow extends SimpleWindow {
 
     public void reload() {
         this.drawables.clear();
+        this.clearChildren();
         this.init();
     }
 

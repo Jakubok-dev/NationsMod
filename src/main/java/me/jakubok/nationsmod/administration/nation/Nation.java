@@ -36,7 +36,10 @@ public class Nation extends AdministratingUnit<NationLawDescription> {
     @Override
     public Set<PlayerAccount> getPlayerMembers() {
         Set<PlayerAccount> result = new HashSet<>();
+
         for (Province province : this.getProvinces()) {
+            if (province == null)
+                break;
             for (Town town : province.getTowns()) {
                 result.addAll(town.getPlayerMembers());
             }
@@ -47,6 +50,8 @@ public class Nation extends AdministratingUnit<NationLawDescription> {
     public Set<UUID> getAIMembers() {
         Set<UUID> result = new HashSet<>();
         for (Province province : this.getProvinces()) {
+            if (province == null)
+                break;
             for (Town town : province.getTowns()) {
                 result.addAll(town.getAIMembers());
             }
