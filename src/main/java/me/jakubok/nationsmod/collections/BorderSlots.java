@@ -4,10 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import dev.onyxstudios.cca.api.v3.component.ComponentV3;
 import net.minecraft.nbt.NbtCompound;
 
-public class BorderSlots implements ComponentV3 {
+public class BorderSlots implements Serialisable {
 
     public List<BorderGroup> slots = new ArrayList<>();
 

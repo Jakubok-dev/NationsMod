@@ -11,48 +11,47 @@ import me.jakubok.nationsmod.administration.law.Directive;
 import me.jakubok.nationsmod.administration.province.Province;
 import me.jakubok.nationsmod.administration.town.Town;
 import me.jakubok.nationsmod.collections.PlayerAccount;
-import me.jakubok.nationsmod.registries.ComponentsRegistry;
+import me.jakubok.nationsmod.registries.LegalOrganisationsRegistry;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.crash.CrashException;
 import net.minecraft.util.crash.CrashReport;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldProperties;
 
 public class Nation extends AdministratingUnit<NationLawDescription> {
 
-    public Nation(String name, World world, String provinceName, Town capital) {
-        super(new NationLawDescription(), name, world.getLevelProperties());
+    public Nation(String name, String provinceName, Town capital, MinecraftServer server) {
+        super(new NationLawDescription(), name, server);
         this.setCapitalsID(capital.getId());
 
-        Province mainProvince = new Province(provinceName, capital, this, world);
+        Province mainProvince = new Province(provinceName, capital, this, server);
         this.getTheListOfProvincesIDs().add(mainProvince.getId());
 
     }
-    public Nation(NbtCompound tag, WorldProperties props) {
-        super(new NationLawDescription(), props);
-        readFromNbt(tag);
+    public Nation(NbtCompound tag, MinecraftServer server) {
+        super(new NationLawDescription());
+        readFromNbt(tag, server);
     }
 
     @Override
-    public Set<PlayerAccount> getPlayerMembers() {
+    public Set<PlayerAccount> getPlayerMembers(MinecraftServer server) {
         Set<PlayerAccount> result = new HashSet<>();
 
-        for (Province province : this.getProvinces()) {
+        for (Province province : this.getProvinces(server)) {
             if (province == null)
                 break;
-            for (Town town : province.getTowns()) {
+            for (Town town : province.getTowns(server)) {
                 result.addAll(town.getPlayerMembers());
             }
         }
         return result;
     }
     @Override
-    public Set<UUID> getAIMembers() {
+    public Set<UUID> getAIMembers(MinecraftServer server) {
         Set<UUID> result = new HashSet<>();
-        for (Province province : this.getProvinces()) {
+        for (Province province : this.getProvinces(server)) {
             if (province == null)
                 break;
-            for (Town town : province.getTowns()) {
+            for (Town town : province.getTowns(server)) {
                 result.addAll(town.getAIMembers());
             }
         }
@@ -66,8 +65,8 @@ public class Nation extends AdministratingUnit<NationLawDescription> {
         return this.law.putARule(NationLawDescription.capitalsIDLabel, id);
     }
 
-    public Town getCapital() {
-        return Town.fromUUID(getCapitalsID(), props);
+    public Town getCapital(MinecraftServer server) {
+        return Town.fromUUID(getCapitalsID(), server);
     }
 
     public List<UUID> getTheListOfProvincesIDs() {
@@ -76,27 +75,24 @@ public class Nation extends AdministratingUnit<NationLawDescription> {
         return result;
     }
 
-    public List<Province> getProvinces() {
+    public List<Province> getProvinces(MinecraftServer server) {
         return this.getTheListOfProvincesIDs().stream()
-            .map(el -> Province.fromUUID(el, props))
+            .map(el -> Province.fromUUID(el, server))
             .toList();
     }
 
     @Override
-    public void readTheFormOfGovernment(NbtCompound nbt) {
+    public void readTheFormOfGovernment(NbtCompound nbt, MinecraftServer server) {
         switch (nbt.getString("formOfGovernment")) {
             case "absolute_monarchy":
-                this.formOfGovernment = new AbsoluteMonarchy<Nation, NationLawDescription>(this, () -> new Directive<>(this.description));
+                this.formOfGovernment = new AbsoluteMonarchy<Nation, NationLawDescription>(this, () -> new Directive<>(this.description), server);
                 break;
             default:
                 throw new CrashException(CrashReport.create(new Throwable(), "Unknown form of government"));
         }
     }
     
-    public static Nation fromUUID(UUID id, WorldProperties props) {
-        return (Nation)ComponentsRegistry.LEGAL_ORGANISATIONS_REGISTRY.get(props).get(id);
-    }
-    public static Nation fromUUID(UUID id, World world) {
-        return fromUUID(id, world.getLevelProperties());
+    public static Nation fromUUID(UUID id, MinecraftServer server) {
+        return (Nation)LegalOrganisationsRegistry.getRegistry(server).get(id);
     }
 }

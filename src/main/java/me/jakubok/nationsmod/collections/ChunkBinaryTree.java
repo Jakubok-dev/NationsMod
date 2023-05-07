@@ -1,11 +1,16 @@
 package me.jakubok.nationsmod.collections;
 
-import dev.onyxstudios.cca.api.v3.component.ComponentV3;
+import java.util.function.Function;
+
+import me.jakubok.nationsmod.NationsMod;
 import me.jakubok.nationsmod.chunk.ChunkClaimRegistry;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.PersistentState;
+import net.minecraft.world.PersistentStateManager;
 
-public class ChunkBinaryTree implements ComponentV3 {
+public class ChunkBinaryTree extends PersistentState {
 
     public ChunkBinaryTree(NbtCompound tag) {
         readFromNbt(tag);
@@ -30,6 +35,7 @@ public class ChunkBinaryTree implements ComponentV3 {
             if (z > current.value.getZ()) {
                 return this.getOrCreateRecursive(current.right, x, z);
             }
+            this.markDirty();
             return current;
         }
         return this.getOrCreateRecursive(current.right, x, z);
@@ -58,11 +64,13 @@ public class ChunkBinaryTree implements ComponentV3 {
             else if (value.getZ() > current.value.getZ()) {
                 current.right = this.insertRecursive(current.right, value);
             }
+            this.markDirty();
             return current;
         }
         else
             current.right = this.insertRecursive(current.right, value);
-
+        
+        this.markDirty();
         return current;
     }
 
@@ -85,6 +93,7 @@ public class ChunkBinaryTree implements ComponentV3 {
             if (z > current.value.getZ()) {
                 return this.getRecursive(current.right, x, z);
             }
+            this.markDirty();
             return current;
         }
         return this.getRecursive(current.right, x, z);
@@ -100,21 +109,33 @@ public class ChunkBinaryTree implements ComponentV3 {
         return get(pos.getX() >> 4, pos.getZ() >> 4);
     }
 
-    @Override
     public void readFromNbt(NbtCompound tag) {
         if (!tag.getBoolean("is_root_null"))
             this.root = new Node<ChunkClaimRegistry>(tag, () -> new ChunkClaimRegistry());
     }
 
     @Override
-    public void writeToNbt(NbtCompound tag) {
-        writeToNbtAndReturn(tag);
-    }
-
-    public NbtCompound writeToNbtAndReturn(NbtCompound tag) {
+    public NbtCompound writeNbt(NbtCompound tag) {
         if (this.root != null)
             this.root.writeToNbt(tag);
         tag.putBoolean("is_root_null", this.root == null);
         return tag;
+    }
+
+    public static ChunkBinaryTree getRegistry(ServerWorld world) {
+
+        Function<NbtCompound, ChunkBinaryTree> createFromNbt = nbt -> {
+            ChunkBinaryTree registry = new ChunkBinaryTree();
+            registry.readFromNbt(nbt);
+            return registry;
+        };
+
+        PersistentStateManager manager = world.getPersistentStateManager();
+        ChunkBinaryTree registry = manager.getOrCreate(
+            createFromNbt,
+            ChunkBinaryTree::new, 
+            NationsMod.MOD_ID + ":chunk_binary_tree"
+        );
+        return registry;
     }
 }

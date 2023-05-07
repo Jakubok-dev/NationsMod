@@ -22,9 +22,6 @@
     ],
     "client": [
       "me.jakubok.nationsmod.NationsClient"
-    ],
-    "cardinal-components": [
-      "me.jakubok.nationsmod.registries.ComponentsRegistry"
     ]
   },
   "mixins": [
@@ -39,12 +36,5 @@
   },
   "suggests": { },
 
-  "custom": {
-    "cardinal-components": [
-      "nationsmod:legal_organisations_registry",
-      "nationsmod:chunk_binary_tree",
-      "nationsmod:player_info",
-      "nationsmod:border_slots"
-    ]
-}
+  "custom": { }
 }

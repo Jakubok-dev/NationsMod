@@ -14,56 +14,64 @@ import me.jakubok.nationsmod.collections.PlayerAccount;
 import me.jakubok.nationsmod.collections.PlayerInfo;
 import me.jakubok.nationsmod.entity.human.HumanData;
 import me.jakubok.nationsmod.entity.human.HumanEntity;
-import me.jakubok.nationsmod.registries.ComponentsRegistry;
+import me.jakubok.nationsmod.registries.LegalOrganisationsRegistry;
+import me.jakubok.nationsmod.registries.PlayerInfoRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.crash.CrashException;
 import net.minecraft.util.crash.CrashReport;
 import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldProperties;
 
 
 public class Town extends AdministratingUnit<TownLawDescription> {
 
-    public Town(String name, String districtName, ChunkPos pos, World world, Province province, BorderGroup borderGroup) {
-        super(new TownLawDescription(), name, world.getLevelProperties());
+    public Town(String name, String districtName, ChunkPos pos, ServerWorld world, Province province, BorderGroup borderGroup, MinecraftServer server) {
+        super(new TownLawDescription(), name, server);
         if (province != null)
             this.setProvincesID(province.getId());
 
-        District mainDistrict = new District(districtName, this, world, borderGroup);
+        District mainDistrict = new District(districtName, this, world, borderGroup, server);
 
         this.getTheListOfDistrictsIDs().add(mainDistrict.getId());
     }
-    public Town(String name, String districtName, ChunkPos pos, World world, BorderGroup group) {
-        this(name, districtName, pos, world, null, group);
+    public Town(String name, String districtName, ChunkPos pos, ServerWorld world, BorderGroup group, MinecraftServer server) {
+        this(name, districtName, pos, world, null, group, server);
     }
-    public Town(NbtCompound tag, WorldProperties props) {
-        super(new TownLawDescription(), props);
-        this.readFromNbt(tag);
+    public Town(NbtCompound tag, MinecraftServer server) {
+        super(new TownLawDescription());
+        this.readFromNbt(tag, server);
     }
     
     @Override
+    public Set<PlayerAccount> getPlayerMembers(MinecraftServer server) {
+        return this.getPlayerMembers();
+    }
     public Set<PlayerAccount> getPlayerMembers() {
         @SuppressWarnings("unchecked")
         Set<PlayerAccount> result = (Set<PlayerAccount>)this.law.getARule(TownLawDescription.setOfPlayerMembersLabel);
         return result;
     }
+
     @Override
+    public Set<UUID> getAIMembers(MinecraftServer server) {
+        return this.getAIMembers();
+    }
     public Set<UUID> getAIMembers() {
         @SuppressWarnings("unchecked")
         Set<UUID> result = (Set<UUID>)this.law.getARule(TownLawDescription.setOfAIMembersLabel);
         return result;
     }
 
-    public boolean addAMember(PlayerEntity entity) {
+    public boolean addAMember(PlayerEntity entity, MinecraftServer server) {
         if (this.getPlayerMembers().contains(new PlayerAccount(entity)))
             return false;
-        PlayerInfo info = ComponentsRegistry.PLAYER_INFO.get(this.props).getAPlayer(new PlayerAccount(entity));
+        PlayerInfo info = PlayerInfoRegistry.getRegistry(server).getAPlayer(new PlayerAccount(entity));
         if (info.getCitizenship() != null)
-            Town.fromUUID(info.getCitizenship(), this.props).removeAMember(entity);
+            Town.fromUUID(info.getCitizenship(), server).removeAMember(entity);
         
-        info.setCitizenship(this.getId());
+        info.setCitizenship(this.getId(), server);
         this.getPlayerMembers().add(new PlayerAccount(entity));
 
         return true;
@@ -72,14 +80,14 @@ public class Town extends AdministratingUnit<TownLawDescription> {
         return this.getPlayerMembers().remove(new PlayerAccount(entity));
     }
 
-    public boolean addAMember(HumanEntity entity) {
+    public boolean addAMember(HumanEntity entity, MinecraftServer server) {
         if (this.getAIMembers().contains(entity.getUuid()))
             return false;
         HumanData data = entity.getHumanData();
         if (data.getCitizenship() != null)
-            Town.fromUUID(data.getCitizenship(), this.props).removeAMember(entity);
+            Town.fromUUID(data.getCitizenship(), server).removeAMember(entity);
         
-        data.setCitizenship(this.getId(), this.props);
+        data.setCitizenship(this.getId(), server);
         this.getAIMembers().add(entity.getUuid());
         
         return true;
@@ -94,9 +102,9 @@ public class Town extends AdministratingUnit<TownLawDescription> {
         return result;
     }
 
-    public List<District> getDistricts() {
+    public List<District> getDistricts(MinecraftServer server) {
         return this.getTheListOfDistrictsIDs().stream()
-        .map(el -> (District)ComponentsRegistry.LEGAL_ORGANISATIONS_REGISTRY.get(props).get(el))
+        .map(el -> (District)LegalOrganisationsRegistry.getRegistry(server).get(el))
         .toList();
         
     }
@@ -109,34 +117,30 @@ public class Town extends AdministratingUnit<TownLawDescription> {
         return this.law.putARule(TownLawDescription.provincesIDLabel, id);
     }
 
-    public Province getProvince() {
-        return Province.fromUUID(this.getProvincesID(), props);
+    public Province getProvince(MinecraftServer server) {
+        return Province.fromUUID(this.getProvincesID(), server);
     }
 
     public void setProvince(Province province) {
         this.setProvincesID(province.getId());
     }
 
-    public boolean hasProvince() {
-        return getProvince() != null;
+    public boolean hasProvince(MinecraftServer server) {
+        return this.getProvince(server) != null;
     }
 
     @Override
-    public void readTheFormOfGovernment(NbtCompound nbt) {
+    public void readTheFormOfGovernment(NbtCompound nbt, MinecraftServer server) {
         switch (nbt.getString("formOfGovernment")) {
             case "absolute_monarchy":
-                this.formOfGovernment = new AbsoluteMonarchy<Town, TownLawDescription>(this, () -> new Directive<>(this.description));
+                this.formOfGovernment = new AbsoluteMonarchy<Town, TownLawDescription>(this, () -> new Directive<>(this.description), server);
                 break;
             default:
                 throw new CrashException(CrashReport.create(new Throwable(), "Unknown form of government"));
         }
     }
 
-    public static Town fromUUID(UUID id, WorldProperties props) {
-        return (Town)ComponentsRegistry.LEGAL_ORGANISATIONS_REGISTRY.get(props).get(id);
-    }
-
-    public static Town fromUUID(UUID id, World world) {
-        return fromUUID(id, world.getLevelProperties());
+    public static Town fromUUID(UUID id, MinecraftServer server) {
+        return (Town)LegalOrganisationsRegistry.getRegistry(server).get(id);
     }
 }

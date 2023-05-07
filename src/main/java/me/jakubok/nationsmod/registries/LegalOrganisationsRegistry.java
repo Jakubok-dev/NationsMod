@@ -4,30 +4,30 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
 
-import dev.onyxstudios.cca.api.v3.component.ComponentV3;
+import me.jakubok.nationsmod.NationsMod;
 import me.jakubok.nationsmod.administration.abstractEntities.LegalOrganisation;
 import me.jakubok.nationsmod.administration.district.District;
 import me.jakubok.nationsmod.administration.nation.Nation;
 import me.jakubok.nationsmod.administration.province.Province;
 import me.jakubok.nationsmod.administration.town.Town;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.world.WorldProperties;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.PersistentState;
+import net.minecraft.world.PersistentStateManager;
 
-public class LegalOrganisationsRegistry implements ComponentV3 {
+public class LegalOrganisationsRegistry extends PersistentState {
 
     private final Map<UUID, LegalOrganisation<?>> organisations = new HashMap<>();
-    public final WorldProperties props;
-    
-    public LegalOrganisationsRegistry(WorldProperties props) {
-        this.props = props;
-    }
 
     public Map<UUID, LegalOrganisation<?>> getOrganisations() {
+        this.markDirty();
         return this.organisations;
     }
 
     public LegalOrganisation<?> get(UUID id) {
+        this.markDirty();
         return this.organisations.get(id);
     }
 
@@ -37,40 +37,55 @@ public class LegalOrganisationsRegistry implements ComponentV3 {
         if (this.organisations.get(organisation.getId()) != null)
             return false;
         this.organisations.put(organisation.getId(), organisation);
+        this.markDirty();
         return true;
     }
 
     public boolean remove(UUID id) {
+        this.markDirty();
         return this.organisations.remove(id) != null;
     }
 
-    @Override
-    public void readFromNbt(NbtCompound tag) {
+    public void readFromNbt(NbtCompound tag, MinecraftServer server) {
+        this.markDirty();
         this.organisations.clear();
         for (int i = 0; i < tag.getInt("size"); i++) {
             NbtCompound subtag = tag.getCompound("entry" + i);
             UUID id = subtag.getCompound("law").getUuid("id");
             if (subtag.getBoolean("isADistrict"))
-            this.organisations.put(id, new District(subtag, props));
+            this.organisations.put(id, new District(subtag, server));
             if (subtag.getBoolean("isATown"))
-            this.organisations.put(id, new Town(subtag, props));
+            this.organisations.put(id, new Town(subtag, server));
             if (subtag.getBoolean("isAProvince"))
-                this.organisations.put(id, new Province(subtag, props));
+                this.organisations.put(id, new Province(subtag, server));
             if (subtag.getBoolean("isANation")) 
-                this.organisations.put(id, new Nation(subtag, props));
+                this.organisations.put(id, new Nation(subtag, server));
         }
     }
 
     @Override
-    public void writeToNbt(NbtCompound tag) {
-        this.writeToNbtAndReturn(tag);
-    }
-
-    public NbtCompound writeToNbtAndReturn(NbtCompound nbt) {
+    public NbtCompound writeNbt(NbtCompound nbt) {
         AtomicInteger size = new AtomicInteger(0);
         for (LegalOrganisation<?> entry : this.organisations.values())
             nbt.put("entry" + size.getAndIncrement(), entry.writeToNbtAndReturn(new NbtCompound()));
         nbt.putInt("size", size.get());
         return nbt;
+    }
+
+    public static LegalOrganisationsRegistry getRegistry(MinecraftServer server) {
+
+        Function<NbtCompound, LegalOrganisationsRegistry> createFromNbt = nbt -> {
+            LegalOrganisationsRegistry registry = new LegalOrganisationsRegistry();
+            registry.readFromNbt(nbt, server);
+            return registry;
+        };
+
+        PersistentStateManager manager = server.getOverworld().getPersistentStateManager();
+        LegalOrganisationsRegistry registry = manager.getOrCreate(
+            createFromNbt,
+            LegalOrganisationsRegistry::new, 
+            NationsMod.MOD_ID + ":legal_organisations_registry"
+        );
+        return registry;
     }
 }

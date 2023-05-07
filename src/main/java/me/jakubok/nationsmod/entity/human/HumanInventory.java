@@ -2,7 +2,7 @@ package me.jakubok.nationsmod.entity.human;
 
 import java.util.PriorityQueue;
 
-import dev.onyxstudios.cca.api.v3.component.ComponentV3;
+import me.jakubok.nationsmod.collections.Serialisable;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.AxeItem;
 import net.minecraft.item.HoeItem;
@@ -11,7 +11,7 @@ import net.minecraft.item.ShovelItem;
 import net.minecraft.item.SwordItem;
 import net.minecraft.nbt.NbtCompound;
 
-public class HumanInventory extends SimpleInventory implements ComponentV3 {
+public class HumanInventory extends SimpleInventory implements Serialisable {
     PriorityQueue<Entry> swords = new PriorityQueue<>();
     PriorityQueue<Entry> axes = new PriorityQueue<>();
     PriorityQueue<Entry> shovels = new PriorityQueue<>();

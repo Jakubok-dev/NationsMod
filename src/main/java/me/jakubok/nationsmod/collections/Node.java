@@ -2,10 +2,9 @@ package me.jakubok.nationsmod.collections;
 
 import com.google.common.base.Supplier;
 
-import dev.onyxstudios.cca.api.v3.component.ComponentV3;
 import net.minecraft.nbt.NbtCompound;
 
-public class Node<T extends ComponentV3> implements ComponentV3 {
+public class Node<T extends Serialisable> implements Serialisable {
     public T value;
     public Node<T> left;
     public Node<T> right;

@@ -8,13 +8,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import dev.onyxstudios.cca.api.v3.component.ComponentV3;
 import me.jakubok.nationsmod.administration.law.LawDescription.RuleDescription;
 import me.jakubok.nationsmod.collections.Colour;
+import me.jakubok.nationsmod.collections.Serialisable;
 import me.jakubok.nationsmod.collections.PlayerAccount;
 import net.minecraft.nbt.NbtCompound;
 
-public class Law<D extends LawDescription> implements ComponentV3 {
+public class Law<D extends LawDescription> implements Serialisable {
     public final D description;
     protected Map<String, Object> law = new HashMap<>();
     public Law(D description) {

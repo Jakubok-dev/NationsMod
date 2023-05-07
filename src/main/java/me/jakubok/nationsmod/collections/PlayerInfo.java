@@ -2,21 +2,20 @@ package me.jakubok.nationsmod.collections;
 
 import java.util.UUID;
 
-import dev.onyxstudios.cca.api.v3.component.ComponentV3;
 import me.jakubok.nationsmod.administration.district.District;
 import me.jakubok.nationsmod.administration.nation.Nation;
 import me.jakubok.nationsmod.administration.province.Province;
 import me.jakubok.nationsmod.administration.town.Town;
 import me.jakubok.nationsmod.chunk.ChunkClaimRegistry;
-import me.jakubok.nationsmod.registries.ComponentsRegistry;
+import me.jakubok.nationsmod.registries.PlayerInfoRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldProperties;
 
-public class PlayerInfo implements ComponentV3 {
+public class PlayerInfo implements Serialisable {
 
     public boolean inAWilderness = true;
     public UUID currentDistrict;
@@ -27,21 +26,18 @@ public class PlayerInfo implements ComponentV3 {
     protected UUID citizenship;
 
     protected PlayerAccount account;
-    public final WorldProperties props;
+    public BorderSlots slots = new BorderSlots();
 
     public boolean online = false;
 
-    public PlayerInfo(NbtCompound compound, WorldProperties props) {
-        this.props = props;
+    public PlayerInfo(NbtCompound compound) {
         this.readFromNbt(compound);
     }
-    public PlayerInfo(PlayerEntity entity, WorldProperties props) {
+    public PlayerInfo(PlayerEntity entity) {
         this.account = new PlayerAccount(entity);
-        this.props = props;
     }
-    public PlayerInfo(PlayerAccount account, WorldProperties props) {
+    public PlayerInfo(PlayerAccount account) {
         this.account = account;
-        this.props = props;
     }
 
     public PlayerAccount getPlayerAccount() {
@@ -58,8 +54,8 @@ public class PlayerInfo implements ComponentV3 {
     public UUID getCitizenship() {
         return citizenship;
     }
-    public boolean setCitizenship(UUID citizenship) {
-        if (Town.fromUUID(citizenship, this.props) == null)
+    public boolean setCitizenship(UUID citizenship, MinecraftServer server) {
+        if (Town.fromUUID(citizenship, server) == null)
             return false;
         this.citizenship = citizenship;
         return true;
@@ -68,9 +64,9 @@ public class PlayerInfo implements ComponentV3 {
         this.citizenship = null;
     }
 
-    public Text getToolBarText(PlayerEntity player) {
+    public Text getToolBarText(ServerPlayerEntity player, MinecraftServer server) {
 
-        ChunkClaimRegistry registry = ComponentsRegistry.CHUNK_BINARY_TREE.get(player.getEntityWorld()).get(player.getBlockPos());
+        ChunkClaimRegistry registry = ChunkBinaryTree.getRegistry(player.getWorld()).get(player.getBlockPos());
 
         if (registry == null)
             return wilderness();
@@ -79,10 +75,10 @@ public class PlayerInfo implements ComponentV3 {
 
         inAWilderness = false;
 
-        District district = District.fromUUID(registry.claimBelonging(player.getBlockPos()), player.getEntityWorld());
-        Town town = district.getTown();
+        District district = District.fromUUID(registry.claimBelonging(player.getBlockPos()), server);
+        Town town = district.getTown(server);
 
-        if (!town.hasProvince()) {
+        if (!town.hasProvince(server)) {
             if (!town.getId().equals(this.currentTown)) {
                 this.currentTown = town.getId();
                 this.currentDistrict = district.getId();
@@ -97,8 +93,8 @@ public class PlayerInfo implements ComponentV3 {
             return null;
         }
 
-        Province province = town.getProvince();
-        Nation nation = province.getNation();
+        Province province = town.getProvince(server);
+        Nation nation = province.getNation(server);
 
         if (!nation.getId().equals(this.currentNation)) {
             this.currentNation = nation.getId();
@@ -165,6 +161,9 @@ public class PlayerInfo implements ComponentV3 {
 
         if (!tag.getBoolean("is_citizenship_null"))
             this.citizenship = tag.getUuid("citizenship");
+        
+        if (!tag.getBoolean("are_slots_null"))
+            this.slots.readFromNbt(tag.getCompound("slots"));
     }
 
     @Override
@@ -192,13 +191,13 @@ public class PlayerInfo implements ComponentV3 {
         if (this.citizenship != null)
             tag.putUuid("citizenship", this.citizenship);
         tag.putBoolean("is_citizenship_null", this.citizenship == null);
+
+        if (this.slots != null)
+            tag.put("slots", this.slots.writeToNbtAndReturn(new NbtCompound(), true));
+        tag.putBoolean("are_slots_null", this.slots == null);
     }
     
-    public static PlayerInfo fromAccount(PlayerAccount account, WorldProperties props) {
-        return ComponentsRegistry.PLAYER_INFO.get(props).getAPlayer(account);
-    }
-
-    public static PlayerInfo fromAccount(PlayerAccount account, World world) {
-        return fromAccount(account, world.getLevelProperties());
+    public static PlayerInfo fromAccount(PlayerAccount account, MinecraftServer server) {
+        return PlayerInfoRegistry.getRegistry(server).getAPlayer(account);
     }
 }

@@ -11,14 +11,14 @@ import me.jakubok.nationsmod.administration.law.LawApprovement;
 import me.jakubok.nationsmod.collections.Colour;
 import me.jakubok.nationsmod.collections.PlayerAccount;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.world.WorldProperties;
+import net.minecraft.server.MinecraftServer;
 
 public abstract class AdministratingUnit<D extends AdministratingUnitLawDescription> extends LegalOrganisation<D> {
 
     public FormOfGovernment<?, ?, ?, D> formOfGovernment;
 
-    public AdministratingUnit(D description, String name, WorldProperties props) {
-        super(description, name, props);
+    public AdministratingUnit(D description, String name, MinecraftServer server) {
+        super(description, name, server);
         Random rng = new Random();
         if (this.getTheMapColour().getR() <= 0)
             this.getTheMapColour().setR(rng.nextInt(255));
@@ -27,10 +27,10 @@ public abstract class AdministratingUnit<D extends AdministratingUnitLawDescript
         if (this.getTheMapColour().getB() <= 0)
             this.getTheMapColour().setB(rng.nextInt(255));
         if (formOfGovernment == null)
-            this.formOfGovernment = new AbsoluteMonarchy<AdministratingUnit<D>, D>(this, () -> new Directive<>(this.description));
+            this.formOfGovernment = new AbsoluteMonarchy<AdministratingUnit<D>, D>(this, () -> new Directive<>(this.description), server);
     }
-    public AdministratingUnit(D description, WorldProperties props) {
-        super(description, props);
+    public AdministratingUnit(D description) {
+        super(description);
     }
 
     public Colour getTheMapColour() {
@@ -45,15 +45,15 @@ public abstract class AdministratingUnit<D extends AdministratingUnitLawDescript
         return (LawApprovement)this.law.getARule(AdministratingUnitLawDescription.citizenshipApprovementLabel);
     }
 
-    public abstract Set<PlayerAccount> getPlayerMembers();
-    public abstract Set<UUID> getAIMembers();
+    public abstract Set<PlayerAccount> getPlayerMembers(MinecraftServer server);
+    public abstract Set<UUID> getAIMembers(MinecraftServer server);
 
-    public abstract void readTheFormOfGovernment(NbtCompound nbt);
+    public abstract void readTheFormOfGovernment(NbtCompound nbt, MinecraftServer server);
 
     @Override
-    public void readFromNbt(NbtCompound tag) {
-        super.readFromNbt(tag);
-        this.readTheFormOfGovernment(tag);
+    public void readFromNbt(NbtCompound tag, MinecraftServer server) {
+        super.readFromNbt(tag, server);
+        this.readTheFormOfGovernment(tag, server);
     }
 
     @Override

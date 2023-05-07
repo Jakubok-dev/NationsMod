@@ -3,8 +3,9 @@ package me.jakubok.nationsmod.networking.server;
 import me.jakubok.nationsmod.collections.Border;
 import me.jakubok.nationsmod.collections.BorderSlots;
 import me.jakubok.nationsmod.collections.Colour;
+import me.jakubok.nationsmod.collections.PlayerAccount;
+import me.jakubok.nationsmod.collections.PlayerInfo;
 import me.jakubok.nationsmod.networking.Packets;
-import me.jakubok.nationsmod.registries.ComponentsRegistry;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -20,7 +21,7 @@ public class UnselectABorderSlot implements PlayChannelHandler {
     public void receive(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler,
             PacketByteBuf buf, PacketSender responseSender) {
             server.execute(() -> {
-                BorderSlots slots = ComponentsRegistry.BORDER_SLOTS.get(player);
+                BorderSlots slots = PlayerInfo.fromAccount(new PlayerAccount(player), server).slots;
                 for (Border block : slots.slots.get(slots.selectedSlot).toList()) {
                     PacketByteBuf buffer = PacketByteBufs.create();
                     buffer.writeBlockPos(block.position);

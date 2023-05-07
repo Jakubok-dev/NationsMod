@@ -10,6 +10,7 @@ import me.jakubok.nationsmod.administration.governmentElements.FormOfGovernment;
 import me.jakubok.nationsmod.administration.governmentElements.decisiveEntities.Monarch;
 import me.jakubok.nationsmod.administration.law.Directive;
 import me.jakubok.nationsmod.administration.law.Directive.DirectiveStatus;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.text.Text;
 
 public class AbsoluteMonarchy<U extends AdministratingUnit<D>, D extends AdministratingUnitLawDescription> extends FormOfGovernment<Monarch, Monarch, U, D> {
@@ -17,9 +18,9 @@ public class AbsoluteMonarchy<U extends AdministratingUnit<D>, D extends Adminis
     private final Monarch monarch;
 
     public AbsoluteMonarchy(U administratedUnit,
-            Supplier<Directive<D>> directiveFactory) {
+            Supplier<Directive<D>> directiveFactory, MinecraftServer server) {
         super(administratedUnit, directiveFactory);
-        this.monarch = new Monarch(administratedUnit, this);
+        this.monarch = new Monarch(administratedUnit, this, server);
     }
 
     @Override

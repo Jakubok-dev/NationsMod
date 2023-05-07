@@ -1,26 +1,25 @@
 package me.jakubok.nationsmod.administration.abstractEntities;
 
 import me.jakubok.nationsmod.chunk.ChunkClaimRegistry;
+import me.jakubok.nationsmod.collections.ChunkBinaryTree;
 import me.jakubok.nationsmod.collections.Colour;
-import me.jakubok.nationsmod.registries.ComponentsRegistry;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldProperties;
 
 public abstract class TerritoryClaimer<D extends TerritoryClaimerLawDescription> extends LegalOrganisation<D> {
 
-    public TerritoryClaimer(D description,String name, World world) {
-        super(description, name, world.getLevelProperties());
+    public TerritoryClaimer(D description, String name, MinecraftServer server) {
+        super(description, name, server);
     }
-    public TerritoryClaimer(D description, WorldProperties props, NbtCompound nbt) {
-        super(description, props);
-        this.readFromNbt(nbt);
+    public TerritoryClaimer(D description, NbtCompound nbt, MinecraftServer server) {
+        super(description);
+        this.readFromNbt(nbt, server);
     }
 
-    public abstract Colour getTheMapColour();
+    public abstract Colour getTheMapColour(MinecraftServer server);
     public abstract void sendMapBlockInfo(ServerWorld world, BlockPos pos);
 
     public long getClaimedBlocksCount() {
@@ -30,9 +29,9 @@ public abstract class TerritoryClaimer<D extends TerritoryClaimerLawDescription>
         return this.law.putARule(TerritoryClaimerLawDescription.claimedBlocksCountLabel, value);
     }
 
-    public int claim(BlockPos pos, World world) {
+    public int claim(BlockPos pos, ServerWorld world) {
         
-        ChunkClaimRegistry chunkClaimRegistry = ComponentsRegistry.CHUNK_BINARY_TREE.get(world).getOrCreate(pos);
+        ChunkClaimRegistry chunkClaimRegistry = ChunkBinaryTree.getRegistry(world).getOrCreate(pos);
 
         if(chunkClaimRegistry.isBelonging(pos))
             return 0;
@@ -49,7 +48,7 @@ public abstract class TerritoryClaimer<D extends TerritoryClaimerLawDescription>
 
         return 1;
     }
-    public int claim(ChunkPos pos, World world) {
+    public int claim(ChunkPos pos, ServerWorld world) {
         int result = 0;
         for (int i = pos.x << 4; i < (pos.x << 4) + 16; i++) {
             for (int j = pos.z << 4; j < (pos.z << 4) + 16; j++)
@@ -58,8 +57,8 @@ public abstract class TerritoryClaimer<D extends TerritoryClaimerLawDescription>
         return result;
     }
 
-    public int unclaim(BlockPos pos, World world) {
-        ChunkClaimRegistry chunkClaimRegistry = ComponentsRegistry.CHUNK_BINARY_TREE.get(world).getOrCreate(pos);
+    public int unclaim(BlockPos pos, ServerWorld world) {
+        ChunkClaimRegistry chunkClaimRegistry = ChunkBinaryTree.getRegistry(world).getOrCreate(pos);
 
         if (!chunkClaimRegistry.isBelonging(pos))
             return 0;
@@ -71,7 +70,7 @@ public abstract class TerritoryClaimer<D extends TerritoryClaimerLawDescription>
         
         return 1;
     }
-    public int unclaim(ChunkPos pos, World world) {
+    public int unclaim(ChunkPos pos, ServerWorld world) {
         int result = 0;
         for (int i = pos.x << 4; i < (pos.x << 4) + 16; i++) {
             for (int j = pos.z << 4; j < (pos.z << 4) + 16; j++)

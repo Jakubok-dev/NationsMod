@@ -5,15 +5,15 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-import dev.onyxstudios.cca.api.v3.component.ComponentV3;
 import me.jakubok.nationsmod.administration.abstractEntities.AdministratingUnit;
 import me.jakubok.nationsmod.administration.abstractEntities.AdministratingUnitLawDescription;
 import me.jakubok.nationsmod.administration.governmentElements.DecisiveEntity.DecisiveEntitysVerdict;
 import me.jakubok.nationsmod.administration.law.Directive;
+import me.jakubok.nationsmod.collections.Serialisable;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
 
-public abstract class FormOfGovernment<L extends DecisiveEntity, E extends DecisiveEntity, U extends AdministratingUnit<D>, D extends AdministratingUnitLawDescription> implements ComponentV3 {
+public abstract class FormOfGovernment<L extends DecisiveEntity, E extends DecisiveEntity, U extends AdministratingUnit<D>, D extends AdministratingUnitLawDescription> implements Serialisable {
     public final U administratedUnit;
     public final Map<UUID, Directive<D>> mapOfDirectives = new HashMap<>();
     protected final Supplier<Directive<D>> directiveFactory;

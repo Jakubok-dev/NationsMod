@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import me.jakubok.nationsmod.collections.PlayerAccount;
 import me.jakubok.nationsmod.collections.PlayerInfo;
-import me.jakubok.nationsmod.registries.ComponentsRegistry;
+import me.jakubok.nationsmod.registries.PlayerInfoRegistry;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.server.PlayerManager;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -16,9 +16,8 @@ import net.minecraft.server.network.ServerPlayerEntity;
 public class PlayerManagerMixin {
     @Inject(at = @At("HEAD"), method = "Lnet/minecraft/server/PlayerManager;onPlayerConnect(Lnet/minecraft/network/ClientConnection;Lnet/minecraft/server/network/ServerPlayerEntity;)V")
     private void markPlayerAsOnline(ClientConnection connection, ServerPlayerEntity player, CallbackInfo info) {
-        PlayerInfo playerinfo = ComponentsRegistry
-        .PLAYER_INFO
-        .get(player.getEntityWorld().getLevelProperties())
+        PlayerInfo playerinfo = PlayerInfoRegistry
+        .getRegistry(player.getServer())
         .getAPlayer(new PlayerAccount(player));
 
         playerinfo.online = true;
@@ -27,9 +26,8 @@ public class PlayerManagerMixin {
 
     @Inject(at = @At("HEAD"), method = "Lnet/minecraft/server/PlayerManager;remove(Lnet/minecraft/server/network/ServerPlayerEntity;)V")
     private void markPlayerAsOffline(ServerPlayerEntity player, CallbackInfo info) {
-        PlayerInfo playerinfo = ComponentsRegistry
-        .PLAYER_INFO
-        .get(player.getEntityWorld().getLevelProperties())
+        PlayerInfo playerinfo = PlayerInfoRegistry
+        .getRegistry(player.getServer())
         .getAPlayer(new PlayerAccount(player));
 
         playerinfo.online = false;

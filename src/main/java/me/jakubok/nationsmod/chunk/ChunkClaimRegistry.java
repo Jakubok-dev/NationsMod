@@ -5,10 +5,10 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import dev.onyxstudios.cca.api.v3.component.ComponentV3;
 import me.jakubok.nationsmod.administration.abstractEntities.TerritoryClaimer;
+import me.jakubok.nationsmod.collections.ChunkBinaryTree;
+import me.jakubok.nationsmod.collections.Serialisable;
 import me.jakubok.nationsmod.networking.Packets;
-import me.jakubok.nationsmod.registries.ComponentsRegistry;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -17,9 +17,8 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 
-public class ChunkClaimRegistry implements ComponentV3 {
+public class ChunkClaimRegistry implements Serialisable {
 
     private Map<BlockPos, UUID> claims = new HashMap<>();
     private int x, z;
@@ -130,7 +129,7 @@ public class ChunkClaimRegistry implements ComponentV3 {
     public void addToPlayersMaps(ServerWorld world, BlockPos pos, TerritoryClaimer<?> claimer) {
         PacketByteBuf buffer = PacketByteBufs.create();
         buffer.writeBlockPos(pos);
-        buffer.writeInt(claimer.getTheMapColour().getBitmask());
+        buffer.writeInt(claimer.getTheMapColour(world.getServer()).getBitmask());
         for (ServerPlayerEntity playerEntity : PlayerLookup.tracking(world, pos)) {
             ServerPlayNetworking.send(playerEntity, Packets.RENDER_CLAIMANTS_COLOUR, buffer);
         }
@@ -180,11 +179,11 @@ public class ChunkClaimRegistry implements ComponentV3 {
         return tag;
     }
 
-    public static UUID GET_CLAIMANT(int x, int z, World world) {
+    public static UUID GET_CLAIMANT(int x, int z, ServerWorld world) {
         return GET_CLAIMANT(new BlockPos(x, 64, z), world);
     }
-    public static UUID GET_CLAIMANT(BlockPos pos, World world) {
-        ChunkClaimRegistry registry = ComponentsRegistry.CHUNK_BINARY_TREE.get(world).get(pos);
+    public static UUID GET_CLAIMANT(BlockPos pos, ServerWorld world) {
+        ChunkClaimRegistry registry = ChunkBinaryTree.getRegistry(world).get(pos);
         if (registry == null)
             return null;
         return registry.claimBelonging(pos);

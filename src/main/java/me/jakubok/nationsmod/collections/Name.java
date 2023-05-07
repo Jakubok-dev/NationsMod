@@ -2,11 +2,10 @@ package me.jakubok.nationsmod.collections;
 
 import java.util.Random;
 
-import dev.onyxstudios.cca.api.v3.component.ComponentV3;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
 
-public class Name implements ComponentV3 {
+public class Name implements Serialisable {
     public String firstName;
     public String lastName;
 

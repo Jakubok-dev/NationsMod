@@ -6,11 +6,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-import dev.onyxstudios.cca.api.v3.component.ComponentV3;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.BlockPos;
 
-public class BorderGroup implements ComponentV3 {
+public class BorderGroup implements Serialisable {
 
     public BorderGroup(NbtCompound tag) {
         this.readFromNbt(tag);

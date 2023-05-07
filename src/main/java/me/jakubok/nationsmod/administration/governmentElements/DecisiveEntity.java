@@ -5,11 +5,11 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import dev.onyxstudios.cca.api.v3.component.ComponentV3;
 import me.jakubok.nationsmod.administration.abstractEntities.AdministratingUnit;
+import me.jakubok.nationsmod.collections.Serialisable;
 import net.minecraft.nbt.NbtCompound;
 
-public abstract class DecisiveEntity implements ComponentV3 {
+public abstract class DecisiveEntity implements Serialisable {
 
     public final AdministratingUnit<?> administratedUnit;
     public final FormOfGovernment<?, ?, ?, ?> formOfGovernment;

@@ -2,7 +2,8 @@ package me.jakubok.nationsmod.networking.server;
 
 import me.jakubok.nationsmod.collections.BorderGroup;
 import me.jakubok.nationsmod.collections.BorderSlots;
-import me.jakubok.nationsmod.registries.ComponentsRegistry;
+import me.jakubok.nationsmod.collections.PlayerAccount;
+import me.jakubok.nationsmod.collections.PlayerInfo;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking.PlayChannelHandler;
 import net.minecraft.network.PacketByteBuf;
@@ -19,7 +20,7 @@ public class DeleteABorderSlot implements PlayChannelHandler {
         String slotName = buf.readString();
 
         server.execute(() -> {
-            BorderSlots slots = ComponentsRegistry.BORDER_SLOTS.get(player);
+            BorderSlots slots = PlayerInfo.fromAccount(new PlayerAccount(player), server).slots;
 
             int slotIndex = -1;
             for (BorderGroup slot : slots.slots) {

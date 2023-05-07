@@ -1,10 +1,9 @@
 package me.jakubok.nationsmod.collections;
 
-import dev.onyxstudios.cca.api.v3.component.ComponentV3;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.BlockPos;
 
-public class Border implements ComponentV3 {
+public class Border implements Serialisable {
 
     public BlockPos position;
 

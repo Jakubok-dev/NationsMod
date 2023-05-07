@@ -25,7 +25,7 @@ public class GetAProvince implements PlayChannelHandler {
         PacketByteBuf buffer = PacketByteBufs.create();
         buffer.writeUuid(packetID);
         server.execute(() -> {
-            Province province = Province.fromUUID(provinceId, player.getEntityWorld().getLevelProperties());
+            Province province = Province.fromUUID(provinceId, server);
             buffer.writeNbt(province.writeToNbtAndReturn(new NbtCompound()));
             ServerPlayNetworking.send(player, Packets.RECEIVE, buffer);
         });

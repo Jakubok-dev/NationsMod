@@ -2,32 +2,28 @@ package me.jakubok.nationsmod.administration.abstractEntities;
 
 import java.util.UUID;
 
-import dev.onyxstudios.cca.api.v3.component.ComponentV3;
 import me.jakubok.nationsmod.administration.district.District;
 import me.jakubok.nationsmod.administration.law.Law;
 import me.jakubok.nationsmod.administration.nation.Nation;
 import me.jakubok.nationsmod.administration.province.Province;
 import me.jakubok.nationsmod.administration.town.Town;
 import me.jakubok.nationsmod.administration.town.TownLawDescription;
-import me.jakubok.nationsmod.registries.ComponentsRegistry;
+import me.jakubok.nationsmod.registries.LegalOrganisationsRegistry;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.world.WorldProperties;
+import net.minecraft.server.MinecraftServer;
 
-public abstract class LegalOrganisation<D extends LegalOrganisationLawDescription> implements ComponentV3 {
+public abstract class LegalOrganisation<D extends LegalOrganisationLawDescription> {
     public final D description;
     public Law<D> law;
-    public final WorldProperties props;
-    public LegalOrganisation(D description, String name, WorldProperties props) {
+    public LegalOrganisation(D description, String name, MinecraftServer server) {
         this.description = description;
         this.law = new Law<>(this.description);
         this.law.putARule(LegalOrganisationLawDescription.IdLabel, UUID.randomUUID());
         this.setName(name);
-        this.props = props;
-        ComponentsRegistry.LEGAL_ORGANISATIONS_REGISTRY.get(this.props).register(this);
+        LegalOrganisationsRegistry.getRegistry(server).register(this);
     }
-    public LegalOrganisation(D description, WorldProperties props) {
+    public LegalOrganisation(D description) {
         this.description = description;
-        this.props = props;
         this.law = new Law<>(this.description);
     }
 
@@ -42,12 +38,10 @@ public abstract class LegalOrganisation<D extends LegalOrganisationLawDescriptio
         return this.law.putARule(TownLawDescription.NameLabel, name);
     }
 
-    @Override
-    public void readFromNbt(NbtCompound tag) {
+    public void readFromNbt(NbtCompound tag, MinecraftServer server) {
         this.law.readFromNbt(tag.getCompound("law"));
     }
 
-    @Override
     public void writeToNbt(NbtCompound tag) {
         this.writeToNbtAndReturn(tag);
     }

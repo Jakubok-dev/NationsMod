@@ -2,11 +2,10 @@ package me.jakubok.nationsmod.collections;
 
 import java.util.UUID;
 
-import dev.onyxstudios.cca.api.v3.component.ComponentV3;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 
-public class PlayerAccount implements ComponentV3 {
+public class PlayerAccount implements Serialisable {
     public UUID playersID, playersOfflineID;
     public String name;
 

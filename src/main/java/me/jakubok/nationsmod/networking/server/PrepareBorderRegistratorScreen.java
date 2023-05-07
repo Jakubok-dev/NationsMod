@@ -3,8 +3,9 @@ package me.jakubok.nationsmod.networking.server;
 import java.util.UUID;
 
 import me.jakubok.nationsmod.collections.BorderSlots;
+import me.jakubok.nationsmod.collections.PlayerAccount;
+import me.jakubok.nationsmod.collections.PlayerInfo;
 import me.jakubok.nationsmod.networking.Packets;
-import me.jakubok.nationsmod.registries.ComponentsRegistry;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -24,7 +25,7 @@ public class PrepareBorderRegistratorScreen implements PlayChannelHandler {
         PacketByteBuf responseBuffer = PacketByteBufs.create();
         responseBuffer.writeUuid(packetID);
 
-        BorderSlots borderSlots = ComponentsRegistry.BORDER_SLOTS.get(player);
+        BorderSlots borderSlots = PlayerInfo.fromAccount(new PlayerAccount(player), server).slots;
         NbtCompound nbt = new NbtCompound();
         for (int i = 0; i < borderSlots.slots.size(); i++) {
             nbt.putString("name" + i, borderSlots.slots.get(i).name);

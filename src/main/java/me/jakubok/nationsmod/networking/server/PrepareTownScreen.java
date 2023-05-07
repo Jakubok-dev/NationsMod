@@ -27,7 +27,7 @@ public class PrepareTownScreen implements PlayChannelHandler {
         buffer.writeUuid(packetID);
 
         server.execute(() -> {
-            Town town = Town.fromUUID(townId, player.getEntityWorld());
+            Town town = Town.fromUUID(townId, server);
 
             buffer.writeNbt(town.writeToNbtAndReturn(new NbtCompound()));
             ServerPlayNetworking.send(player, Packets.RECEIVE, buffer);

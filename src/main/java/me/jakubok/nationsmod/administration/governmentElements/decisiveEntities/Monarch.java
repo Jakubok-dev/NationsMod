@@ -7,19 +7,22 @@ import me.jakubok.nationsmod.administration.governmentElements.DecisiveEntity;
 import me.jakubok.nationsmod.administration.governmentElements.FormOfGovernment;
 import me.jakubok.nationsmod.collections.PlayerAccount;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.MinecraftServer;
 
 public class Monarch extends DecisiveEntity {
 
     private PlayerAccount monarch;
     private UUID AIMonarch;
 
-    public Monarch(AdministratingUnit<?> administratedUnit, FormOfGovernment<?, ?, ?, ?> formOfGovernment) {
+    public Monarch(AdministratingUnit<?> administratedUnit, FormOfGovernment<?, ?, ?, ?> formOfGovernment, MinecraftServer server) {
         super(administratedUnit, formOfGovernment);
 
-        if (!this.administratedUnit.getPlayerMembers().isEmpty()) {
-            this.monarch = this.administratedUnit.getPlayerMembers().stream().findAny().get();
-        } else if (!this.administratedUnit.getAIMembers().isEmpty()) {
-            this.AIMonarch = this.administratedUnit.getAIMembers().stream().findAny().get();
+        if (server != null) {
+            if (!this.administratedUnit.getPlayerMembers(server).isEmpty()) {
+                this.monarch = this.administratedUnit.getPlayerMembers(server).stream().findAny().get();
+            } else if (!this.administratedUnit.getAIMembers(server).isEmpty()) {
+                this.AIMonarch = this.administratedUnit.getAIMembers(server).stream().findAny().get();
+            }
         }
     }
 

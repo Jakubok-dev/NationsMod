@@ -4,9 +4,9 @@ import java.util.UUID;
 
 import me.jakubok.nationsmod.administration.district.District;
 import me.jakubok.nationsmod.chunk.ChunkClaimRegistry;
+import me.jakubok.nationsmod.collections.ChunkBinaryTree;
 import me.jakubok.nationsmod.collections.Colour;
 import me.jakubok.nationsmod.networking.Packets;
-import me.jakubok.nationsmod.registries.ComponentsRegistry;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -29,7 +29,7 @@ public class GetBlocksClaimantColour implements PlayChannelHandler {
         responseBufferToPushInfo.writeBlockPos(pos);
 
         server.execute(() -> {
-            ChunkClaimRegistry registry = ComponentsRegistry.CHUNK_BINARY_TREE.get(player.getEntityWorld()).get(pos);
+            ChunkClaimRegistry registry = ChunkBinaryTree.getRegistry(player.getWorld()).get(pos);
             if (registry == null)
                 return;
             
@@ -37,12 +37,12 @@ public class GetBlocksClaimantColour implements PlayChannelHandler {
             if (districtID == null)
                 return;
 
-            District district = District.fromUUID(districtID, player.getEntityWorld());
+            District district = District.fromUUID(districtID, server);
 
             if (district == null)
                 return;
 
-            Colour colour = new Colour(district.getTheMapColour().getBitmask());
+            Colour colour = new Colour(district.getTheMapColour(server).getBitmask());
             responseBufferToRenderColour.writeInt(colour.getBitmask());
 
             ServerPlayNetworking.send(player, Packets.RENDER_CLAIMANTS_COLOUR, responseBufferToRenderColour);

@@ -8,24 +8,22 @@ import me.jakubok.nationsmod.collections.Border;
 import me.jakubok.nationsmod.collections.BorderGroup;
 import me.jakubok.nationsmod.collections.Colour;
 import me.jakubok.nationsmod.networking.Packets;
-import me.jakubok.nationsmod.registries.ComponentsRegistry;
+import me.jakubok.nationsmod.registries.LegalOrganisationsRegistry;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldProperties;
 
 public class District extends TerritoryClaimer<DistrictLawDescription> {
 
-    public District(String name, Town town, World world, BorderGroup group) {
-        super(new DistrictLawDescription(), name, world);
+    public District(String name, Town town, ServerWorld world, BorderGroup group, MinecraftServer server) {
+        super(new DistrictLawDescription(), name, server);
         this.setTownsID(town.getId());
-        ComponentsRegistry.LEGAL_ORGANISATIONS_REGISTRY.get(props).register(this);
 
         if (group == null)
             return;
@@ -38,12 +36,12 @@ public class District extends TerritoryClaimer<DistrictLawDescription> {
             this.claim(elem.position, world);
         }
     }
-    public District(NbtCompound tag, WorldProperties props) {
-        super(new DistrictLawDescription(), props, tag);
+    public District(NbtCompound tag, MinecraftServer server) {
+        super(new DistrictLawDescription(), tag, server);
     }
 
-    public Town getTown() {
-        return (Town)ComponentsRegistry.LEGAL_ORGANISATIONS_REGISTRY.get(props).get(this.getTownsID());
+    public Town getTown(MinecraftServer server) {
+        return (Town)LegalOrganisationsRegistry.getRegistry(server).get(this.getTownsID());
     }
 
     public UUID getTownsID() {
@@ -53,21 +51,21 @@ public class District extends TerritoryClaimer<DistrictLawDescription> {
         return this.law.putARule(DistrictLawDescription.townIDLabel, id);
     }
 
-    public static District fromUUID(UUID id, World world) {
-        return (District)ComponentsRegistry.LEGAL_ORGANISATIONS_REGISTRY.get(world.getLevelProperties()).get(id);
+    public static District fromUUID(UUID id, MinecraftServer server) {
+        return (District)LegalOrganisationsRegistry.getRegistry(server).get(id);
     }
     @Override
-    public Colour getTheMapColour() {
-        return this.getTown().getTheMapColour();
+    public Colour getTheMapColour(MinecraftServer server) {
+        return this.getTown(server).getTheMapColour();
     }
     @Override
     public void sendMapBlockInfo(ServerWorld world, BlockPos pos) {
         PacketByteBuf buffer = PacketByteBufs.create();
         NbtCompound nbt = new NbtCompound();
 
-        nbt.putString("townsName", this.getTown().getName());
+        nbt.putString("townsName", this.getTown(world.getServer()).getName());
         nbt.putString("districtsName", this.getName());
-        nbt.putUuid("townsUUID", this.getTown().getId());
+        nbt.putUuid("townsUUID", this.getTown(world.getServer()).getId());
         nbt.putUuid("districtsUUID", this.getId());
 
         buffer.writeBlockPos(pos);

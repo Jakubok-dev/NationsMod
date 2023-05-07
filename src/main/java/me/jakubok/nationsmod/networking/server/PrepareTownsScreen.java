@@ -6,7 +6,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import me.jakubok.nationsmod.administration.abstractEntities.LegalOrganisation;
 import me.jakubok.nationsmod.administration.town.Town;
 import me.jakubok.nationsmod.networking.Packets;
-import me.jakubok.nationsmod.registries.ComponentsRegistry;
+import me.jakubok.nationsmod.registries.LegalOrganisationsRegistry;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -28,7 +28,7 @@ public class PrepareTownsScreen implements PlayChannelHandler {
             NbtCompound compound = new NbtCompound();
             AtomicInteger size = new AtomicInteger(0);
 
-            for (LegalOrganisation<?> town : ComponentsRegistry.LEGAL_ORGANISATIONS_REGISTRY.get(player.getEntityWorld().getLevelProperties()).getOrganisations().values()) {
+            for (LegalOrganisation<?> town : LegalOrganisationsRegistry.getRegistry(server).getOrganisations().values()) {
                 if (!(town instanceof Town))
                     continue;
                 compound.putString("town_name" + size.incrementAndGet(), town.getName());

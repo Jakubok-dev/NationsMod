@@ -1,9 +1,8 @@
 package me.jakubok.nationsmod.collections;
 
-import dev.onyxstudios.cca.api.v3.component.ComponentV3;
 import net.minecraft.nbt.NbtCompound;
 
-public class Colour implements ComponentV3 {
+public class Colour implements Serialisable {
     private int r, g, b;
     public Colour(int r, int g, int b) {
         this.r = r;

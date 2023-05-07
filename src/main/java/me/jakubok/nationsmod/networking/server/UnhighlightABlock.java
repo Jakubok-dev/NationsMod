@@ -2,7 +2,8 @@ package me.jakubok.nationsmod.networking.server;
 
 import me.jakubok.nationsmod.collections.Border;
 import me.jakubok.nationsmod.collections.BorderSlots;
-import me.jakubok.nationsmod.registries.ComponentsRegistry;
+import me.jakubok.nationsmod.collections.PlayerAccount;
+import me.jakubok.nationsmod.collections.PlayerInfo;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking.PlayChannelHandler;
 import net.minecraft.network.PacketByteBuf;
@@ -18,7 +19,7 @@ public class UnhighlightABlock implements PlayChannelHandler {
         BlockPos pos = buf.readBlockPos();
 
         server.execute(() -> {
-            BorderSlots slots = ComponentsRegistry.BORDER_SLOTS.get(player);
+            BorderSlots slots = PlayerInfo.fromAccount(new PlayerAccount(player), server).slots;
             Border border = new Border(pos);
             slots.getSelectedSlot().delete(border);
         });

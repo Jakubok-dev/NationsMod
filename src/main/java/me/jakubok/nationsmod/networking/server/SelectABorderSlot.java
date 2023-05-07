@@ -4,8 +4,9 @@ import me.jakubok.nationsmod.collections.Border;
 import me.jakubok.nationsmod.collections.BorderGroup;
 import me.jakubok.nationsmod.collections.BorderSlots;
 import me.jakubok.nationsmod.collections.Colour;
+import me.jakubok.nationsmod.collections.PlayerAccount;
+import me.jakubok.nationsmod.collections.PlayerInfo;
 import me.jakubok.nationsmod.networking.Packets;
-import me.jakubok.nationsmod.registries.ComponentsRegistry;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -29,7 +30,7 @@ public class SelectABorderSlot implements PlayChannelHandler {
     
 
     public static void SEND_DATA_TO_CLIENT(String slotName, ServerPlayerEntity player) {
-        BorderSlots slots = ComponentsRegistry.BORDER_SLOTS.get(player);
+        BorderSlots slots = PlayerInfo.fromAccount(new PlayerAccount(player), player.server).slots;;
 
         for (BorderGroup slot : slots.slots) {
             if (slot.name.toLowerCase().equals(slotName.toLowerCase())) {

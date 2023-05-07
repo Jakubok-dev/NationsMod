@@ -25,7 +25,7 @@ public class GetANation implements PlayChannelHandler {
         PacketByteBuf buffer = PacketByteBufs.create();
         buffer.writeUuid(packetID);
         server.execute(() -> {
-            Nation nation = Nation.fromUUID(provinceId, player.getEntityWorld().getLevelProperties());
+            Nation nation = Nation.fromUUID(provinceId, server);
             buffer.writeNbt(nation.writeToNbtAndReturn(new NbtCompound()));
             ServerPlayNetworking.send(player, Packets.RECEIVE, buffer);
         });

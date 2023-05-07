@@ -295,7 +295,7 @@ public class MapScreen extends Screen {
         buffer.writeNbt(nbt);
 
         PlayChannelHandler response = (MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) -> {
-            Town town = new Town(buf.readNbt(), client.world.getLevelProperties());
+            Town town = new Town(buf.readNbt(), null);
 
             client.execute(() -> {
                 client.setScreen(new TownScreen(town, this));

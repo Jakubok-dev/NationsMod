@@ -66,7 +66,7 @@ public class GeneralInfoSubscreen {
             ),
             new Property(
                 Text.of("Districts:"), 
-                Text.of(inst.town.getDistricts().size() + ""), 
+                Text.of(inst.town.getTheListOfDistrictsIDs().size() + ""), 
                 inst.getClient(),
                 SimpleWindow.windowTop + 35 + 21 * 3
             ),
@@ -130,7 +130,7 @@ public class GeneralInfoSubscreen {
         (MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) -> {
             NbtCompound nbtresponse = buf.readNbt();
             client.execute(() -> {
-                this.province = new Province(nbtresponse, client.world.getLevelProperties());
+                this.province = new Province(nbtresponse, null);
                 this.properties.get(4).value = Text.of(this.province.getName());
                 this.getTheNation(inst);
             });
@@ -146,7 +146,7 @@ public class GeneralInfoSubscreen {
         (MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) -> {
             NbtCompound nbtresponse = buf.readNbt();
             client.execute(() -> {
-                this.nation = new Nation(nbtresponse, client.world.getLevelProperties());
+                this.nation = new Nation(nbtresponse, null);
                 this.properties.get(5).value = Text.of(this.nation.getName());
             });
         });

@@ -7,27 +7,26 @@ import me.jakubok.nationsmod.administration.abstractEntities.TerritoryClaimer;
 import me.jakubok.nationsmod.administration.nation.Nation;
 import me.jakubok.nationsmod.administration.town.Town;
 import me.jakubok.nationsmod.collections.Colour;
-import me.jakubok.nationsmod.registries.ComponentsRegistry;
+import me.jakubok.nationsmod.registries.LegalOrganisationsRegistry;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldProperties;
 
 public class Province extends TerritoryClaimer<ProvinceLawDescription> {
 
-    public Province(String name, Town capital, Nation nation, World world) {
-        super(new ProvinceLawDescription(), name, world);
+    public Province(String name, Town capital, Nation nation, MinecraftServer server) {
+        super(new ProvinceLawDescription(), name, server);
         this.setNationsUUID(nation.getId());
         this.setCapitalsUUID(capital.getId());
         capital.setProvince(this);
     }
-    public Province(NbtCompound tag, WorldProperties props) {
-        super(new ProvinceLawDescription(), props, tag);
+    public Province(NbtCompound tag, MinecraftServer server) {
+        super(new ProvinceLawDescription(), tag, server);
     }
 
-    public Town getCapital() {
-        return Town.fromUUID(getCapitalsUUID(), props);
+    public Town getCapital(MinecraftServer server) {
+        return Town.fromUUID(getCapitalsUUID(), server);
     }
     public UUID getCapitalsUUID() {
         return (UUID)this.law.getARule(ProvinceLawDescription.capitalsIDLabel);
@@ -36,9 +35,9 @@ public class Province extends TerritoryClaimer<ProvinceLawDescription> {
         return this.law.putARule(ProvinceLawDescription.capitalsIDLabel, id);
     }
     
-    public List<Town> getTowns() {
+    public List<Town> getTowns(MinecraftServer server) {
         return this.getTownsIDs().stream()
-        .map(el -> Town.fromUUID(el, props))
+        .map(el -> Town.fromUUID(el, server))
         .toList();
     }
     public List<UUID> getTownsIDs() {
@@ -47,8 +46,8 @@ public class Province extends TerritoryClaimer<ProvinceLawDescription> {
         return result;
     }
 
-    public Nation getNation() {
-        return Nation.fromUUID(this.getNationsUUID(), this.props);
+    public Nation getNation(MinecraftServer server) {
+        return Nation.fromUUID(this.getNationsUUID(), server);
     }
     public UUID getNationsUUID() {
         return (UUID)this.law.getARule(ProvinceLawDescription.nationsIDLabel);
@@ -57,15 +56,13 @@ public class Province extends TerritoryClaimer<ProvinceLawDescription> {
         return this.law.putARule(ProvinceLawDescription.nationsIDLabel, id);
     }
 
-    public static Province fromUUID(UUID id, WorldProperties props) {
-        return (Province)ComponentsRegistry.LEGAL_ORGANISATIONS_REGISTRY.get(props).get(id);
+    public static Province fromUUID(UUID id, MinecraftServer server) {
+        return (Province)LegalOrganisationsRegistry.getRegistry(server).get(id);
     }
-    public static Province fromUUID(UUID id, World world) {
-        return fromUUID(id, world.getLevelProperties());
-    }
+
     @Override
-    public Colour getTheMapColour() {
-        return this.getNation().getTheMapColour();
+    public Colour getTheMapColour(MinecraftServer server) {
+        return this.getNation(server).getTheMapColour();
     }
     @Override
     public void sendMapBlockInfo(ServerWorld world, BlockPos pos) {

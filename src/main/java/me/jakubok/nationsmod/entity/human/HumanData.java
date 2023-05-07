@@ -4,15 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import dev.onyxstudios.cca.api.v3.component.ComponentV3;
 import me.jakubok.nationsmod.administration.town.Town;
+import me.jakubok.nationsmod.collections.Serialisable;
 import me.jakubok.nationsmod.collections.Name;
 import net.minecraft.entity.data.TrackedDataHandler;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.world.WorldProperties;
+import net.minecraft.server.MinecraftServer;
 
-public class HumanData implements ComponentV3 {
+public class HumanData implements Serialisable {
 
     public Name name = new Name();
     public HumanInventory inventory = new HumanInventory(27);
@@ -28,8 +28,8 @@ public class HumanData implements ComponentV3 {
     public UUID getCitizenship() {
         return citizenship;
     }
-    public boolean setCitizenship(UUID citizenship, WorldProperties props) {
-        if (Town.fromUUID(citizenship, props) == null)
+    public boolean setCitizenship(UUID citizenship, MinecraftServer server) {
+        if (Town.fromUUID(citizenship, server) == null)
             return false;
         this.citizenship = citizenship;
         return true;
