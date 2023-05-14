@@ -10,8 +10,8 @@ import me.jakubok.nationsmod.administration.governmentElements.formsOfGovernment
 import me.jakubok.nationsmod.administration.law.Directive;
 import me.jakubok.nationsmod.administration.province.Province;
 import me.jakubok.nationsmod.administration.town.Town;
-import me.jakubok.nationsmod.collections.PlayerAccount;
-import me.jakubok.nationsmod.registries.LegalOrganisationsRegistry;
+import me.jakubok.nationsmod.collection.PlayerAccount;
+import me.jakubok.nationsmod.registries.LegalOrganisationRegistry;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.crash.CrashException;
@@ -93,6 +93,6 @@ public class Nation extends AdministratingUnit<NationLawDescription> {
     }
     
     public static Nation fromUUID(UUID id, MinecraftServer server) {
-        return (Nation)LegalOrganisationsRegistry.getRegistry(server).get(id);
+        return (Nation)LegalOrganisationRegistry.getRegistry(server).get(id);
     }
 }

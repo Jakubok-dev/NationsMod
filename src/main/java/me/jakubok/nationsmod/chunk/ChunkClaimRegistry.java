@@ -6,8 +6,8 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import me.jakubok.nationsmod.administration.abstractEntities.TerritoryClaimer;
-import me.jakubok.nationsmod.collections.ChunkBinaryTree;
-import me.jakubok.nationsmod.collections.Serialisable;
+import me.jakubok.nationsmod.collection.ChunkBinaryTree;
+import me.jakubok.nationsmod.collection.Serialisable;
 import me.jakubok.nationsmod.networking.Packets;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;

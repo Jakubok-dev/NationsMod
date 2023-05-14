@@ -9,7 +9,7 @@ import me.jakubok.nationsmod.administration.abstractEntities.AdministratingUnit;
 import me.jakubok.nationsmod.administration.abstractEntities.AdministratingUnitLawDescription;
 import me.jakubok.nationsmod.administration.governmentElements.DecisiveEntity.DecisiveEntitysVerdict;
 import me.jakubok.nationsmod.administration.law.Directive;
-import me.jakubok.nationsmod.collections.Serialisable;
+import me.jakubok.nationsmod.collection.Serialisable;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
 

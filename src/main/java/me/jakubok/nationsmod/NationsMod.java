@@ -1,13 +1,12 @@
 package me.jakubok.nationsmod;
 
-import me.jakubok.nationsmod.entity.human.HumanData;
 import me.jakubok.nationsmod.networking.ServerNetworking;
 import me.jakubok.nationsmod.registries.BlockRegistry;
 import me.jakubok.nationsmod.registries.EntityRegistry;
 import me.jakubok.nationsmod.registries.ItemRegistry;
 import me.jakubok.nationsmod.registries.StatusEffectRegistry;
+import me.jakubok.nationsmod.registries.ModsTrackedDataHandlerRegistry;
 import net.fabricmc.api.ModInitializer;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 
 public class NationsMod implements ModInitializer {
 
@@ -25,6 +24,6 @@ public class NationsMod implements ModInitializer {
 		EntityRegistry.init();
 		StatusEffectRegistry.init();
 		ServerNetworking.register();
-		TrackedDataHandlerRegistry.register(HumanData.HUMAN_DATA_HANDLER);
+		ModsTrackedDataHandlerRegistry.init();
 	}
 }

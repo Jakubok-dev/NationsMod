@@ -2,7 +2,8 @@ package me.jakubok.nationsmod.entity.human;
 
 import java.util.PriorityQueue;
 
-import me.jakubok.nationsmod.collections.Serialisable;
+import me.jakubok.nationsmod.collection.Serialisable;
+import net.minecraft.entity.data.TrackedDataHandler;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.AxeItem;
 import net.minecraft.item.HoeItem;
@@ -10,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ShovelItem;
 import net.minecraft.item.SwordItem;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.PacketByteBuf;
 
 public class HumanInventory extends SimpleInventory implements Serialisable {
     PriorityQueue<Entry> swords = new PriorityQueue<>();
@@ -122,4 +124,25 @@ public class HumanInventory extends SimpleInventory implements Serialisable {
             return this.getValue().equals(((Entry)obj).getValue());
         }
     }
+
+    public static final TrackedDataHandler<HumanInventory> HUMAN_INVENTORY_DATA_HANDLER = new TrackedDataHandler<HumanInventory>() {
+
+        @Override
+        public void write(PacketByteBuf var1, HumanInventory var2) {
+            var1.writeNbt(var2.writeToNbtAndReturn(new NbtCompound()));
+        }
+
+        @Override
+        public HumanInventory read(PacketByteBuf var1) {
+            HumanInventory inv = new HumanInventory(27);
+            inv.readFromNbt(var1.readNbt());
+            return inv;
+        }
+
+        @Override
+        public HumanInventory copy(HumanInventory var1) {
+            return var1;
+        }
+        
+    };
 }

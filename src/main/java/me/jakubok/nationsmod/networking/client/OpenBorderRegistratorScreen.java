@@ -4,9 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import me.jakubok.nationsmod.NationsClient;
-import me.jakubok.nationsmod.collections.Border;
-import me.jakubok.nationsmod.collections.BorderSlots;
-import me.jakubok.nationsmod.collections.Colour;
+import me.jakubok.nationsmod.collection.Border;
+import me.jakubok.nationsmod.collection.BorderSlots;
+import me.jakubok.nationsmod.collection.Colour;
 import me.jakubok.nationsmod.gui.BorderRegistratorScreen;
 import me.jakubok.nationsmod.networking.Packets;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;

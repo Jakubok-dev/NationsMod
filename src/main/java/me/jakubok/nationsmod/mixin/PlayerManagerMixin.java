@@ -5,8 +5,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import me.jakubok.nationsmod.collections.PlayerAccount;
-import me.jakubok.nationsmod.collections.PlayerInfo;
+import me.jakubok.nationsmod.collection.PlayerAccount;
+import me.jakubok.nationsmod.collection.PlayerInfo;
 import me.jakubok.nationsmod.registries.PlayerInfoRegistry;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.server.PlayerManager;

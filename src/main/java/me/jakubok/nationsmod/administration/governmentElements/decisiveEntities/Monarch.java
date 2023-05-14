@@ -5,7 +5,7 @@ import java.util.UUID;
 import me.jakubok.nationsmod.administration.abstractEntities.AdministratingUnit;
 import me.jakubok.nationsmod.administration.governmentElements.DecisiveEntity;
 import me.jakubok.nationsmod.administration.governmentElements.FormOfGovernment;
-import me.jakubok.nationsmod.collections.PlayerAccount;
+import me.jakubok.nationsmod.collection.PlayerAccount;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.MinecraftServer;
 

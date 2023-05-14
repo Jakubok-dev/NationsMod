@@ -6,7 +6,7 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import me.jakubok.nationsmod.administration.abstractEntities.AdministratingUnit;
-import me.jakubok.nationsmod.collections.Serialisable;
+import me.jakubok.nationsmod.collection.Serialisable;
 import net.minecraft.nbt.NbtCompound;
 
 public abstract class DecisiveEntity implements Serialisable {

@@ -3,9 +3,9 @@ package me.jakubok.nationsmod.networking.server;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import me.jakubok.nationsmod.administration.town.Town;
-import me.jakubok.nationsmod.collections.PlayerAccount;
-import me.jakubok.nationsmod.collections.PlayerInfo;
-import me.jakubok.nationsmod.registries.LegalOrganisationsRegistry;
+import me.jakubok.nationsmod.collection.PlayerAccount;
+import me.jakubok.nationsmod.collection.PlayerInfo;
+import me.jakubok.nationsmod.registries.LegalOrganisationRegistry;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking.PlayChannelHandler;
 import net.minecraft.nbt.NbtCompound;
@@ -26,7 +26,7 @@ public class CreateATown implements PlayChannelHandler {
         server.execute(() -> {
             // Check if the town name is unique
             AtomicBoolean unique = new AtomicBoolean(true);
-            LegalOrganisationsRegistry.getRegistry(server).getOrganisations().values().forEach(el -> {
+            LegalOrganisationRegistry.getRegistry(server).getOrganisations().values().forEach(el -> {
                 if (!(el instanceof Town))
                     return;
                 if (townName.toLowerCase().equals(el.getName().toLowerCase())) {

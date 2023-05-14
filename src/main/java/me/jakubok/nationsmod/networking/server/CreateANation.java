@@ -7,8 +7,8 @@ import me.jakubok.nationsmod.administration.district.District;
 import me.jakubok.nationsmod.administration.nation.Nation;
 import me.jakubok.nationsmod.administration.town.Town;
 import me.jakubok.nationsmod.chunk.ChunkClaimRegistry;
-import me.jakubok.nationsmod.collections.ChunkBinaryTree;
-import me.jakubok.nationsmod.registries.LegalOrganisationsRegistry;
+import me.jakubok.nationsmod.collection.ChunkBinaryTree;
+import me.jakubok.nationsmod.registries.LegalOrganisationRegistry;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking.PlayChannelHandler;
 import net.minecraft.nbt.NbtCompound;
@@ -33,7 +33,7 @@ public class CreateANation implements PlayChannelHandler {
             // Check if the nation name is unique and if the town belongs to a province
             AtomicBoolean validated = new AtomicBoolean(true);
             
-            LegalOrganisationsRegistry.getRegistry(server).getOrganisations().values().forEach(el -> {
+            LegalOrganisationRegistry.getRegistry(server).getOrganisations().values().forEach(el -> {
                 if (!(el instanceof Nation))
                     return;
                 if (el.getName().toLowerCase().equals(nationName.toLowerCase())) {
@@ -66,7 +66,7 @@ public class CreateANation implements PlayChannelHandler {
         if (!registry.isBelonging(player.getBlockPos()))
             return null;
 
-        TerritoryClaimer<?> claimer = (TerritoryClaimer<?>)LegalOrganisationsRegistry.getRegistry(player.getServer()).get(registry.claimBelonging(player.getBlockPos()));
+        TerritoryClaimer<?> claimer = (TerritoryClaimer<?>)LegalOrganisationRegistry.getRegistry(player.getServer()).get(registry.claimBelonging(player.getBlockPos()));
 
         if (!(claimer instanceof District))
             return null;

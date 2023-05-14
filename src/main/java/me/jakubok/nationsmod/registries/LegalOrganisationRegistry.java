@@ -17,7 +17,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.PersistentState;
 import net.minecraft.world.PersistentStateManager;
 
-public class LegalOrganisationsRegistry extends PersistentState {
+public class LegalOrganisationRegistry extends PersistentState {
 
     private final Map<UUID, LegalOrganisation<?>> organisations = new HashMap<>();
 
@@ -72,18 +72,18 @@ public class LegalOrganisationsRegistry extends PersistentState {
         return nbt;
     }
 
-    public static LegalOrganisationsRegistry getRegistry(MinecraftServer server) {
+    public static LegalOrganisationRegistry getRegistry(MinecraftServer server) {
 
-        Function<NbtCompound, LegalOrganisationsRegistry> createFromNbt = nbt -> {
-            LegalOrganisationsRegistry registry = new LegalOrganisationsRegistry();
+        Function<NbtCompound, LegalOrganisationRegistry> createFromNbt = nbt -> {
+            LegalOrganisationRegistry registry = new LegalOrganisationRegistry();
             registry.readFromNbt(nbt, server);
             return registry;
         };
 
         PersistentStateManager manager = server.getOverworld().getPersistentStateManager();
-        LegalOrganisationsRegistry registry = manager.getOrCreate(
+        LegalOrganisationRegistry registry = manager.getOrCreate(
             createFromNbt,
-            LegalOrganisationsRegistry::new, 
+            LegalOrganisationRegistry::new, 
             NationsMod.MOD_ID + ":legal_organisations_registry"
         );
         return registry;

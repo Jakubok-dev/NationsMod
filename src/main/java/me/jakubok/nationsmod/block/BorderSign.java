@@ -10,18 +10,20 @@ import net.minecraft.block.Waterloggable;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
+import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldAccess;
 
 public class BorderSign extends Block implements BlockEntityProvider, Waterloggable {
 
@@ -29,6 +31,7 @@ public class BorderSign extends Block implements BlockEntityProvider, Waterlogga
     public static final BooleanProperty BACK = BooleanProperty.of("back");
     public static final BooleanProperty LEFT = BooleanProperty.of("left");
     public static final BooleanProperty RIGHT = BooleanProperty.of("right");
+    public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
 
     public BorderSign() {
         super(FabricBlockSettings.of(Material.STONE).hardness(15.0f));
@@ -37,7 +40,7 @@ public class BorderSign extends Block implements BlockEntityProvider, Waterlogga
             .with(BACK, false)
             .with(LEFT, false)
             .with(RIGHT, false)
-            .with(Properties.WATERLOGGED, false)
+            .with(WATERLOGGED, false)
         );
     }
 
@@ -48,7 +51,7 @@ public class BorderSign extends Block implements BlockEntityProvider, Waterlogga
         builder.add(BACK);
         builder.add(LEFT);
         builder.add(RIGHT);
-        builder.add(Properties.WATERLOGGED);
+        builder.add(WATERLOGGED);
     }
     
     @Override
@@ -80,18 +83,6 @@ public class BorderSign extends Block implements BlockEntityProvider, Waterlogga
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
-            BlockHitResult hit) {
-        
-        if (world.isClient)
-            return ActionResult.SUCCESS;
-        
-        this.update(world, pos);
-
-        return ActionResult.SUCCESS;
-    }
-
-    @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack itemStack) {
         super.onPlaced(world, pos, state, placer, itemStack);
         this.update(world, pos);
@@ -109,5 +100,24 @@ public class BorderSign extends Block implements BlockEntityProvider, Waterlogga
         ((BorderSignEntity)world.getBlockEntity(pos)).delete(world);
 
         super.onBreak(world, pos, state, player);
+    }
+
+    @Override
+    public BlockState getPlacementState(ItemPlacementContext ctx) {
+        return (BlockState)this.getDefaultState()
+            .with(WATERLOGGED, ctx.getWorld().getFluidState(ctx.getBlockPos()).getFluid() == Fluids.WATER);
+    }
+
+    @Override
+    public FluidState getFluidState(BlockState state) {
+        return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : state.getFluidState();
+    }
+
+    @Override
+    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
+        if (state.get(WATERLOGGED)) {
+            world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+        }
+        return state;
     }
 }

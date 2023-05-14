@@ -9,9 +9,9 @@ import java.util.Set;
 import java.util.UUID;
 
 import me.jakubok.nationsmod.administration.law.LawDescription.RuleDescription;
-import me.jakubok.nationsmod.collections.Colour;
-import me.jakubok.nationsmod.collections.Serialisable;
-import me.jakubok.nationsmod.collections.PlayerAccount;
+import me.jakubok.nationsmod.collection.Colour;
+import me.jakubok.nationsmod.collection.PlayerAccount;
+import me.jakubok.nationsmod.collection.Serialisable;
 import net.minecraft.nbt.NbtCompound;
 
 public class Law<D extends LawDescription> implements Serialisable {

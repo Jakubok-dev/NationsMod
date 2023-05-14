@@ -8,8 +8,8 @@ import me.jakubok.nationsmod.administration.governmentElements.FormOfGovernment;
 import me.jakubok.nationsmod.administration.governmentElements.formsOfGovernment.AbsoluteMonarchy;
 import me.jakubok.nationsmod.administration.law.Directive;
 import me.jakubok.nationsmod.administration.law.LawApprovement;
-import me.jakubok.nationsmod.collections.Colour;
-import me.jakubok.nationsmod.collections.PlayerAccount;
+import me.jakubok.nationsmod.collection.Colour;
+import me.jakubok.nationsmod.collection.PlayerAccount;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.MinecraftServer;
 

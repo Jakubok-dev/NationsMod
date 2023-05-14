@@ -4,11 +4,11 @@ import java.util.UUID;
 
 import me.jakubok.nationsmod.administration.abstractEntities.TerritoryClaimer;
 import me.jakubok.nationsmod.administration.town.Town;
-import me.jakubok.nationsmod.collections.Border;
-import me.jakubok.nationsmod.collections.BorderGroup;
-import me.jakubok.nationsmod.collections.Colour;
+import me.jakubok.nationsmod.collection.Border;
+import me.jakubok.nationsmod.collection.BorderGroup;
+import me.jakubok.nationsmod.collection.Colour;
 import me.jakubok.nationsmod.networking.Packets;
-import me.jakubok.nationsmod.registries.LegalOrganisationsRegistry;
+import me.jakubok.nationsmod.registries.LegalOrganisationRegistry;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -41,7 +41,7 @@ public class District extends TerritoryClaimer<DistrictLawDescription> {
     }
 
     public Town getTown(MinecraftServer server) {
-        return (Town)LegalOrganisationsRegistry.getRegistry(server).get(this.getTownsID());
+        return (Town)LegalOrganisationRegistry.getRegistry(server).get(this.getTownsID());
     }
 
     public UUID getTownsID() {
@@ -52,7 +52,7 @@ public class District extends TerritoryClaimer<DistrictLawDescription> {
     }
 
     public static District fromUUID(UUID id, MinecraftServer server) {
-        return (District)LegalOrganisationsRegistry.getRegistry(server).get(id);
+        return (District)LegalOrganisationRegistry.getRegistry(server).get(id);
     }
     @Override
     public Colour getTheMapColour(MinecraftServer server) {

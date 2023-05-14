@@ -19,14 +19,14 @@ public class HumanMeetGoal extends Goal {
 
     @Override
     public boolean canStart() {
-        if (instance.getHumanData().aggressiveness >= 2)
+        if (instance.getTheAggressiveness() >= 2)
             return false;
         if (requestTimer > 0) {
             requestTimer--;
             return false;
         }
         requestTimer = 600;
-        double chance = 1d / (double)(1 + instance.getHumanData().relatives.size());
+        double chance = 1d / (double)(1 + instance.getTheRelatives().size());
         Random rng = new Random();
         if (rng.nextDouble(1) > chance)
             return false;

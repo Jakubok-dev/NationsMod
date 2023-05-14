@@ -21,7 +21,9 @@ public class AggressivenessEffect extends StatusEffect {
     public void onApplied(LivingEntity entity, AttributeContainer attributes, int amplifier) {
         super.onApplied(entity, attributes, amplifier);
         if (entity instanceof HumanEntity) {
-            ((HumanEntity)entity).getHumanData().aggressiveness += amplifier + 1;
+            int aggressiveness = ((HumanEntity)entity).getTheAggressiveness();
+            aggressiveness += amplifier + 1;
+            ((HumanEntity)entity).setTheAggressiveness(aggressiveness);
         }
     }
 
@@ -29,7 +31,9 @@ public class AggressivenessEffect extends StatusEffect {
     public void onRemoved(LivingEntity entity, AttributeContainer attributes, int amplifier) {
         super.onRemoved(entity, attributes, amplifier);
         if (entity instanceof HumanEntity) {
-            ((HumanEntity)entity).getHumanData().aggressiveness -= amplifier + 1;
+            int aggressiveness = ((HumanEntity)entity).getTheAggressiveness();
+            aggressiveness -= amplifier + 1;
+            ((HumanEntity)entity).setTheAggressiveness(aggressiveness);
         }
     }
 }

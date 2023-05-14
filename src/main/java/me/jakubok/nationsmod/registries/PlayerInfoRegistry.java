@@ -6,8 +6,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
 import me.jakubok.nationsmod.NationsMod;
-import me.jakubok.nationsmod.collections.PlayerAccount;
-import me.jakubok.nationsmod.collections.PlayerInfo;
+import me.jakubok.nationsmod.collection.PlayerAccount;
+import me.jakubok.nationsmod.collection.PlayerInfo;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.PersistentState;

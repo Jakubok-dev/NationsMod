@@ -1,8 +1,8 @@
 package me.jakubok.nationsmod.administration.abstractEntities;
 
 import me.jakubok.nationsmod.chunk.ChunkClaimRegistry;
-import me.jakubok.nationsmod.collections.ChunkBinaryTree;
-import me.jakubok.nationsmod.collections.Colour;
+import me.jakubok.nationsmod.collection.ChunkBinaryTree;
+import me.jakubok.nationsmod.collection.Colour;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;

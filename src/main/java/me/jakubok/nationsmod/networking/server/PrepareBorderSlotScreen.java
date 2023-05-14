@@ -2,10 +2,10 @@ package me.jakubok.nationsmod.networking.server;
 
 import java.util.UUID;
 
-import me.jakubok.nationsmod.collections.BorderGroup;
-import me.jakubok.nationsmod.collections.BorderSlots;
-import me.jakubok.nationsmod.collections.PlayerAccount;
-import me.jakubok.nationsmod.collections.PlayerInfo;
+import me.jakubok.nationsmod.collection.BorderGroup;
+import me.jakubok.nationsmod.collection.BorderSlots;
+import me.jakubok.nationsmod.collection.PlayerAccount;
+import me.jakubok.nationsmod.collection.PlayerInfo;
 import me.jakubok.nationsmod.networking.Packets;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;

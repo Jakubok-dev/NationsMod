@@ -6,8 +6,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import me.jakubok.nationsmod.NationsClient;
-import me.jakubok.nationsmod.collections.BorderGroup;
-import me.jakubok.nationsmod.collections.ClientBorderDrawer;
+import me.jakubok.nationsmod.collection.BorderGroup;
+import me.jakubok.nationsmod.collection.ClientBorderDrawer;
 import me.jakubok.nationsmod.map.MapStorage;
 import net.minecraft.network.ClientConnection;
 

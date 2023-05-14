@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import me.jakubok.nationsmod.collections.Colour;
-import me.jakubok.nationsmod.collections.Pair;
+import me.jakubok.nationsmod.collection.Colour;
+import me.jakubok.nationsmod.collection.Pair;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.text.Text;

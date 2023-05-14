@@ -10,8 +10,8 @@ import com.mojang.blaze3d.systems.RenderSystem;
 
 import me.jakubok.nationsmod.NationsClient;
 import me.jakubok.nationsmod.administration.town.Town;
-import me.jakubok.nationsmod.collections.Border;
-import me.jakubok.nationsmod.collections.Colour;
+import me.jakubok.nationsmod.collection.Border;
+import me.jakubok.nationsmod.collection.Colour;
 import me.jakubok.nationsmod.gui.townScreen.TownScreen;
 import me.jakubok.nationsmod.networking.ClientNetworking;
 import me.jakubok.nationsmod.networking.Packets;

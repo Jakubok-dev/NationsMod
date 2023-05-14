@@ -2,7 +2,7 @@ package me.jakubok.nationsmod.administration.abstractEntities;
 
 import me.jakubok.nationsmod.administration.law.LawApprovement;
 import me.jakubok.nationsmod.administration.law.RuleType;
-import me.jakubok.nationsmod.collections.Colour;
+import me.jakubok.nationsmod.collection.Colour;
 
 public class AdministratingUnitLawDescription extends LegalOrganisationLawDescription {
     public static final RuleDescription mapColour = new RuleDescription(RuleType.COLOUR, "The colour the territory claimer has on the map", false, new Colour(0));

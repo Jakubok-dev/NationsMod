@@ -1,8 +1,8 @@
 package me.jakubok.nationsmod.networking.client;
 
 import me.jakubok.nationsmod.NationsClient;
-import me.jakubok.nationsmod.collections.Border;
-import me.jakubok.nationsmod.collections.Colour;
+import me.jakubok.nationsmod.collection.Border;
+import me.jakubok.nationsmod.collection.Colour;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking.PlayChannelHandler;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.client.MinecraftClient;

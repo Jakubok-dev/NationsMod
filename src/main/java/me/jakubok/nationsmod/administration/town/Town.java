@@ -9,12 +9,11 @@ import me.jakubok.nationsmod.administration.district.District;
 import me.jakubok.nationsmod.administration.governmentElements.formsOfGovernment.AbsoluteMonarchy;
 import me.jakubok.nationsmod.administration.law.Directive;
 import me.jakubok.nationsmod.administration.province.Province;
-import me.jakubok.nationsmod.collections.BorderGroup;
-import me.jakubok.nationsmod.collections.PlayerAccount;
-import me.jakubok.nationsmod.collections.PlayerInfo;
-import me.jakubok.nationsmod.entity.human.HumanData;
+import me.jakubok.nationsmod.collection.BorderGroup;
+import me.jakubok.nationsmod.collection.PlayerAccount;
+import me.jakubok.nationsmod.collection.PlayerInfo;
 import me.jakubok.nationsmod.entity.human.HumanEntity;
-import me.jakubok.nationsmod.registries.LegalOrganisationsRegistry;
+import me.jakubok.nationsmod.registries.LegalOrganisationRegistry;
 import me.jakubok.nationsmod.registries.PlayerInfoRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
@@ -83,11 +82,10 @@ public class Town extends AdministratingUnit<TownLawDescription> {
     public boolean addAMember(HumanEntity entity, MinecraftServer server) {
         if (this.getAIMembers().contains(entity.getUuid()))
             return false;
-        HumanData data = entity.getHumanData();
-        if (data.getCitizenship() != null)
-            Town.fromUUID(data.getCitizenship(), server).removeAMember(entity);
+        if (entity.getTheCitizenship() != null)
+            Town.fromUUID(entity.getTheCitizenship(), server).removeAMember(entity);
         
-        data.setCitizenship(this.getId(), server);
+        entity.setTheCitizenship(this.getId(), server);
         this.getAIMembers().add(entity.getUuid());
         
         return true;
@@ -104,7 +102,7 @@ public class Town extends AdministratingUnit<TownLawDescription> {
 
     public List<District> getDistricts(MinecraftServer server) {
         return this.getTheListOfDistrictsIDs().stream()
-        .map(el -> (District)LegalOrganisationsRegistry.getRegistry(server).get(el))
+        .map(el -> (District)LegalOrganisationRegistry.getRegistry(server).get(el))
         .toList();
         
     }
@@ -141,6 +139,6 @@ public class Town extends AdministratingUnit<TownLawDescription> {
     }
 
     public static Town fromUUID(UUID id, MinecraftServer server) {
-        return (Town)LegalOrganisationsRegistry.getRegistry(server).get(id);
+        return (Town)LegalOrganisationRegistry.getRegistry(server).get(id);
     }
 }

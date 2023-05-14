@@ -3,9 +3,9 @@ package me.jakubok.nationsmod.items;
 import me.jakubok.nationsmod.administration.abstractEntities.TerritoryClaimer;
 import me.jakubok.nationsmod.administration.district.District;
 import me.jakubok.nationsmod.chunk.ChunkClaimRegistry;
-import me.jakubok.nationsmod.collections.ChunkBinaryTree;
+import me.jakubok.nationsmod.collection.ChunkBinaryTree;
 import me.jakubok.nationsmod.networking.Packets;
-import me.jakubok.nationsmod.registries.LegalOrganisationsRegistry;
+import me.jakubok.nationsmod.registries.LegalOrganisationRegistry;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -50,7 +50,7 @@ public class NationIndependenceDeclaration extends Item implements Declaration {
                 return super.use(world, user, hand);
             }
 
-            TerritoryClaimer<?> claimer = (TerritoryClaimer<?>)LegalOrganisationsRegistry.getRegistry(((ServerWorld)world).getServer()).get(registry.claimBelonging(user.getBlockPos()));
+            TerritoryClaimer<?> claimer = (TerritoryClaimer<?>)LegalOrganisationRegistry.getRegistry(((ServerWorld)world).getServer()).get(registry.claimBelonging(user.getBlockPos()));
 
             if (!(claimer instanceof District)) {
                 user.sendMessage(Text.translatable("gui.nationsmod.nation_creation_screen.not_in_a_town"), false);

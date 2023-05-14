@@ -5,7 +5,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.function.Function;
 
-import me.jakubok.nationsmod.collections.Colour;
+import me.jakubok.nationsmod.collection.Colour;
 
 public enum RuleType {
     INTEGER(obj -> obj instanceof Integer),

@@ -1,4 +1,4 @@
-package me.jakubok.nationsmod.collections;
+package me.jakubok.nationsmod.collection;
 
 public class Pair<A, B> {
     public A key;

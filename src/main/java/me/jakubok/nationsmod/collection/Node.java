@@ -1,4 +1,4 @@
-package me.jakubok.nationsmod.collections;
+package me.jakubok.nationsmod.collection;
 
 import com.google.common.base.Supplier;
 

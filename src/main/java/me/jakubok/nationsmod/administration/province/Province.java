@@ -6,8 +6,8 @@ import java.util.UUID;
 import me.jakubok.nationsmod.administration.abstractEntities.TerritoryClaimer;
 import me.jakubok.nationsmod.administration.nation.Nation;
 import me.jakubok.nationsmod.administration.town.Town;
-import me.jakubok.nationsmod.collections.Colour;
-import me.jakubok.nationsmod.registries.LegalOrganisationsRegistry;
+import me.jakubok.nationsmod.collection.Colour;
+import me.jakubok.nationsmod.registries.LegalOrganisationRegistry;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
@@ -57,7 +57,7 @@ public class Province extends TerritoryClaimer<ProvinceLawDescription> {
     }
 
     public static Province fromUUID(UUID id, MinecraftServer server) {
-        return (Province)LegalOrganisationsRegistry.getRegistry(server).get(id);
+        return (Province)LegalOrganisationRegistry.getRegistry(server).get(id);
     }
 
     @Override

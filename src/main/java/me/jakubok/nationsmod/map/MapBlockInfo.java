@@ -2,7 +2,7 @@ package me.jakubok.nationsmod.map;
 
 import java.util.UUID;
 
-import me.jakubok.nationsmod.collections.Pair;
+import me.jakubok.nationsmod.collection.Pair;
 
 public class MapBlockInfo {
     public Pair<String, UUID> district;

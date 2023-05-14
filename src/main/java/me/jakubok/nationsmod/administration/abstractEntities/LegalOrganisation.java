@@ -8,7 +8,7 @@ import me.jakubok.nationsmod.administration.nation.Nation;
 import me.jakubok.nationsmod.administration.province.Province;
 import me.jakubok.nationsmod.administration.town.Town;
 import me.jakubok.nationsmod.administration.town.TownLawDescription;
-import me.jakubok.nationsmod.registries.LegalOrganisationsRegistry;
+import me.jakubok.nationsmod.registries.LegalOrganisationRegistry;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.MinecraftServer;
 
@@ -20,7 +20,7 @@ public abstract class LegalOrganisation<D extends LegalOrganisationLawDescriptio
         this.law = new Law<>(this.description);
         this.law.putARule(LegalOrganisationLawDescription.IdLabel, UUID.randomUUID());
         this.setName(name);
-        LegalOrganisationsRegistry.getRegistry(server).register(this);
+        LegalOrganisationRegistry.getRegistry(server).register(this);
     }
     public LegalOrganisation(D description) {
         this.description = description;

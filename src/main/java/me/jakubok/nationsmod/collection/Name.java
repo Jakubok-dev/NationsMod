@@ -1,36 +1,40 @@
-package me.jakubok.nationsmod.collections;
+package me.jakubok.nationsmod.collection;
 
 import java.util.Random;
+import java.util.UUID;
 
+import net.minecraft.entity.data.TrackedDataHandler;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
 
-public class Name implements Serialisable {
-    public String firstName;
-    public String lastName;
+public class Name {
+    public final String firstName;
+    public final String lastName;
 
-    public Name() {
-        this(randomSurname());
+    public Name(boolean isAFemale) {
+        this(randomSurname(), isAFemale);
     }
-    public Name(String lastName) {
-        this.firstName = randomName();
+    public Name(String lastName, boolean isAFemale) {
+        this.firstName = randomName(isAFemale);
+        this.lastName = lastName;
+    }
+    public Name(boolean isAFemale, UUID uuid) {
+        this(surnameFromUUID(uuid), isAFemale, uuid);
+    }
+    public Name(String lastName, boolean isAFemale, UUID uuid) {
+        this.firstName = nameFromUUID(isAFemale, uuid);
         this.lastName = lastName;
     }
     public Name(NbtCompound nbt) {
-        this.readFromNbt(nbt);
+        this.firstName = nbt.getString("firstName");
+        this.lastName = nbt.getString("lastName");
     }
 
     public Text getText() {
         return Text.of(firstName + " " + lastName);
     }
 
-    @Override
-    public void readFromNbt(NbtCompound tag) {
-        this.firstName = tag.getString("firstName");
-        this.lastName = tag.getString("lastName");
-    }
-
-    @Override
     public void writeToNbt(NbtCompound tag) {
         this.writeToNbtAndReturn(tag);
     }
@@ -41,9 +45,9 @@ public class Name implements Serialisable {
         return tag;
     }
 
-    public static String randomName() {
+    public static String randomName(boolean female) {
         Random rng = new Random();
-        return names[rng.nextInt(names.length)];
+        return female ? femaleNames[rng.nextInt(femaleNames.length)] : maleNames[rng.nextInt(maleNames.length)];
     }
 
     public static String randomSurname() {
@@ -51,7 +55,15 @@ public class Name implements Serialisable {
         return surnames[rng.nextInt(surnames.length)];
     }
 
-    public static String[] names = {
+    public static String nameFromUUID(boolean female, UUID uuid) {
+        return female ? femaleNames[Math.floorMod(uuid.hashCode(), femaleNames.length)] : maleNames[Math.floorMod(uuid.hashCode(), maleNames.length)];
+    }
+
+    public static String surnameFromUUID(UUID uuid) {
+        return surnames[Math.floorMod(uuid.hashCode(), surnames.length)];
+    }
+
+    public static String[] maleNames = {
         "Mark",
         "Steve",
         "Thomas",
@@ -123,7 +135,91 @@ public class Name implements Serialisable {
         "Jeremy",
         "Christian",
         "Keith",
-        "Roger"
+        "Roger",
+        "Terry",
+        "Kai",
+        "Sunny",
+        "Zuri"
+    };
+
+    public static String[] femaleNames = {
+        "Olivia",
+        "Emma",
+        "Charlotte",
+        "Amelia",
+        "Ava",
+        "Sophia",
+        "Isabella",
+        "Mia",
+        "Evelyn",
+        "Harper",
+        "Mary",
+        "Patricia",
+        "Jennifer",
+        "Alex",
+        "Efe",
+        "Makena",
+        "Noor",
+        "Linda",
+        "Elizabeth",
+        "Barbara",
+        "Susan",
+        "Jessica",
+        "Sarah",
+        "Karen",
+        "Lisa",
+        "Nancy",
+        "Betty",
+        "Margaret",
+        "Sandra",
+        "Ashley",
+        "Kimberly",
+        "Emily",
+        "Donna",
+        "Michelle",
+        "Carol",
+        "Amanda",
+        "Dorothy",
+        "Melissa",
+        "Deborah",
+        "Stephanie",
+        "Rebecca",
+        "Amanda",
+        "Sharon",
+        "Laura",
+        "Cynthia",
+        "Kathleen",
+        "Amy",
+        "Angela",
+        "Shirley",
+        "Anna",
+        "Brenda",
+        "Pamela",
+        "Emma",
+        "Nicole",
+        "Helen",
+        "Samantha",
+        "Katherine",
+        "Christine",
+        "Debra",
+        "Rachel",
+        "Carolyn",
+        "Janet",
+        "Catherine",
+        "Maria",
+        "Heather",
+        "Diane",
+        "Ruth",
+        "Julie",
+        "Olivia",
+        "Joyce",
+        "Kelly",
+        "Victoria",
+        "Lauren",
+        "Christina",
+        "Joan",
+        "Evelyn",
+        "Ari"
     };
 
     public static String[] surnames = {
@@ -228,4 +324,23 @@ public class Name implements Serialisable {
         "Melnyk",
         "Shevchenko"
     };
+
+    public static final TrackedDataHandler<Name> NAME_HANDLER = new TrackedDataHandler<Name>() {
+
+        @Override
+        public void write(PacketByteBuf var1, Name var2) {
+            var1.writeNbt(var2.writeToNbtAndReturn(new NbtCompound()));
+        }
+
+        @Override
+        public Name read(PacketByteBuf var1) {
+            return new Name(var1.readNbt());
+        }
+
+        @Override
+        public Name copy(Name var1) {
+            return var1;
+        }
+        
+    }; 
 }

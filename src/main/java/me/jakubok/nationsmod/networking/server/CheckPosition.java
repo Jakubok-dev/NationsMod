@@ -2,10 +2,10 @@ package me.jakubok.nationsmod.networking.server;
 
 import me.jakubok.nationsmod.administration.district.District;
 import me.jakubok.nationsmod.chunk.ChunkClaimRegistry;
-import me.jakubok.nationsmod.collections.ChunkBinaryTree;
-import me.jakubok.nationsmod.collections.Colour;
-import me.jakubok.nationsmod.collections.PlayerAccount;
-import me.jakubok.nationsmod.collections.PlayerInfo;
+import me.jakubok.nationsmod.collection.ChunkBinaryTree;
+import me.jakubok.nationsmod.collection.Colour;
+import me.jakubok.nationsmod.collection.PlayerAccount;
+import me.jakubok.nationsmod.collection.PlayerInfo;
 import me.jakubok.nationsmod.networking.Packets;
 import me.jakubok.nationsmod.registries.PlayerInfoRegistry;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;

@@ -1,9 +1,9 @@
 package me.jakubok.nationsmod.networking.server;
 
-import me.jakubok.nationsmod.collections.BorderGroup;
-import me.jakubok.nationsmod.collections.BorderSlots;
-import me.jakubok.nationsmod.collections.PlayerAccount;
-import me.jakubok.nationsmod.collections.PlayerInfo;
+import me.jakubok.nationsmod.collection.BorderGroup;
+import me.jakubok.nationsmod.collection.BorderSlots;
+import me.jakubok.nationsmod.collection.PlayerAccount;
+import me.jakubok.nationsmod.collection.PlayerInfo;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking.PlayChannelHandler;
 import net.minecraft.network.PacketByteBuf;

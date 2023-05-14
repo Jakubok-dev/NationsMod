@@ -6,7 +6,7 @@ import java.util.UUID;
 
 import me.jakubok.nationsmod.administration.abstractEntities.AdministratingUnitLawDescription;
 import me.jakubok.nationsmod.administration.law.RuleType;
-import me.jakubok.nationsmod.collections.PlayerAccount;
+import me.jakubok.nationsmod.collection.PlayerAccount;
 
 public class TownLawDescription extends AdministratingUnitLawDescription{
     public static final RuleDescription provincesID = new RuleDescription(RuleType.UUID, "The id of the province in which the town is", true, null);

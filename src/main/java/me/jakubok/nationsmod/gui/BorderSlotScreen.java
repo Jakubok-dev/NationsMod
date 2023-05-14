@@ -1,7 +1,7 @@
 package me.jakubok.nationsmod.gui;
 
 import me.jakubok.nationsmod.NationsClient;
-import me.jakubok.nationsmod.collections.BorderGroup;
+import me.jakubok.nationsmod.collection.BorderGroup;
 import me.jakubok.nationsmod.gui.miscellaneous.SimpleWindow;
 import me.jakubok.nationsmod.networking.Packets;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;

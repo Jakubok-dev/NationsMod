@@ -43,25 +43,18 @@ public class HumanEntityRenderer extends LivingEntityRenderer<HumanEntity, Playe
         this.addFeature(new StuckStingersFeatureRenderer<HumanEntity, PlayerEntityModel<HumanEntity>>(this));
     } 
 
-    Skin[] SKINS = new Skin[] {
-        new Skin("textures/entity/player/slim/alex.png", Model.SLIM), 
-        new Skin("textures/entity/player/slim/ari.png", Model.SLIM), 
-        new Skin("textures/entity/player/slim/efe.png", Model.SLIM), 
-        new Skin("textures/entity/player/slim/kai.png", Model.SLIM), 
-        new Skin("textures/entity/player/slim/makena.png", Model.SLIM), 
-        new Skin("textures/entity/player/slim/noor.png", Model.SLIM), 
-        new Skin("textures/entity/player/slim/steve.png", Model.SLIM), 
-        new Skin("textures/entity/player/slim/sunny.png", Model.SLIM), 
-        new Skin("textures/entity/player/slim/zuri.png", Model.SLIM), 
-        new Skin("textures/entity/player/wide/alex.png", Model.WIDE), 
-        new Skin("textures/entity/player/wide/ari.png", Model.WIDE), 
-        new Skin("textures/entity/player/wide/efe.png", Model.WIDE), 
+    Skin[] SKINS_MALE = new Skin[] {
         new Skin("textures/entity/player/wide/kai.png", Model.WIDE), 
-        new Skin("textures/entity/player/wide/makena.png", Model.WIDE), 
-        new Skin("textures/entity/player/wide/noor.png", Model.WIDE), 
         new Skin("textures/entity/player/wide/steve.png", Model.WIDE), 
         new Skin("textures/entity/player/wide/sunny.png", Model.WIDE), 
         new Skin("textures/entity/player/wide/zuri.png", Model.WIDE)
+    };
+    Skin[] SKINS_FEMALE = new Skin[] {
+        new Skin("textures/entity/player/wide/alex.png", Model.WIDE),
+        new Skin("textures/entity/player/wide/ari.png", Model.WIDE), 
+        new Skin("textures/entity/player/wide/efe.png", Model.WIDE), 
+        new Skin("textures/entity/player/wide/makena.png", Model.WIDE), 
+        new Skin("textures/entity/player/wide/noor.png", Model.WIDE), 
     };
     record Skin(Identifier texture, Model model) {
         public Skin(String texture, Model model) {
@@ -82,7 +75,7 @@ public class HumanEntityRenderer extends LivingEntityRenderer<HumanEntity, Playe
 
     @Override
     public Identifier getTexture(HumanEntity var1) {
-        return SKINS[Math.floorMod(var1.getUuid().hashCode(), SKINS.length / 2) + SKINS.length / 2].texture;
+        return var1.isAFemale() ? SKINS_FEMALE[Math.floorMod(var1.getUuid().hashCode(), SKINS_FEMALE.length)].texture : SKINS_MALE[Math.floorMod(var1.getUuid().hashCode(), SKINS_MALE.length)].texture;
     }
 
     @Override
