@@ -52,7 +52,7 @@ public class BorderSlotCreationScreen extends SimpleWindow {
             Text.translatable("gui.nationsmod.submit"),
             t -> {
 
-                if (this.nameField.getText().trim() == "" || this.nameField.getText().trim() == "+")
+                if (this.nameField.getText().trim().equals("") || this.nameField.getText().trim().equals("+"))
                     return;
 
                 PacketByteBuf buffer = PacketByteBufs.create();

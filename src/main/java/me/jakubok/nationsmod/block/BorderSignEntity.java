@@ -1,11 +1,17 @@
 package me.jakubok.nationsmod.block;
 
+import me.jakubok.nationsmod.geometry.Polygon;
 import me.jakubok.nationsmod.registries.BlockRegistry;
+import me.jakubok.nationsmod.registries.PolygonRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import java.util.UUID;
 
 public class BorderSignEntity extends BlockEntity {
 

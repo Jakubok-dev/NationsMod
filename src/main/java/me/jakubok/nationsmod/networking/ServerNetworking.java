@@ -1,21 +1,6 @@
 package me.jakubok.nationsmod.networking;
 
-import me.jakubok.nationsmod.networking.server.CheckPosition;
-import me.jakubok.nationsmod.networking.server.CreateANation;
-import me.jakubok.nationsmod.networking.server.CreateATown;
-import me.jakubok.nationsmod.networking.server.DeleteABorderSlot;
-import me.jakubok.nationsmod.networking.server.GetANation;
-import me.jakubok.nationsmod.networking.server.GetAProvince;
-import me.jakubok.nationsmod.networking.server.GetBlocksClaimantColour;
-import me.jakubok.nationsmod.networking.server.HighlightABlock;
-import me.jakubok.nationsmod.networking.server.PrepareBorderRegistratorScreen;
-import me.jakubok.nationsmod.networking.server.CreateABorderSlot;
-import me.jakubok.nationsmod.networking.server.PrepareBorderSlotScreen;
-import me.jakubok.nationsmod.networking.server.PrepareTownScreen;
-import me.jakubok.nationsmod.networking.server.PrepareTownsScreen;
-import me.jakubok.nationsmod.networking.server.SelectABorderSlot;
-import me.jakubok.nationsmod.networking.server.UnhighlightABlock;
-import me.jakubok.nationsmod.networking.server.UnselectABorderSlot;
+import me.jakubok.nationsmod.networking.server.*;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 
 public class ServerNetworking {
@@ -36,5 +21,10 @@ public class ServerNetworking {
         ServerPlayNetworking.registerGlobalReceiver(Packets.PREPARE_BORDER_REGISTRATOR_SCREEN, new PrepareBorderRegistratorScreen());
         ServerPlayNetworking.registerGlobalReceiver(Packets.GET_A_NATION, new GetANation());
         ServerPlayNetworking.registerGlobalReceiver(Packets.GET_A_PROVINCE, new GetAProvince());
+        ServerPlayNetworking.registerGlobalReceiver(Packets.SELECT_A_POLYGON, new SelectAPolygon());
+        ServerPlayNetworking.registerGlobalReceiver(Packets.UNSELECT_A_POLYGON, new UnselectAPolygon());
+        ServerPlayNetworking.registerGlobalReceiver(Packets.REMOVE_A_POLYGON, new RemoveAPolygon());
+        ServerPlayNetworking.registerGlobalReceiver(Packets.GET_A_POLYGON, new GetAPolygon());
+        ServerPlayNetworking.registerGlobalReceiver(Packets.CREATE_A_POLYGON, new CreateAPolygon());
     }
 }

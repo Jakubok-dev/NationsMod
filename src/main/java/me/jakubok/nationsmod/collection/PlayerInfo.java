@@ -13,6 +13,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
+import net.minecraft.util.math.BlockPos;
 
 public class PlayerInfo implements Serialisable {
 
@@ -21,13 +22,12 @@ public class PlayerInfo implements Serialisable {
     public UUID currentTown;
     public UUID currentProvince;
     public UUID currentNation;
-
     protected UUID citizenship;
-
     protected PlayerAccount account;
     public BorderSlots slots = new BorderSlots();
-
     public boolean online = false;
+    public BlockPos lastlyClickedBorderSign;
+    public PolygonPlayerStorage polygonPlayerStorage = new PolygonPlayerStorage();
 
     public PlayerInfo(NbtCompound compound) {
         this.readFromNbt(compound);
@@ -163,6 +163,15 @@ public class PlayerInfo implements Serialisable {
         
         if (!tag.getBoolean("are_slots_null"))
             this.slots.readFromNbt(tag.getCompound("slots"));
+
+        if (!tag.getBoolean("is_lastly_clicked_border_sign_null")) {
+            int x = tag.getInt("lastly_clicked_border_sign_x");
+            int y = tag.getInt("lastly_clicked_border_sign_y");
+            int z = tag.getInt("lastly_clicked_border_sign_z");
+            this.lastlyClickedBorderSign = new BlockPos(x, y, z);
+        }
+
+        this.polygonPlayerStorage = new PolygonPlayerStorage(tag.getCompound("polygons"));
     }
 
     @Override
@@ -194,6 +203,15 @@ public class PlayerInfo implements Serialisable {
         if (this.slots != null)
             tag.put("slots", this.slots.writeToNbtAndReturn(new NbtCompound(), true));
         tag.putBoolean("are_slots_null", this.slots == null);
+
+        if (this.lastlyClickedBorderSign != null) {
+            tag.putInt("lastly_clicked_border_sign_x", this.lastlyClickedBorderSign.getX());
+            tag.putInt("lastly_clicked_border_sign_y", this.lastlyClickedBorderSign.getY());
+            tag.putInt("lastly_clicked_border_sign_z", this.lastlyClickedBorderSign.getZ());
+        }
+        tag.putBoolean("is_lastly_clicked_border_sign_null", this.lastlyClickedBorderSign == null);
+
+        tag.put("polygons", this.polygonPlayerStorage.writeToNbtAndReturn(new NbtCompound(), true));
     }
     
     public static PlayerInfo fromAccount(PlayerAccount account, MinecraftServer server) {

@@ -1,8 +1,8 @@
 package me.jakubok.nationsmod.items;
 
-import me.jakubok.nationsmod.collection.BorderSlots;
 import me.jakubok.nationsmod.collection.PlayerAccount;
 import me.jakubok.nationsmod.collection.PlayerInfo;
+import me.jakubok.nationsmod.collection.PolygonPlayerStorage;
 import me.jakubok.nationsmod.networking.Packets;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -19,6 +19,9 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class BorderRegistrator extends Item {
 
     public BorderRegistrator() {
@@ -31,10 +34,17 @@ public class BorderRegistrator extends Item {
             return super.use(world, user, hand); 
 
         MinecraftServer server = ((ServerWorld)world).getServer();
-        BorderSlots slots = PlayerInfo.fromAccount(new PlayerAccount(user), server).slots;
+        PolygonPlayerStorage slots = PlayerInfo.fromAccount(new PlayerAccount(user), server).polygonPlayerStorage;
         PacketByteBuf buffer = PacketByteBufs.create();
-        buffer.writeNbt(slots.writeToNbtAndReturn(new NbtCompound(), true));
-        ServerPlayNetworking.send((ServerPlayerEntity)user, Packets.OPEN_BORDER_REGISTRATOR_SCREEN, buffer);
+        List<String> polygonNames = slots.slots.stream().map(el -> el.name).toList();
+        NbtCompound nbt = new NbtCompound();
+
+        for (int i = 0; i < polygonNames.size(); i++)
+            nbt.putString("polygon" + i, polygonNames.get(i));
+        nbt.putInt("size", polygonNames.size());
+
+        buffer.writeNbt(nbt);
+        ServerPlayNetworking.send((ServerPlayerEntity)user, Packets.OPEN_POLYGONS_STORAGE_SCREEN, buffer);
 
         return TypedActionResult.success(user.getMainHandStack());
     }

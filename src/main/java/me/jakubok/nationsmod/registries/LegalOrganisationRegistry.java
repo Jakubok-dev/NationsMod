@@ -53,9 +53,9 @@ public class LegalOrganisationRegistry extends PersistentState {
             NbtCompound subtag = tag.getCompound("entry" + i);
             UUID id = subtag.getCompound("law").getUuid("id");
             if (subtag.getBoolean("isADistrict"))
-            this.organisations.put(id, new District(subtag, server));
+                this.organisations.put(id, new District(subtag, server));
             if (subtag.getBoolean("isATown"))
-            this.organisations.put(id, new Town(subtag, server));
+                this.organisations.put(id, new Town(subtag, server));
             if (subtag.getBoolean("isAProvince"))
                 this.organisations.put(id, new Province(subtag, server));
             if (subtag.getBoolean("isANation")) 
@@ -81,11 +81,10 @@ public class LegalOrganisationRegistry extends PersistentState {
         };
 
         PersistentStateManager manager = server.getOverworld().getPersistentStateManager();
-        LegalOrganisationRegistry registry = manager.getOrCreate(
+        return manager.getOrCreate(
             createFromNbt,
-            LegalOrganisationRegistry::new, 
+            LegalOrganisationRegistry::new,
             NationsMod.MOD_ID + ":legal_organisations_registry"
         );
-        return registry;
     }
 }

@@ -4,16 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import me.jakubok.nationsmod.networking.client.ClearClaimantOnTheMap;
-import me.jakubok.nationsmod.networking.client.HighlightABlock;
-import me.jakubok.nationsmod.networking.client.OpenBorderRegistratorScreen;
-import me.jakubok.nationsmod.networking.client.OpenBorderSlotCreatorScreen;
-import me.jakubok.nationsmod.networking.client.OpenNationCreationScreen;
-import me.jakubok.nationsmod.networking.client.Receive;
-import me.jakubok.nationsmod.networking.client.RenderClaimantsColour;
-import me.jakubok.nationsmod.networking.client.UnhighlightABlock;
-import me.jakubok.nationsmod.networking.client.OpenTownCreationScreen;
-import me.jakubok.nationsmod.networking.client.PullMapBlockInfo;
+import me.jakubok.nationsmod.networking.client.*;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -41,7 +32,6 @@ public class ClientNetworking {
         SERVER_REQUESTS.put(id, responseFunction);
         buffer.writeUuid(id);
         ClientPlayNetworking.send(packet, buffer);
-
         return true;
     }
 
@@ -57,5 +47,7 @@ public class ClientNetworking {
         ClientPlayNetworking.registerGlobalReceiver(Packets.UNHIGHLIGHT_A_BLOCK_CLIENT, new UnhighlightABlock());
         ClientPlayNetworking.registerGlobalReceiver(Packets.CLEAR_CLAIMANT_ON_THE_MAP, new ClearClaimantOnTheMap());
         ClientPlayNetworking.registerGlobalReceiver(Packets.PULL_MAP_BLOCK_INFO, new PullMapBlockInfo());
+        ClientPlayNetworking.registerGlobalReceiver(Packets.OPEN_POLYGONS_STORAGE_SCREEN, new OpenPolygonsStorageScreen());
+        ClientPlayNetworking.registerGlobalReceiver(Packets.OPEN_POLYGON_CREATION_SCREEN, new OpenPolygonCreationScreen());
     }
 }
