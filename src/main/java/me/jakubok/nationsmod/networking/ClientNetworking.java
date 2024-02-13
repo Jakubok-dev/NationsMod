@@ -49,5 +49,7 @@ public class ClientNetworking {
         ClientPlayNetworking.registerGlobalReceiver(Packets.PULL_MAP_BLOCK_INFO, new PullMapBlockInfo());
         ClientPlayNetworking.registerGlobalReceiver(Packets.OPEN_POLYGONS_STORAGE_SCREEN, new OpenPolygonsStorageScreen());
         ClientPlayNetworking.registerGlobalReceiver(Packets.OPEN_POLYGON_CREATION_SCREEN, new OpenPolygonCreationScreen());
+        ClientPlayNetworking.registerGlobalReceiver(Packets.CACHE_A_POLYGON, new CacheAPolygon());
+        ClientPlayNetworking.registerGlobalReceiver(Packets.UNCACHE_A_POLYGON, new UncacheAPolygon());
     }
 }

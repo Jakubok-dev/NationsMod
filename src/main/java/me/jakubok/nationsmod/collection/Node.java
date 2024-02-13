@@ -9,27 +9,23 @@ public class Node<T extends Serialisable> implements Serialisable {
     public Node<T> left;
     public Node<T> right;
 
-    private Supplier<T> supplier;
-
     public Node(T value) {
         this.value = value;
         left = null;
         right = null;
     }
 
-    public Node(NbtCompound tag, Supplier<T> supplier) {
-        this.value = supplier.get();
-        this.supplier = supplier;
+    public Node(NbtCompound tag) {
         this.readFromNbt(tag);
     }
 
     @Override
     public void readFromNbt(NbtCompound tag) {
         if (!tag.getBoolean("is_left_null"))
-            this.left = new Node<T>((NbtCompound)tag.get("left"), this.supplier);
+            this.left = new Node<T>((NbtCompound)tag.get("left"));
 
         if (!tag.getBoolean("is_right_null"))
-            this.right = new Node<T>((NbtCompound)tag.get("right"), this.supplier);
+            this.right = new Node<T>((NbtCompound)tag.get("right"));
 
         this.value.readFromNbt((NbtCompound)tag.get("value"));
     }

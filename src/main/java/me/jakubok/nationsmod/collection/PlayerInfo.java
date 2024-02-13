@@ -7,6 +7,7 @@ import me.jakubok.nationsmod.administration.nation.Nation;
 import me.jakubok.nationsmod.administration.province.Province;
 import me.jakubok.nationsmod.administration.town.Town;
 import me.jakubok.nationsmod.chunk.ChunkClaimRegistry;
+import me.jakubok.nationsmod.geometry.Point;
 import me.jakubok.nationsmod.registries.PlayerInfoRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
@@ -26,7 +27,7 @@ public class PlayerInfo implements Serialisable {
     protected PlayerAccount account;
     public BorderSlots slots = new BorderSlots();
     public boolean online = false;
-    public BlockPos lastlyClickedBorderSign;
+    public Point lastlyClickedBorderSign;
     public PolygonPlayerStorage polygonPlayerStorage = new PolygonPlayerStorage();
 
     public PlayerInfo(NbtCompound compound) {
@@ -166,9 +167,8 @@ public class PlayerInfo implements Serialisable {
 
         if (!tag.getBoolean("is_lastly_clicked_border_sign_null")) {
             int x = tag.getInt("lastly_clicked_border_sign_x");
-            int y = tag.getInt("lastly_clicked_border_sign_y");
             int z = tag.getInt("lastly_clicked_border_sign_z");
-            this.lastlyClickedBorderSign = new BlockPos(x, y, z);
+            this.lastlyClickedBorderSign = new Point(x, z);
         }
 
         this.polygonPlayerStorage = new PolygonPlayerStorage(tag.getCompound("polygons"));
@@ -205,9 +205,8 @@ public class PlayerInfo implements Serialisable {
         tag.putBoolean("are_slots_null", this.slots == null);
 
         if (this.lastlyClickedBorderSign != null) {
-            tag.putInt("lastly_clicked_border_sign_x", this.lastlyClickedBorderSign.getX());
-            tag.putInt("lastly_clicked_border_sign_y", this.lastlyClickedBorderSign.getY());
-            tag.putInt("lastly_clicked_border_sign_z", this.lastlyClickedBorderSign.getZ());
+            tag.putInt("lastly_clicked_border_sign_x", this.lastlyClickedBorderSign.key);
+            tag.putInt("lastly_clicked_border_sign_z", this.lastlyClickedBorderSign.value);
         }
         tag.putBoolean("is_lastly_clicked_border_sign_null", this.lastlyClickedBorderSign == null);
 

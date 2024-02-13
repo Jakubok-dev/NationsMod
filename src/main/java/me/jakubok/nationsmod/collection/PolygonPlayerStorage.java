@@ -42,9 +42,7 @@ public class PolygonPlayerStorage implements Serialisable {
         nbt.putBoolean("selectedSlotWritten", writeSelectedSlot);
         AtomicInteger size = new AtomicInteger(0);
         this.slots.forEach(el -> {
-            NbtCompound subtag = new NbtCompound();
-            el.writeToNbt(subtag);
-            nbt.put("polygon" + size.incrementAndGet(), subtag);
+            nbt.put("polygon" + size.incrementAndGet(), el.writeToNbtAndReturn(new NbtCompound()));
         });
         nbt.putInt("size", size.get());
         return nbt;

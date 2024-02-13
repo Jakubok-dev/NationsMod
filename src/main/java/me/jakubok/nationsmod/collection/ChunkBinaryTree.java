@@ -111,7 +111,7 @@ public class ChunkBinaryTree extends PersistentState {
 
     public void readFromNbt(NbtCompound tag) {
         if (!tag.getBoolean("is_root_null"))
-            this.root = new Node<ChunkClaimRegistry>(tag, () -> new ChunkClaimRegistry());
+            this.root = new Node<ChunkClaimRegistry>(tag);
     }
 
     @Override

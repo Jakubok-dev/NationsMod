@@ -366,7 +366,7 @@ public class BorderGroup implements Serialisable {
     @Override
     public void readFromNbt(NbtCompound tag) {
         if (!tag.getBoolean("is_root_null"))
-            this.root = new Node<Border>(tag, () -> new Border());
+            this.root = new Node<Border>(tag);
         this.name = tag.getString("name");
     }
 

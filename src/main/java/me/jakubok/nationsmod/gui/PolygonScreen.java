@@ -38,7 +38,7 @@ public class PolygonScreen extends SimpleWindow {
         super.init();
 
         this.select = ButtonWidget.builder(
-                Text.of("Select"),
+                this.selected ? Text.of("Unselect") : Text.of("Select"),
                 t -> {
                     if (this.selected) {
 
@@ -65,13 +65,14 @@ public class PolygonScreen extends SimpleWindow {
                 (windowRight - windowLeft) / 3 - 5,
                 20
         ).build();
+        this.addDrawableChild(this.select);
         this.remove = ButtonWidget.builder(
                 Text.of("Remove"),
-                t -> {/* this.client.setScreen(new BorderSlotDeletionScreen(this, slot.name, this)) */}
+                t -> { this.client.setScreen(new PolygonDeletionScreen(this.index, null)); }
         ).dimensions(
                 (windowLeft + (windowRight - windowLeft) / 3) + 1,
                 windowBottom - 25,
-                (windowRight - windowLeft) / 3 - 2,
+                (windowRight - windowLeft) / 3,
                 20
         ).build();
         this.addDrawableChild(this.remove);

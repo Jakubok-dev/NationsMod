@@ -1,209 +1,444 @@
 package me.jakubok.nationsmod.geometry;
 
-import me.jakubok.nationsmod.collection.Pair;
+import me.jakubok.nationsmod.collection.PolygonNode;
 import me.jakubok.nationsmod.collection.Serialisable;
 import net.minecraft.nbt.NbtCompound;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Consumer;
+
 public class Polygon implements Serialisable {
-
-    public EdgeNode root;
+    public PolygonNode<Point> root;
     public String name;
-
+    Map<String, Consumer<Polygon>> subscribers = new HashMap<>();
+    Range domain = null, valueSet = null;
     public Polygon(String name) {
-        this.name = name;
-    }
-    public Polygon(String name, MathEquation<?> root) {
-        this.root = new EdgeNode(root);
         this.name = name;
     }
     public Polygon(NbtCompound nbt) {
         this.readFromNbt(nbt);
     }
 
-    public boolean insertLeft(double x, double y) {
-        if (isClosed() || this.root == null)
-            return false;
-
-        MathEquation<?> value = MathEquation.fromTwoPoints(x, y, this.root.value.domain.from, this.root.value.valueSet.from);
-        if (this.doesCollide(value))
-            return false;
-
-        EdgeNode newNode = new EdgeNode(value);
-        this.root.left = newNode;
-        newNode.right = this.root;
-        this.root = newNode;
-        return true;
-    }
-    public boolean insertRight(double x, double y) {
-        if (isClosed() || this.root == null)
-            return false;
-
-        EdgeNode iterator = root;
-        while (iterator.right != null)
-            iterator = iterator.right;
-
-        MathEquation<?> value = MathEquation.fromTwoPoints(x, y, iterator.value.domain.to, iterator.value.valueSet.to);
-        if (this.doesCollide(value))
-            return false;
-
-        iterator.right = new EdgeNode(value);
-        iterator.right.left = iterator;
-
-        return true;
+    public boolean add(Point added, Point pointInThePolygon) {
+        if (this.isEmpty())
+            this.addToTheRight(pointInThePolygon);
+        if (this.root.value.equals(pointInThePolygon))
+            return this.addToTheLeft(added);
+        if (this.getTheLastNode().value.equals(pointInThePolygon))
+            return this.addToTheRight(added);
+        return false;
     }
 
-    public boolean deleteByPoint(double x, double y) {
-        if (this.root == null)
-            return false;
-
-        Pair<EdgeNode, EdgeNode> edges = findEdges(x, y);
-
-        if (edges == null)
-            return false;
-        if (edges.value == null) {
-            this.deleteEdge(edges.key);
+    public boolean addToTheRight(Point p) {
+        PolygonNode<Point> newNode = new PolygonNode<>(p);
+        if (this.isEmpty()) {
+            this.root = newNode;
+            this.checkRanges(p, false);
+            this.markDirty();
+            return true;
+        }
+        if (this.root.left == null && this.root.right == null) {
+            this.root.right = newNode;
+            newNode.left = this.root;
+            this.checkRanges(p, false);
+            this.markDirty();
             return true;
         }
 
-        MathEquation<?> resultant = MathEquation.fromTwoPoints(edges.key.value.domain.from, edges.key.value.valueSet.from, edges.value.value.domain.to, edges.value.value.valueSet.to);
-        EdgeNode resultantEdge = new EdgeNode(resultant);
-
-        this.deleteEdge(edges.key);
-        this.deleteEdge(edges.value);
-        if (edges.key.left != null) {
-            edges.key.left.right = resultantEdge;
-            resultantEdge.left = edges.key.left;
-        }
-        if (edges.value.right != null) {
-            edges.value.right.left = resultantEdge;
-            resultantEdge.right = edges.value.right;
-        }
-
-        return true;
-    }
-
-    public boolean deleteEdge(EdgeNode edge) {
-        if (edge == this.root) {
-            if(edge.right != null) {
-                this.root = edge.right;
-            } else {
-                this.root = null;
-                return true;
-            }
-        }
-
-        if (edge.right != null)
-            edge.right.left = null;
-        if (edge.left != null)
-            edge.left.right = null;
-        return true;
-    }
-
-    public Pair<EdgeNode, EdgeNode> findEdges(double x, double y) {
-        if (this.root == null)
-            return null;
-        EdgeNode iterator = this.root;
-        while (iterator != null) {
-            if (iterator.value.domain.to == x && iterator.value.valueSet.to == y) {
-                return new Pair<>(iterator, iterator.right != null ? iterator.right : null);
-            }
-
-            iterator = iterator.right;
-            if (iterator == root)
-                break;
-        }
-        return null;
-    }
-
-    public boolean doesCollide(MathEquation<?> eq) {
-        if (this.root == null)
+        PolygonNode<Point> lastNode = this.getTheLastNode();
+        if (this.getTheNode(p) == this.root)
+            return this.closeTheShape();
+        if (this.doesInterfereWithThePolygon(lastNode.value, newNode.value) || this.getTheNode(p) != null)
             return false;
-        EdgeNode iterator = this.root;
-        while (iterator != null) {
-            if (iterator.value.getTheIntersectionX(eq) != null || iterator.value.doesOverlap(eq))
+        lastNode.right = newNode;
+        newNode.left = lastNode;
+        this.checkRanges(p, false);
+        this.markDirty();
+        return true;
+    }
+
+    public boolean addToTheLeft(Point p) {
+        PolygonNode<Point> newNode = new PolygonNode<>(p);
+        if (this.isEmpty()) {
+            this.root = newNode;
+            this.checkRanges(p, false);
+            this.markDirty();
+            return true;
+        }
+        if (this.root.left == null && this.root.right == null) {
+            this.root.left = newNode;
+            newNode.right = this.root;
+            this.root = newNode;
+            this.checkRanges(p, false);
+            this.markDirty();
+            return true;
+        }
+
+        if (this.getTheNode(p) == this.getTheLastNode())
+            return this.closeTheShape();
+        if (this.doesInterfereWithThePolygon(root.value, newNode.value) || this.getTheNode(p) != null)
+            return false;
+        this.root.left = newNode;
+        newNode.right = this.root;
+        this.root = newNode;
+        this.checkRanges(p, false);
+        this.markDirty();
+        return true;
+    }
+
+    protected boolean closeTheShape() {
+        PolygonNode<Point> lastNode = this.getTheLastNode();
+        if (this.doesInterfereWithThePolygon(this.root.value, lastNode.value))
+            return false;
+        this.root.left = lastNode;
+        lastNode.right = this.root;
+        this.markDirty();
+        return true;
+    }
+
+    public boolean delete(Point p) {
+        if (this.isEmpty())
+            return false;
+        if (this.root.left == null && this.root.right == null) {
+            if (this.root.value.equals(p)) {
+                this.root = null;
+                this.checkRanges(p, true);
+                this.markDirty();
                 return true;
-            iterator = iterator.right;
-            if (iterator == this.root)
+            } else return false;
+        }
+
+        if (root.right == null)
+            return false;
+        if (root.right.right == null) {
+            if (this.root.value.equals(p)) {
+                PolygonNode<Point> temp = this.root;
+                this.root.right.left = null;
+                this.root = this.root.right;
+                temp.right = null;
+                this.checkRanges(p, true);
+                this.markDirty();
+                return true;
+            } else if (this.root.right.value.equals(p)) {
+                this.root.right.left = null;
+                this.root.right = null;
+                this.checkRanges(p, true);
+                this.markDirty();
+                return true;
+            } else return false;
+        }
+
+        PolygonNode<Point> foundNode = this.getTheNode(p);
+        if (foundNode == null)
+            return false;
+
+        if (foundNode.left == null) {
+            foundNode.right.left = null;
+            this.root = foundNode.right;
+            foundNode.right = null;
+            this.checkRanges(p, true);
+            this.markDirty();
+            return true;
+        }
+        if (foundNode.right == null) {
+            foundNode.left.right = null;
+            foundNode.left = null;
+            this.checkRanges(p, true);
+            this.markDirty();
+            return true;
+        }
+
+        if (this.doesInterfereWithThePolygon(foundNode.left.value, foundNode.right.value, foundNode))
+            return false;
+
+        foundNode.left.right = foundNode.right;
+        foundNode.right.left = foundNode.left;
+        if (this.root.value.equals(foundNode.value))
+            this.root = foundNode.right;
+        foundNode.right = null;
+        foundNode.left = null;
+        this.checkRanges(p, true);
+        this.markDirty();
+        return true;
+    }
+
+    public boolean insert(Point insertedPoint, Point p1, Point p2) {
+        PolygonNode<Point> node1 = this.getTheNode(p1);
+        PolygonNode<Point> node2 = this.getTheNode(p2);
+        if (node1 == null || node2 == null || this.getTheNode(insertedPoint) != null)
+            return false;
+        PolygonNode<Point> leftSide, rightSide;
+        if (node1.right == node2) {
+            leftSide = node1;
+            rightSide = node2;
+        } else if (node1.left == node2) {
+            rightSide = node1;
+            leftSide = node2;
+        } else return false;
+
+        if (this.doesInterfereWithThePolygon(leftSide.value, insertedPoint) || this.doesInterfereWithThePolygon(insertedPoint, rightSide.value))
+            return false;
+
+        PolygonNode<Point> insertedNode = new PolygonNode<>(insertedPoint);
+        leftSide.right = insertedNode;
+        rightSide.left = insertedNode;
+        insertedNode.left = leftSide;
+        insertedNode.right = rightSide;
+
+        this.updateRanges();
+        this.markDirty();
+        return true;
+    }
+
+    public boolean doesIntersectWithThePolygon(Point a, Point b) {
+        if (this.isEmpty())
+            return false;
+        PolygonNode<Point> t = root.right;
+        while (t != null) {
+            if (Polygon.doesIntersect(a, b, t.left.value, t.value))
+                return true;
+            t = t.right;
+            if (t == root.right)
                 break;
         }
         return false;
     }
 
-    public boolean isClosed() {
-        if (this.root == null)
+    public boolean doesInterfereWithThePolygon(Point a, Point b) {
+        if (this.isEmpty())
             return false;
-        return this.root.left != null;
+        PolygonNode<Point> t = root.right;
+        while (t != null) {
+            if (Polygon.doesInterfere(a, b, t.left.value, t.value))
+                return true;
+            t = t.right;
+            if (t == root.right)
+                break;
+        }
+        return false;
+    }
+    public boolean doesInterfereWithThePolygon(Point a, Point b, PolygonNode<Point> ignoredPoint) {
+        if (this.isEmpty())
+            return false;
+        MathEquation<?> ignoredEdge1 = null, ignoredEdge2 = null;
+        if (ignoredPoint != null) {
+            if (ignoredPoint.left != null)
+                ignoredEdge1 = MathEquation.fromTwoPoints(ignoredPoint.left.value.key, ignoredPoint.left.value.value, ignoredPoint.value.key, ignoredPoint.value.value);
+            if (ignoredPoint.right != null)
+                ignoredEdge2 = MathEquation.fromTwoPoints(ignoredPoint.value.key, ignoredPoint.value.value, ignoredPoint.right.value.key, ignoredPoint.right.value.value);
+        }
+        PolygonNode<Point> t = root.right;
+        while (t != null) {
+            if (ignoredEdge1 != null)
+                if (MathEquation.fromTwoPoints(t.left.value.key, t.left.value.value, t.value.key, t.value.value).doesOverlap(ignoredEdge1)) {
+                    t = t.right;
+                    if (t == root.right)
+                        break;
+                    continue;
+                }
+            if (ignoredEdge2 != null)
+                if (MathEquation.fromTwoPoints(t.left.value.key, t.left.value.value, t.value.key, t.value.value).doesOverlap(ignoredEdge2)) {
+                    t = t.right;
+                    if (t == root.right)
+                        break;
+                    continue;
+                }
+            if (Polygon.doesInterfere(a, b, t.left.value, t.value))
+                return true;
+            t = t.right;
+            if (t == root.right)
+                break;
+        }
+        return false;
+    }
+
+    public PolygonNode<Point> getTheLastNode() {
+        if (this.isEmpty())
+            return null;
+        if (this.isThePolygonClosed())
+            return root.left;
+        PolygonNode<Point> t = root;
+        while (t.right != null)
+            t = t.right;
+        return t;
+    }
+
+    public boolean isThePolygonClosed() {
+        if (this.isEmpty())
+            return false;
+        return root.left != null;
+    }
+
+    public boolean isEmpty() {
+        return this.root == null;
+    }
+
+    public PolygonNode<Point> getTheNode(Point p) {
+        if (this.isEmpty())
+            return null;
+        PolygonNode<Point> t = this.root;
+        while (t != null) {
+            if (t.value.equals(p))
+                return t;
+
+            t = t.right;
+            if (t == this.root)
+                break;
+        }
+        return null;
+    }
+
+    public Range getDomain() {
+        return domain;
+    }
+
+    public Range getValueSet() {
+        return valueSet;
+    }
+
+    protected boolean checkRanges(Point a, boolean deleted) {
+        if (deleted) {
+            if (this.domain == null || this.valueSet == null)
+                return false;
+            if (this.domain.from == a.key || this.domain.to == a.key || this.valueSet.from == a.value || this.valueSet.to == a.value) {
+                return this.updateRanges();
+            }
+            return false;
+        }
+
+        if (this.domain == null || this.valueSet == null) {
+            if (this.domain == null)
+                this.domain = new Range(a.key, a.key);
+            if (this.valueSet == null)
+                this.valueSet = new Range(a.value, a.value);
+            return true;
+        }
+        boolean changed = false;
+        if (this.domain.from > a.key) {
+            changed = true;
+            this.domain = new Range(a.key, this.domain.to);
+        }
+        if (this.domain.to < a.key) {
+            changed = true;
+            this.domain = new Range(this.domain.from, a.key);
+        }
+        if (this.valueSet.from > a.value) {
+            changed = true;
+            this.valueSet = new Range(a.value, this.valueSet.to);
+        }
+        if (this.valueSet.to < a.value) {
+            changed = true;
+            this.valueSet = new Range(this.valueSet.from, a.value);
+        }
+        return changed;
+    }
+
+    protected boolean updateRanges() {
+        if (root == null) {
+            this.domain = null; this.valueSet = null;
+            return true;
+        }
+
+        int xmin = this.root.value.key, xmax = this.root.value.key, ymin = this.root.value.value, ymax = this.root.value.value;
+        PolygonNode<Point> n = this.root.right;
+        while (n != null) {
+            xmin = Math.min(n.value.key, xmin);
+            xmax = Math.max(n.value.key, xmax);
+            ymin = Math.min(n.value.value, ymin);
+            ymax = Math.max(n.value.value, ymax);
+            n = n.right;
+            if (n == this.root)
+                break;
+        }
+        Range oldDomain = this.domain, oldValueSet = this.valueSet;
+        this.domain = new Range(xmin, xmax);
+        this.valueSet = new Range(ymin, ymax);
+        return !(this.domain.equals(oldDomain) && this.valueSet.equals(oldValueSet));
+    }
+
+    public Consumer<Polygon> subscribe(String key, Consumer<Polygon> subscriber) {
+        return this.subscribers.put(key, subscriber);
+    }
+
+    public Consumer<Polygon> unsubscribe(String key) {
+        return this.subscribers.remove(key);
+    }
+
+    protected void markDirty() {
+        this.subscribers.forEach((k, v) -> {
+            v.accept(this);
+        });
     }
 
     @Override
     public void readFromNbt(NbtCompound tag) {
-        this.name = tag.getString("name");
-        if (!tag.getBoolean("is_root_null"))
-            this.root = new EdgeNode(tag.getCompound("root"));
+        if (tag.getString("name") != null)
+            this.name = tag.getString("name");
+        if (!tag.getBoolean("is_empty")) {
+            for (int i = 0; i < tag.getInt("size"); i++) {
+                NbtCompound subtag = tag.getCompound("node" + i);
+                Point p = new Point(0, 0);
+                p.readFromNbt(subtag);
+                this.addToTheRight(p);
+            }
+            if (tag.getBoolean("is_closed"))
+                this.closeTheShape();
+        }
+    }
+
+    public NbtCompound writeToNbtAndReturn(NbtCompound tag) {
+
+        if (!this.isEmpty()) {
+            PolygonNode<Point> node = this.root;
+            int i = 0;
+            for (; node != null; i++) {
+                tag.put("node" + i, node.value.writeToNbtAndReturn(new NbtCompound()));
+
+                node = node.right;
+                if (node == this.root) {
+                    i++;
+                    break;
+                }
+            }
+            tag.putInt("size", i);
+        }
+        tag.putBoolean("is_empty", this.isEmpty());
+        tag.putBoolean("is_closed", this.isThePolygonClosed());
+
+        tag.putString("name", this.name);
+        return tag;
     }
 
     @Override
     public void writeToNbt(NbtCompound tag) {
         this.writeToNbtAndReturn(tag);
     }
-    public NbtCompound writeToNbtAndReturn(NbtCompound nbt) {
-        nbt.putString("name", this.name);
-        if (root != null)
-            nbt.put("root", this.root.saveToNbt(new NbtCompound()));
-        nbt.putBoolean("is_root_null", root == null);
-        return nbt;
+
+    /**
+     *
+     * @param a The 1st point of the 1st line
+     * @param b The 2nd point of the 1st line
+     * @param ax The 1st point of the 2nd line
+     * @param bx The 2nd point of the 2nd line
+     */
+    public static boolean doesIntersect(Point a, Point b, Point ax, Point bx) {
+        MathEquation<?> eq = MathEquation.fromTwoPoints(a.key, a.value, b.key, b.value);
+        MathEquation<?> eqx = MathEquation.fromTwoPoints(ax.key, ax.value, bx.key, bx.value);
+        return eq.getTheIntersectionX(eqx) != null;
     }
 
-    public static class EdgeNode {
-        public MathEquation<?> value;
-        public EdgeNode left;
-        public EdgeNode right;
+    public static boolean doesOverlap(Point a, Point b, Point ax, Point bx) {
+        MathEquation<?> eq = MathEquation.fromTwoPoints(a.key, a.value, b.key, b.value);
+        MathEquation<?> eqx = MathEquation.fromTwoPoints(ax.key, ax.value, bx.key, bx.value);
+        return eq.doesOverlap(eqx);
+    }
 
-        public EdgeNode(MathEquation<?> value) {
-            this.value = value;
-        }
-        public EdgeNode(NbtCompound nbt) {
-            this(nbt, null);
-        }
+    public static boolean doesInterfere(Point a, Point b, Point ax, Point bx) {
+        return doesIntersect(a, b, ax, bx) || doesOverlap(a, b, ax, bx);
+    }
 
-        private EdgeNode(NbtCompound nbt, EdgeNode root) {
-            if (root == null)
-                root = this;
-            if (nbt.getCompound("value").getString("type").equals("linearEquation"))
-                this.value = LinearEquation.readFromNbt(nbt.getCompound("value"));
-            else if (nbt.getCompound("value").getString("type").equals("linearFunction"))
-                this.value = LinearFunction.readFromNbt(nbt.getCompound("value"));
-
-            if (nbt.getBoolean("is_next_present")) {
-                NbtCompound next = nbt.getCompound("next");
-                this.right = new EdgeNode(next, root);
-                this.right.left = this;
-            } else {
-                if (nbt.getBoolean("isClosed")) {
-                    this.right = root;
-                    root.left = this;
-                }
-            }
-        }
-
-        public NbtCompound saveToNbt(NbtCompound nbt) {
-            this.saveToNbtRecursively(nbt, this);
-            return nbt;
-        }
-        private NbtCompound saveToNbtRecursively(NbtCompound nbt, EdgeNode root) {
-            if (this.value instanceof LinearEquation eq)
-                nbt.put("value", eq.writeToNbt(new NbtCompound()));
-            else if (this.value instanceof LinearFunction fun)
-                nbt.put("value", fun.writeToNbt(new NbtCompound()));
-
-            if (this.right != null && this.right != root)
-                nbt.put("next", this.right.saveToNbtRecursively(new NbtCompound(), root));
-            nbt.putBoolean("is_next_present", this.right != null && this.right != root);
-            if (this.right == root)
-                nbt.putBoolean("isClosed", true);
-            else if (this.right == null)
-                nbt.putBoolean("isClosed", false);
-            return nbt;
-        }
+    public static MathEquation<?> makeAnEdge(Point a, Point b) {
+        return MathEquation.fromTwoPoints(a.key, a.value, b.key, b.value);
     }
 }

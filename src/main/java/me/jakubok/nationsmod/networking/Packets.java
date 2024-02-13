@@ -55,4 +55,8 @@ public class Packets {
     public static final Identifier GET_A_POLYGON = new Identifier(NationsMod.MOD_ID, "get_a_polygon");
     public static final Identifier OPEN_POLYGON_CREATION_SCREEN = new Identifier(NationsMod.MOD_ID, "open_polygon_creation_screen");
     public static final Identifier CREATE_A_POLYGON = new Identifier(NationsMod.MOD_ID, "create_a_polygon");
+
+    public static final Identifier BORDER_REGISTRATOR_CLICKED = new Identifier(NationsMod.MOD_ID, "border_registrator_clicked");
+    public static final Identifier CACHE_A_POLYGON = new Identifier(NationsMod.MOD_ID, "cache_a_polygon");
+    public static final Identifier UNCACHE_A_POLYGON = new Identifier(NationsMod.MOD_ID, "uncache_a_polygon");
 }

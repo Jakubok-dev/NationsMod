@@ -16,5 +16,6 @@ public class GameRendererMixin {
         "ldc=hand" }))
     private void onRenderCenterLast(float partialTicks, final long nanoTime, MatrixStack stack, CallbackInfo info) {
         NationsClient.drawer.render(partialTicks, stack);
+        NationsClient.polygonDrawer.render(partialTicks, stack);
     }
 }
