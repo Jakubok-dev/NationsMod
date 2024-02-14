@@ -1,5 +1,6 @@
 package me.jakubok.nationsmod.gui;
 
+import me.jakubok.nationsmod.collection.PolygonAlterationMode;
 import me.jakubok.nationsmod.geometry.Polygon;
 import me.jakubok.nationsmod.gui.miscellaneous.SimpleWindow;
 import me.jakubok.nationsmod.networking.ClientNetworking;
@@ -24,7 +25,8 @@ public class PolygonsStorageScreen extends SimpleWindow {
 
     public final Map<String, Integer> storage;
 
-    protected ButtonWidget left, right;
+    protected ButtonWidget left, right, addition, deletion, insertion, opening;
+    protected PolygonAlterationMode mode;
     protected TextFieldWidget searchBox;
 
     protected int page = 0;
@@ -35,8 +37,9 @@ public class PolygonsStorageScreen extends SimpleWindow {
     List<String> filteredSlotsNames = new ArrayList<>();
     List<ButtonWidget> slotsButtons = new ArrayList<>();
 
-    public PolygonsStorageScreen(Map<String, Integer> storage, Screen previousScreen) {
+    public PolygonsStorageScreen(Map<String, Integer> storage, PolygonAlterationMode mode, Screen previousScreen) {
         super(Text.of("Polygons storage screen"), previousScreen);
+        this.mode = mode;
         this.storage = storage;
         this.slotsNames.addAll(this.storage.keySet());
         Collections.sort(this.slotsNames);
@@ -135,6 +138,95 @@ public class PolygonsStorageScreen extends SimpleWindow {
                 20
         ).build();
         this.addDrawableChild(this.right);
+
+        this.addition = ButtonWidget.builder(
+                Text.of("ADD"),
+                b -> {
+                    this.mode = PolygonAlterationMode.ADDITION;
+                    this.addition.active = false;
+                    this.deletion.active = true;
+                    this.insertion.active = true;
+                    this.opening.active = true;
+
+                    PacketByteBuf buffer = PacketByteBufs.create();
+                    buffer.writeInt(this.mode.ordinal());
+                    ClientPlayNetworking.send(Packets.CHANGE_THE_POLYGON_ALTERATION_MODE, buffer);
+                }
+        ).dimensions(
+                windowLeft,
+                windowTop - 25,
+                25,
+                20
+        ).build();
+        this.addition.active = this.mode != PolygonAlterationMode.ADDITION;
+        this.addDrawableChild(this.addition);
+
+        this.deletion = ButtonWidget.builder(
+                Text.of("DEL"),
+                b -> {
+                    this.mode = PolygonAlterationMode.DELETION;
+                    this.addition.active = true;
+                    this.deletion.active = false;
+                    this.insertion.active = true;
+                    this.opening.active = true;
+
+                    PacketByteBuf buffer = PacketByteBufs.create();
+                    buffer.writeInt(this.mode.ordinal());
+                    ClientPlayNetworking.send(Packets.CHANGE_THE_POLYGON_ALTERATION_MODE, buffer);
+                }
+        ).dimensions(
+                windowLeft + (windowCenterHorizontal - windowLeft) / 2 + 12,
+                windowTop - 25,
+                25,
+                20
+        ).build();
+        this.deletion.active = this.mode != PolygonAlterationMode.DELETION;
+        this.addDrawableChild(this.deletion);
+
+        this.insertion = ButtonWidget.builder(
+                Text.of("INS"),
+                b -> {
+                    this.mode = PolygonAlterationMode.INSERTION;
+                    this.addition.active = true;
+                    this.deletion.active = true;
+                    this.insertion.active = false;
+                    this.opening.active = true;
+
+                    PacketByteBuf buffer = PacketByteBufs.create();
+                    buffer.writeInt(this.mode.ordinal());
+                    ClientPlayNetworking.send(Packets.CHANGE_THE_POLYGON_ALTERATION_MODE, buffer);
+                }
+        ).dimensions(
+                windowCenterHorizontal + (windowRight - windowCenterHorizontal) / 2 - 37,
+                windowTop - 25,
+                25,
+                20
+        ).build();
+        this.insertion.active = this.mode != PolygonAlterationMode.INSERTION;
+        this.addDrawableChild(this.insertion);
+
+        this.opening = ButtonWidget.builder(
+                Text.of("OPN"),
+                b -> {
+                    this.mode = PolygonAlterationMode.OPENING;
+                    this.addition.active = true;
+                    this.deletion.active = true;
+                    this.insertion.active = true;
+                    this.opening.active = false;
+
+                    PacketByteBuf buffer = PacketByteBufs.create();
+                    buffer.writeInt(this.mode.ordinal());
+                    ClientPlayNetworking.send(Packets.CHANGE_THE_POLYGON_ALTERATION_MODE, buffer);
+                }
+        ).dimensions(
+                windowRight - 25,
+                windowTop - 25,
+                25,
+                20
+        ).build();
+        this.opening.active = this.mode != PolygonAlterationMode.OPENING;
+        this.addDrawableChild(this.opening);
+
         this.drawSlots();
     }
 }

@@ -1,5 +1,6 @@
 package me.jakubok.nationsmod.networking.client;
 
+import me.jakubok.nationsmod.collection.PolygonAlterationMode;
 import me.jakubok.nationsmod.collection.PolygonPlayerStorage;
 import me.jakubok.nationsmod.gui.PolygonsStorageScreen;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -19,8 +20,9 @@ public class OpenPolygonsStorageScreen implements ClientPlayNetworking.PlayChann
         Map<String, Integer> polygonNames = new HashMap<>();
         for (int i = 0; i < nbt.getInt("size"); i++)
             polygonNames.put(nbt.getString("polygon" + i), i);
+        PolygonAlterationMode mode = PolygonAlterationMode.values()[nbt.getInt("mode")];
         client.execute(() -> {
-            client.setScreen(new PolygonsStorageScreen(polygonNames, client.currentScreen));
+            client.setScreen(new PolygonsStorageScreen(polygonNames, mode, client.currentScreen));
         });
     }
 }

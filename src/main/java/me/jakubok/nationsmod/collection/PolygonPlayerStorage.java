@@ -1,5 +1,6 @@
 package me.jakubok.nationsmod.collection;
 
+import me.jakubok.nationsmod.geometry.Point;
 import me.jakubok.nationsmod.geometry.Polygon;
 import net.minecraft.nbt.NbtCompound;
 
@@ -10,6 +11,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class PolygonPlayerStorage implements Serialisable {
     public List<Polygon> slots = new ArrayList<>();
     public int selectedSlot = -1;
+    public PolygonAlterationMode mode = PolygonAlterationMode.NULL;
+    public List<Point> tempPoints = new ArrayList<>();
 
     public PolygonPlayerStorage() {}
     public PolygonPlayerStorage(NbtCompound nbt) {
@@ -29,6 +32,7 @@ public class PolygonPlayerStorage implements Serialisable {
             slots.add(new Polygon(tag.getCompound("polygon" + i)));
         if (tag.getBoolean("selectedSlotWritten"))
             this.selectedSlot = tag.getInt("selectedSlot");
+        this.mode = PolygonAlterationMode.values()[tag.getInt("mode")];
     }
 
     @Override
@@ -45,6 +49,7 @@ public class PolygonPlayerStorage implements Serialisable {
             nbt.put("polygon" + size.incrementAndGet(), el.writeToNbtAndReturn(new NbtCompound()));
         });
         nbt.putInt("size", size.get());
+        nbt.putInt("mode", this.mode.ordinal());
         return nbt;
     }
 }

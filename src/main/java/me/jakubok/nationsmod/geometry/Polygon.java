@@ -97,6 +97,34 @@ public class Polygon implements Serialisable {
         return true;
     }
 
+    public boolean openTheShape(Point p1, Point p2) {
+        if (!this.isThePolygonClosed())
+            return false;
+        PolygonNode<Point> n1 = this.getTheNode(p1);
+        PolygonNode<Point> n2 = this.getTheNode(p2);
+
+        if (n1 == null || n2 == null)
+            return false;
+
+        if (n1.left == n2) {
+            n1.left = null;
+            n2.right = null;
+            this.root = n1;
+
+            this.markDirty();
+            return true;
+        }
+        if (n1.right == n2) {
+            n1.right = null;
+            n2.left = null;
+            this.root = n2;
+
+            this.markDirty();
+            return true;
+        }
+        return false;
+    }
+
     public boolean delete(Point p) {
         if (this.isEmpty())
             return false;

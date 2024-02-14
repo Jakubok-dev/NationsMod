@@ -59,4 +59,5 @@ public class Packets {
     public static final Identifier BORDER_REGISTRATOR_CLICKED = new Identifier(NationsMod.MOD_ID, "border_registrator_clicked");
     public static final Identifier CACHE_A_POLYGON = new Identifier(NationsMod.MOD_ID, "cache_a_polygon");
     public static final Identifier UNCACHE_A_POLYGON = new Identifier(NationsMod.MOD_ID, "uncache_a_polygon");
+    public static final Identifier CHANGE_THE_POLYGON_ALTERATION_MODE = new Identifier(NationsMod.MOD_ID, "change_the_polygon_alteration_mode");
 }
