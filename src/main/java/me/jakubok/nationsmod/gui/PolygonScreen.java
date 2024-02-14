@@ -1,14 +1,20 @@
 package me.jakubok.nationsmod.gui;
 
 import me.jakubok.nationsmod.geometry.Polygon;
+import me.jakubok.nationsmod.gui.miscellaneous.Property;
 import me.jakubok.nationsmod.gui.miscellaneous.SimpleWindow;
 import me.jakubok.nationsmod.networking.Packets;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class PolygonScreen extends SimpleWindow {
 
@@ -17,10 +23,51 @@ public class PolygonScreen extends SimpleWindow {
     protected boolean selected;
     protected final int index;
 
+    public List<Property> properties = new ArrayList<>();
+
     public PolygonScreen(Screen previousScreen, Polygon polygon, int index, boolean selected) {
         super(Text.of("Polygon screen - " + polygon.name), previousScreen);
         this.index = index;
         this.selected = selected;
+        this.polygon = polygon;
+        this.properties.add(
+            new Property(
+                Text.of("Nodes"),
+                Text.of(String.valueOf(this.polygon.size())),
+                this.getClient(),
+                SimpleWindow.windowTop + 35
+            )
+        );
+
+        if (this.polygon.getDomain() != null) {
+            this.properties.add(new Property(
+                    Text.of("Min X"),
+                    Text.of(String.valueOf(this.polygon.getDomain().from)),
+                    this.getClient(),
+                    SimpleWindow.windowTop + 35 + 21 * this.properties.size()
+            ));
+            this.properties.add(new Property(
+                    Text.of("Max X"),
+                    Text.of(String.valueOf(this.polygon.getDomain().to)),
+                    this.getClient(),
+                    SimpleWindow.windowTop + 35 + 21 * this.properties.size()
+            ));
+        }
+
+        if (this.polygon.getValueSet() != null) {
+            this.properties.add(new Property(
+                    Text.of("Min Y"),
+                    Text.of(String.valueOf(this.polygon.getValueSet().from)),
+                    this.getClient(),
+                    SimpleWindow.windowTop + 35 + 21 * this.properties.size()
+            ));
+            this.properties.add(new Property(
+                    Text.of("Max Y"),
+                    Text.of(String.valueOf(this.polygon.getValueSet().to)),
+                    this.getClient(),
+                    SimpleWindow.windowTop + 35 + 21 * this.properties.size()
+            ));
+        }
     }
 
     public void makeSelected() {
@@ -31,6 +78,14 @@ public class PolygonScreen extends SimpleWindow {
     public void makeUnselected() {
         this.selected = false;
         this.select.setMessage(Text.translatable("Select"));
+    }
+
+    @Override
+    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        super.render(matrices, mouseX, mouseY, delta);
+        for (int i = 0; i < 5 && i < this.properties.size(); i++) {
+            this.properties.get(i).render(matrices, this, this.getTextRenderer(), mouseX, mouseY, delta);
+        }
     }
 
     @Override

@@ -205,7 +205,7 @@ public class Polygon implements Serialisable {
             leftSide = node2;
         } else return false;
 
-        if (this.doesInterfereWithThePolygon(leftSide.value, insertedPoint) || this.doesInterfereWithThePolygon(insertedPoint, rightSide.value))
+        if (this.doesInterfereWithThePolygon(leftSide.value, insertedPoint, leftSide.value, rightSide.value) || this.doesInterfereWithThePolygon(insertedPoint, rightSide.value, leftSide.value, rightSide.value))
             return false;
 
         PolygonNode<Point> insertedNode = new PolygonNode<>(insertedPoint);
@@ -238,6 +238,25 @@ public class Polygon implements Serialisable {
             return false;
         PolygonNode<Point> t = root.right;
         while (t != null) {
+            if (Polygon.doesInterfere(a, b, t.left.value, t.value))
+                return true;
+            t = t.right;
+            if (t == root.right)
+                break;
+        }
+        return false;
+    }
+    public boolean doesInterfereWithThePolygon(Point a, Point b, Point ignoredA, Point ignoredB) {
+        if (this.isEmpty())
+            return false;
+        PolygonNode<Point> t = root.right;
+        while (t != null) {
+            if (t.value.equals(ignoredA) && t.left.value.equals(ignoredB) || t.value.equals(ignoredB) && t.left.value.equals(ignoredA)) {
+                t = t.right;
+                if (t == root.right)
+                    break;
+                continue;
+            }
             if (Polygon.doesInterfere(a, b, t.left.value, t.value))
                 return true;
             t = t.right;
@@ -315,6 +334,20 @@ public class Polygon implements Serialisable {
                 break;
         }
         return null;
+    }
+
+    public int size() {
+        if (this.isEmpty())
+            return 0;
+        int result = 0;
+        PolygonNode<Point> t = this.root;
+        while (t != null) {
+            result++;
+            t = t.right;
+            if (t == this.root)
+                break;
+        }
+        return result;
     }
 
     public Range getDomain() {

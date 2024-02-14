@@ -69,6 +69,7 @@ public class BorderRegistratorClicked implements ServerPlayNetworking.PlayChanne
                 this.cacheThePoint(pos, player, storage);
 
             } else if (mode == PolygonAlterationMode.DELETION) {
+                storage.tempPoints = new ArrayList<>();
                 Point p = new Point(pos.getX(), pos.getZ());
                 if (polygon.delete(p)) {
                     player.sendMessage(Text.of("Successfully deleted a point at (X=" + p.key + "; Y=" + p.value + ") from the polygon."), true);
@@ -77,7 +78,7 @@ public class BorderRegistratorClicked implements ServerPlayNetworking.PlayChanne
                 player.sendMessage(Text.of("Deletion failed"), true);
             } else if (mode == PolygonAlterationMode.INSERTION) {
                 if (storage.tempPoints.size() >= 2) {
-                    if (polygon.insert(new Point(pos.getX(), pos.getZ()), storage.tempPoints.get(1), storage.tempPoints.get(0))) {
+                    if (polygon.insert(storage.tempPoints.get(1), new Point(pos.getX(), pos.getZ()), storage.tempPoints.get(0))) {
                         player.sendMessage(Text.of("Inserted successfully"), true);
                     } else {
                         player.sendMessage(Text.of("Insertion failed"), true);

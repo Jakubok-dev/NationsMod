@@ -16,12 +16,7 @@ public class PetitionsAndDirectivesSubscreen {
     public final ButtonWidget up, down;
 
     public PetitionsAndDirectivesSubscreen(TownScreen inst) {
-        this.subscreen = new Subscreen<>(
-            Text.of("Petitions & directives"), 
-            new ItemStack(ItemRegistry.PARCHMENT), 
-            (MatrixStack matrices, int mouseX, int mouseY, float delta, TabWindow instance) -> this.render(matrices, mouseX, mouseY, delta, instance), 
-            instance -> this.init(instance) 
-        );
+        this.subscreen = new Subscreen<>(Text.of("Petitions & directives"), new ItemStack(ItemRegistry.PARCHMENT), this::render, this::init);
 
         this.up = ButtonWidget.builder(
             Text.of("▲"), 

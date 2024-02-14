@@ -32,12 +32,7 @@ public class GeneralInfoSubscreen {
     public Province province; public Nation nation;
 
     public GeneralInfoSubscreen(TownScreen inst) {
-        this.subscreen = new Subscreen<TabWindow>(
-            Text.of("General info"),
-            new ItemStack(ItemRegistry.TOWN_INDEPENDENCE_DECLARATION), 
-            (MatrixStack matrices, int mouseX, int mouseY, float delta, TabWindow instance) -> render(matrices, mouseX, mouseY, delta, instance),
-            instance -> init(instance)
-        );
+        this.subscreen = new Subscreen<TabWindow>(Text.of("General info"), new ItemStack(ItemRegistry.TOWN_INDEPENDENCE_DECLARATION), this::render, this::init);
 
         if (inst.town.getProvincesID() == null) {
             province = null; nation = null;
@@ -45,28 +40,28 @@ public class GeneralInfoSubscreen {
             this.getTheProvince(inst);
         }
         
-        this.properties = Arrays.asList(new Property[] {
+        this.properties = Arrays.asList(
             new Property(
-                Text.of("Name:"), 
-                Text.of(inst.town.getName()), 
+                Text.of("Name:"),
+                Text.of(inst.town.getName()),
                 inst.getClient(),
-                SimpleWindow.windowTop + 35 + 21 * 0
+                SimpleWindow.windowTop + 35
             ),
             new Property(
-                Text.of("Government:"), 
-                inst.town.formOfGovernment.getDisplayName(), 
+                Text.of("Government:"),
+                inst.town.formOfGovernment.getDisplayName(),
                 inst.getClient(),
-                SimpleWindow.windowTop + 35 + 21 * 1
+                SimpleWindow.windowTop + 35 + 21
             ),
             new Property(
-                Text.of("Citizens:"), 
-                Text.of(inst.town.getAIMembers().size() + inst.town.getPlayerMembers().size() + ""), 
+                Text.of("Citizens:"),
+                Text.of(inst.town.getAIMembers().size() + inst.town.getPlayerMembers().size() + ""),
                 inst.getClient(),
                 SimpleWindow.windowTop + 35 + 21 * 2
             ),
             new Property(
-                Text.of("Districts:"), 
-                Text.of(inst.town.getTheListOfDistrictsIDs().size() + ""), 
+                Text.of("Districts:"),
+                Text.of(inst.town.getTheListOfDistrictsIDs().size() + ""),
                 inst.getClient(),
                 SimpleWindow.windowTop + 35 + 21 * 3
             ),
@@ -80,21 +75,21 @@ public class GeneralInfoSubscreen {
                 Text.of("Nation:"),
                 Text.of("-"),
                 inst.getClient(),
-                SimpleWindow.windowTop + 35 + 21 * 0
+                SimpleWindow.windowTop + 35
             ),
             new Property(
-                Text.of("Petition support:"), 
+                Text.of("Petition support:"),
                 Text.of(inst.town.getThePetitionSupport() + "%"),
                 inst.getClient(),
-                SimpleWindow.windowTop + 35 + 21 * 1
+                SimpleWindow.windowTop + 35 + 21
             ),
             new Property(
-                Text.of("Citizenship:"), 
+                Text.of("Citizenship:"),
                 inst.town.getTheCitizenshipApprovement().displayText,
                 inst.getClient(),
                 SimpleWindow.windowTop + 35 + 21 * 2
             )
-        });
+        );
 
         settingsUp = ButtonWidget.builder(
             Text.of("▲"), 
