@@ -4,8 +4,10 @@ import net.minecraft.nbt.NbtCompound;
 
 public class Range {
     public final double from, to;
+    public final boolean isLeftClosed, isRightClosed;
     public final boolean isIndefinite;
-    public Range(double from, double to) {
+
+    public Range(double from, double to, boolean isLeftClosed, boolean isRightClosed) {
         if (from > to) {
             double temp = from;
             from = to;
@@ -14,29 +16,53 @@ public class Range {
         this.from = from;
         this.to = to;
         this.isIndefinite = false;
+        this.isLeftClosed = isLeftClosed;
+        this.isRightClosed = isRightClosed;
+    }
+    public Range(double from, double to) {
+        this(from, to, false, false);
     }
     public Range() {
         this.isIndefinite = true;
         this.from = 0d;
         this.to = 0d;
+        this.isLeftClosed = false;
+        this.isRightClosed = false;
     }
 
     public boolean withinRange(Double x) {
         if (x == null)
             return false;
-        return x > from && x < to;
+        if (this.isIndefinite)
+            return true;
+        boolean a = this.isLeftClosed ? x >= from : x > from;
+        boolean b = this.isRightClosed ? x <= to : x < to;
+        return a && b;
     }
 
     public Range commonPart(Range r) {
-        if (Math.max(this.from, r.from) >= Math.min(this.to, r.to))
+        if (r == null)
             return null;
-        return new Range(Math.max(this.from, r.from), Math.min(this.to, r.to));
+        if (this.isIndefinite)
+            return r;
+        if (r.isIndefinite)
+            return this;
+
+        Range leftRange = this.to < r.to ? this : r;
+        Range rightRange = this.to > r.to ? this : r;
+        double commonFrom = rightRange.from;
+        double commonTo = leftRange.to;
+        if (commonFrom > commonTo || commonFrom == commonTo && (!leftRange.isRightClosed || !rightRange.isLeftClosed))
+            return null;
+        return new Range(commonFrom, commonTo, rightRange.isLeftClosed, leftRange.isRightClosed);
     }
 
     public NbtCompound writeToNbt(NbtCompound nbt) {
         nbt.putDouble("from", this.from);
         nbt.putDouble("to", this.to);
         nbt.putBoolean("isIndefinite", this.isIndefinite);
+        nbt.putBoolean("isLeftClosed", this.isLeftClosed);
+        nbt.putBoolean("isRightClosed", this.isRightClosed);
         return nbt;
     }
 
@@ -54,6 +80,8 @@ public class Range {
         double from = nbt.getDouble("from");
         double to = nbt.getDouble("to");
         boolean isIndefinite = nbt.getBoolean("isIndefinite");
-        return isIndefinite ? new Range() : new Range(from, to);
+        boolean isLeftClosed = nbt.getBoolean("isLeftClosed");
+        boolean isRightClosed = nbt.getBoolean("isRightClosed");
+        return isIndefinite ? new Range() : new Range(from, to, isLeftClosed, isRightClosed);
     }
 }

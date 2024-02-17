@@ -94,8 +94,31 @@ public class Polygon implements Serialisable {
         this.root.left = lastNode;
         lastNode.right = this.root;
         this.markDirty();
+
         return true;
     }
+
+//    public void log() {
+//        if (!this.isThePolygonClosed())
+//            return;
+//        Territory territory = Territory.of(null, this, null);
+//        if (territory != null) {
+//            Set<BorderEdge> es = territory.asBorderEdges();
+//            for (BorderEdge e : es) {
+//                System.out.println("X1 " + e.fun.domain.from);
+//                System.out.println(e.fun.a >= 0 ? "Z1 " + e.fun.valueSet.from : "Z1 " + e.fun.valueSet.to);
+//                System.out.println("X2 " + e.fun.domain.to);
+//                System.out.println(e.fun.a < 0 ? "Z2 " + e.fun.valueSet.from : "Z2 " + e.fun.valueSet.to);
+//                System.out.println("Starts the shape? " + e.startsTheShape);
+//                String leftSide = e.fun.domain.isLeftClosed ? "[" : "(";
+//                String rightSide = e.fun.domain.isRightClosed ? "]" : ")";
+//                System.out.println("Domain " + leftSide + e.fun.domain.from + ";" + e.fun.domain.to + rightSide);
+//                leftSide = e.fun.valueSet.isLeftClosed ? "[" : "(";
+//                rightSide = e.fun.valueSet.isRightClosed ? "]" : ")";
+//                System.out.println("Value Set " + leftSide + e.fun.valueSet.from + ";" + e.fun.valueSet.to + rightSide);
+//            }
+//        }
+//    }
 
     public boolean openTheShape(Point p1, Point p2) {
         if (!this.isThePolygonClosed())
