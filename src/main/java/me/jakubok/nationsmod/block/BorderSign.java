@@ -1,12 +1,5 @@
 package me.jakubok.nationsmod.block;
 
-import me.jakubok.nationsmod.collection.Pair;
-import me.jakubok.nationsmod.collection.PlayerAccount;
-import me.jakubok.nationsmod.collection.PlayerInfo;
-import me.jakubok.nationsmod.geometry.MathEquation;
-import me.jakubok.nationsmod.geometry.Polygon;
-import me.jakubok.nationsmod.registries.BlockRegistry;
-import me.jakubok.nationsmod.registries.PolygonRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
@@ -16,14 +9,9 @@ import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.server.network.ServerPlayNetworkHandler;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
@@ -31,9 +19,6 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
-
-import java.util.Optional;
-import java.util.UUID;
 
 public class BorderSign extends Block implements BlockEntityProvider, Waterloggable {
 

@@ -1,20 +1,29 @@
 package me.jakubok.nationsmod.collection;
 
 import me.jakubok.nationsmod.geometry.*;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.util.Identifier;
+import net.minecraft.world.World;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-public class Territory {
-    public final UUID id;
+public class TerritoryShape implements Serialisable {
+    private UUID id;
     public UUID claimantsID;
     private Polygon polygon;
+    private RegistryKey<World> worldRegistryKey;
 
-    private Territory(UUID id, Polygon polygon, UUID claimantsID) {
+    private TerritoryShape(UUID id, Polygon polygon, UUID claimantsID, RegistryKey<World> worldRegistryKey) {
         this.id = id;
         this.polygon = polygon;
         this.claimantsID = claimantsID;
+        this.worldRegistryKey = worldRegistryKey;
+    }
+    public TerritoryShape(NbtCompound nbt) {
+        this.readFromNbt(nbt);
     }
 
     public Set<BorderEdge> asBorderEdges() {
@@ -75,7 +84,7 @@ public class Territory {
                             node.value.key + .5d, node.value.value + .5d,
                             node.right.value.key + .5d, node.right.value.value + .5d
                     ),
-                    claimantsID,
+                    this.id,
                     startsTheShape
             ));
             node = node.right;
@@ -104,7 +113,7 @@ public class Territory {
                             node.value.key + .5d, node.value.value + .5d,
                             node.left.value.key + .5d, node.left.value.value + .5d
                     ),
-                    claimantsID,
+                    this.id,
                     startsTheShape
             ));
             node = node.left;
@@ -112,7 +121,48 @@ public class Territory {
         return edges;
     }
 
-    public static Territory of(UUID id, Polygon polygon, UUID claimantsID) {
+    public UUID getId() {
+        return id;
+    }
+
+    public boolean setId(UUID id) {
+        if (this.id == null) {
+            this.id = id;
+            return true;
+        }
+        return false;
+    }
+
+    public RegistryKey<World> getWorldRegistryKey() {
+        return worldRegistryKey;
+    }
+
+    @Override
+    public void readFromNbt(NbtCompound tag) {
+        if (!tag.getBoolean("is_id_null"))
+            this.id = tag.getUuid("id");
+        this.claimantsID = tag.getUuid("claimantsID");
+        this.polygon = new Polygon(tag.getCompound("polygon"));
+        this.worldRegistryKey = RegistryKey.of(RegistryKey.ofRegistry(new Identifier(tag.getString("world_registry_key_registry"))), new Identifier("world_registry_key_value"));
+    }
+
+    public NbtCompound writeToNbtAndReturn(NbtCompound tag) {
+        if (this.id != null)
+            tag.putUuid("id", this.id);
+        tag.putBoolean("is_id_null", this.id == null);
+        tag.putUuid("claimantsID", this.claimantsID);
+        tag.put("polygon", this.polygon.writeToNbtAndReturn(new NbtCompound()));
+        tag.putString("world_registry_key_registry", this.worldRegistryKey.getRegistry().toString());
+        tag.putString("world_registry_key_value", this.worldRegistryKey.getValue().toString());
+        return tag;
+    }
+
+    @Override
+    public void writeToNbt(NbtCompound tag) {
+        this.writeToNbtAndReturn(tag);
+    }
+
+    public static TerritoryShape of(Polygon polygon, UUID claimantsID, RegistryKey<World> worldRegistryKey) {
         if (!polygon.isThePolygonClosed())
             return null;
         Polygon clone = new Polygon(polygon.name);
@@ -125,6 +175,6 @@ public class Territory {
                 break;
             }
         }
-        return new Territory(id, clone, claimantsID);
+        return new TerritoryShape(null, clone, claimantsID, worldRegistryKey);
     }
 }
