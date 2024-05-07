@@ -34,10 +34,11 @@ public class GeneralInfoSubscreen {
     public GeneralInfoSubscreen(TownScreen inst) {
         this.subscreen = new Subscreen<TabWindow>(Text.of("General info"), new ItemStack(ItemRegistry.TOWN_INDEPENDENCE_DECLARATION), this::render, this::init);
 
-        if (inst.town.getProvincesID() == null) {
+        if (inst.town.getNationsID() == null) {
             province = null; nation = null;
         } else {
-            this.getTheProvince(inst);
+            //this.getTheProvince(inst);
+            province = null; nation = null;
         }
         
         this.properties = Arrays.asList(
@@ -118,21 +119,21 @@ public class GeneralInfoSubscreen {
         ).build();
     }
 
-    protected void getTheProvince(TownScreen inst) {
-        PacketByteBuf buffer = PacketByteBufs.create();
-        NbtCompound nbt = new NbtCompound();
-        nbt.putUuid("id", inst.town.getProvincesID());
-        buffer.writeNbt(nbt);
-        ClientNetworking.makeARequest(Packets.GET_A_PROVINCE, buffer,
-        (MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) -> {
-            NbtCompound nbtresponse = buf.readNbt();
-            client.execute(() -> {
-                this.province = new Province(nbtresponse, null);
-                this.properties.get(4).value = Text.of(this.province.getName());
-                this.getTheNation(inst);
-            });
-        });
-    }
+//    protected void getTheProvince(TownScreen inst) {
+//        PacketByteBuf buffer = PacketByteBufs.create();
+//        NbtCompound nbt = new NbtCompound();
+//        nbt.putUuid("id", inst.town.getProvincesID());
+//        buffer.writeNbt(nbt);
+//        ClientNetworking.makeARequest(Packets.GET_A_PROVINCE, buffer,
+//        (MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) -> {
+//            NbtCompound nbtresponse = buf.readNbt();
+//            client.execute(() -> {
+//                this.province = new Province(nbtresponse, null);
+//                this.properties.get(4).value = Text.of(this.province.getName());
+//                this.getTheNation(inst);
+//            });
+//        });
+//    }
 
     protected void getTheNation(TownScreen inst) {
         PacketByteBuf buffer = PacketByteBufs.create();

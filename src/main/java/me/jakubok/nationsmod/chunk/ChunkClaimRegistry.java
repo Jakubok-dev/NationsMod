@@ -56,8 +56,6 @@ public class ChunkClaimRegistry implements Serialisable {
 
         claims.put(position, claimer.getId());
         
-        this.addToPlayersMaps(world, position, claimer);
-
         return true;
     }
     public boolean addClaim(BlockPos pos, TerritoryClaimer<?> claimer, ServerWorld world) {
@@ -72,8 +70,6 @@ public class ChunkClaimRegistry implements Serialisable {
 
         claims.remove(position);
 
-        this.removeFromPlayersMaps(world, position);
-        
         return true;
     }
     public boolean removeClaim(BlockPos pos, ServerWorld world) {
@@ -86,7 +82,6 @@ public class ChunkClaimRegistry implements Serialisable {
             if (claims.get(pos).equals(claimer.getId())) {
                 result = true;
                 claims.remove(pos);
-                this.removeFromPlayersMaps(world, pos);
             }
         }
         return result;
@@ -101,10 +96,8 @@ public class ChunkClaimRegistry implements Serialisable {
         if (claims.get(position).toString() == claimer.getId().toString())
             return false;
 
-        this.removeFromPlayersMaps(world, position);
         claims.put(position, claimer.getId());
-        this.addToPlayersMaps(world, position, claimer);
-        
+
         return true;
     }
     public boolean changeClaim(BlockPos pos, TerritoryClaimer<?> claimer, ServerWorld world) {
@@ -124,22 +117,6 @@ public class ChunkClaimRegistry implements Serialisable {
     }
     public boolean isBelonging(BlockPos pos) {
         return isBelonging(pos.getX(), pos.getZ());
-    }
-
-    public void addToPlayersMaps(ServerWorld world, BlockPos pos, TerritoryClaimer<?> claimer) {
-        PacketByteBuf buffer = PacketByteBufs.create();
-        buffer.writeBlockPos(pos);
-        buffer.writeInt(claimer.getTheMapColour(world.getServer()).getBitmask());
-        for (ServerPlayerEntity playerEntity : PlayerLookup.tracking(world, pos)) {
-            ServerPlayNetworking.send(playerEntity, Packets.RENDER_CLAIMANTS_COLOUR, buffer);
-        }
-    }
-    public void removeFromPlayersMaps(ServerWorld world, BlockPos pos) {
-        PacketByteBuf buffer = PacketByteBufs.create();
-        buffer.writeBlockPos(pos);
-        for (ServerPlayerEntity playerEntity : PlayerLookup.tracking(world, pos)) {
-            ServerPlayNetworking.send(playerEntity, Packets.CLEAR_CLAIMANT_ON_THE_MAP, buffer);
-        }
     }
 
     @Override

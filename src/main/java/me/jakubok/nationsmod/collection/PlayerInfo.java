@@ -2,13 +2,16 @@ package me.jakubok.nationsmod.collection;
 
 import java.util.UUID;
 
+import me.jakubok.nationsmod.administration.abstractEntities.TerritoryClaimer;
 import me.jakubok.nationsmod.administration.district.District;
 import me.jakubok.nationsmod.administration.nation.Nation;
 import me.jakubok.nationsmod.administration.province.Province;
 import me.jakubok.nationsmod.administration.town.Town;
 import me.jakubok.nationsmod.chunk.ChunkClaimRegistry;
 import me.jakubok.nationsmod.geometry.Point;
+import me.jakubok.nationsmod.registries.LegalOrganisationRegistry;
 import me.jakubok.nationsmod.registries.PlayerInfoRegistry;
+import me.jakubok.nationsmod.registries.territory.GameTerritoryManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.MinecraftServer;
@@ -66,67 +69,53 @@ public class PlayerInfo implements Serialisable {
 
     public Text getToolBarText(ServerPlayerEntity player, MinecraftServer server) {
 
-        ChunkClaimRegistry registry = ChunkBinaryTree.getRegistry(player.getWorld()).get(player.getBlockPos());
-
-        if (registry == null)
-            return wilderness();
-        if (!registry.isBelonging(player.getBlockPos()))
-            return wilderness();
-
-        inAWilderness = false;
-
-        District district = District.fromUUID(registry.claimBelonging(player.getBlockPos()), server);
-        Town town = district.getTown(server);
-
-        if (!town.hasProvince(server)) {
-            if (!town.getId().equals(this.currentTown)) {
-                this.currentTown = town.getId();
-                this.currentDistrict = district.getId();
-                return Text.of(district.getName() + " | " + town.getName());
+        String res = "";
+        TerritoryShape shape = GameTerritoryManager.at(player.getBlockX(), player.getBlockZ(), player.getWorld());
+        if (shape == null)
+            return this.wilderness();
+        if (inAWilderness)
+            inAWilderness = false;
+        TerritoryClaimer<?> claimer = (TerritoryClaimer<?>) LegalOrganisationRegistry.getRegistry(server).get(shape.claimantsID);
+        if (claimer instanceof District district) {
+            if (!district.getId().equals(currentDistrict)) {
+                res += district.getName();
+                currentDistrict = district.getId();
+            }
+            Town town = district.getTown(server);
+            if (!town.getId().equals(currentTown)) {
+                res += " | " + town.getName();
+                currentTown = town.getId();
             }
 
-            if (!district.getId().equals(this.currentDistrict)) {
-                this.currentDistrict = district.getId();
-                return Text.of(district.getName());
+            if (town.hasProvince(server)) {
+                Province province = town.getProvince(server);
+                if (!province.getId().equals(currentProvince)) {
+                    res += " | " + province.getName();
+                    currentProvince = province.getId();
+                }
             }
 
-            return null;
+            if (town.hasNation(server)) {
+                Nation nation = town.getNation(server);
+                if (!nation.getId().equals(currentNation)) {
+                    res += " | " + nation.getName();
+                    currentNation = nation.getId();
+                }
+            }
+        } else if (claimer instanceof Province province) {
+            if (!province.getId().equals(currentProvince)) {
+                res += province.getName();
+                currentProvince = province.getId();
+            }
+
+            Nation nation = province.getNation(server);
+            if (!nation.getId().equals(currentNation)) {
+                res += " | " + nation.getName();
+                currentNation = nation.getId();
+            }
         }
 
-        Province province = town.getProvince(server);
-        Nation nation = province.getNation(server);
-
-        if (!nation.getId().equals(this.currentNation)) {
-            this.currentNation = nation.getId();
-            this.currentProvince = province.getId();
-            this.currentTown = town.getId();
-            this.currentDistrict = district.getId();
-
-            return Text.of(district.getName() + " | " + town.getName() + " | " + province.getName() + " | " + nation.getName());
-        }
-
-        if (!province.getId().equals(this.currentProvince)) {
-            this.currentProvince = province.getId();
-            this.currentTown = town.getId();
-            this.currentDistrict = district.getId();
-
-            return Text.of(district.getName() + " | " + town.getName() + " | " + province.getName());
-        }
-
-        if (!town.getId().equals(this.currentTown)) {
-            this.currentTown = town.getId();
-            this.currentDistrict = district.getId();
-
-            return Text.of(district.getName() + " | " + town.getName());
-        }
-
-        if (!district.getId().equals(this.currentDistrict)) {
-            this.currentDistrict = district.getId();
-
-            return Text.of(district.getName());
-        }
-
-        return null;
+        return Text.of(res);
     }
 
     private Text wilderness() {

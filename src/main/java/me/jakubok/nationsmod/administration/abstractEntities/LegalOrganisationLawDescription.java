@@ -9,9 +9,9 @@ import me.jakubok.nationsmod.administration.law.RuleType;
 
 public abstract class LegalOrganisationLawDescription implements LawDescription {
 
-    public static final RuleDescription Name = new RuleDescription(RuleType.STRING, "The name of the administrating unit", true, null);
+    public static final RuleDescription Name = new RuleDescription(RuleType.STRING, "The name of the administrating unit", true, () -> null);
     public static final String NameLabel = "name";
-    public static final RuleDescription Id = new RuleDescription(RuleType.UUID, "The UUID of the administrating unit", true, UUID.randomUUID());
+    public static final RuleDescription Id = new RuleDescription(RuleType.UUID, "The UUID of the administrating unit", true, UUID::randomUUID);
     public static final String IdLabel = "id";
 
     protected static final Map<String, RuleDescription> rulesDescriptions = new HashMap<>() {{

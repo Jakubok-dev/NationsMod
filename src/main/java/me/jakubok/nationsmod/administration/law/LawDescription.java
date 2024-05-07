@@ -1,6 +1,7 @@
 package me.jakubok.nationsmod.administration.law;
 
 import java.util.Map;
+import java.util.function.Supplier;
 
 import net.minecraft.util.crash.CrashException;
 import net.minecraft.util.crash.CrashReport;
@@ -12,16 +13,16 @@ public interface LawDescription {
     public class RuleDescription {
         protected final RuleType type;
         protected final String description;
-        public final Object defaultValue;
+        public final Supplier<Object> defaultValue;
         public final Boolean nullable;
 
-        public RuleDescription(RuleType type, String description, Boolean nullable, Object defaultValue) {
+        public RuleDescription(RuleType type, String description, Boolean nullable, Supplier<Object> defaultValue) {
             this.type = type;
             this.description = description;
             this.nullable = nullable;
-            if (this.compatible(defaultValue))
+            if (this.compatible(defaultValue.get()))
                 this.defaultValue = defaultValue;
-            else this.defaultValue = null;
+            else this.defaultValue = () -> null;
         }
 
         public boolean compatible(Object obj) {

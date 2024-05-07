@@ -137,6 +137,20 @@ public class TerritoryShape implements Serialisable {
         return worldRegistryKey;
     }
 
+    public Polygon cloneThePolygon() {
+        Polygon clone = new Polygon(polygon.name);
+        PolygonNode<Point> node = polygon.root;
+        while (node != null) {
+            clone.addToTheRight(node.value);
+            node = node.right;
+            if (node == polygon.root) {
+                clone.addToTheRight(polygon.root.value);
+                break;
+            }
+        }
+        return clone;
+    }
+
     @Override
     public void readFromNbt(NbtCompound tag) {
         if (!tag.getBoolean("is_id_null"))
@@ -168,10 +182,10 @@ public class TerritoryShape implements Serialisable {
         Polygon clone = new Polygon(polygon.name);
         PolygonNode<Point> node = polygon.root;
         while (node != null) {
-            clone.addToTheRight(node.value);
+            clone.addToTheRight(new Point(node.value.key, node.value.value));
             node = node.right;
             if (node == polygon.root) {
-                clone.addToTheRight(polygon.root.value);
+                clone.addToTheRight(new Point(polygon.root.value.key, polygon.root.value.value));
                 break;
             }
         }

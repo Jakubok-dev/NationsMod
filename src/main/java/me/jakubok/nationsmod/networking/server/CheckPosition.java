@@ -29,52 +29,52 @@ public class CheckPosition implements PlayChannelHandler {
         ServerWorld world = player.getWorld();
         ChunkBinaryTree tree = ChunkBinaryTree.getRegistry(world);
 
-        for (int i = player.getBlockX() - 7; i <= player.getBlockX() + 7; i++) {
-            for (int j = player.getBlockZ() - 7; j <= player.getBlockZ() + 7; j++) {
-                ChunkClaimRegistry registry = tree.get(new BlockPos(i, 64, j));
-                if (registry == null)
-                    continue;
-                if (registry.claimBelonging(i, j) == null)
-                    continue;
-                District district = District.fromUUID(registry.claimBelonging(i, j), server);
-                PacketByteBuf responseBuffer = PacketByteBufs.create();
-                responseBuffer.writeBlockPos(new BlockPos(i, 64, j));
-                Colour colour = new Colour(district.getTheMapColour(server).getBitmask());
-                colour.changeTheShade(2);
-                responseBuffer.writeInt(colour.getBitmask());
-                responseBuffer.writeBoolean(false);
-                ServerPlayNetworking.send(player, Packets.UNHIGHLIGHT_A_BLOCK_CLIENT, responseBuffer);
-            }
-        }
+//        for (int i = player.getBlockX() - 7; i <= player.getBlockX() + 7; i++) {
+//            for (int j = player.getBlockZ() - 7; j <= player.getBlockZ() + 7; j++) {
+//                ChunkClaimRegistry registry = tree.get(new BlockPos(i, 64, j));
+//                if (registry == null)
+//                    continue;
+//                if (registry.claimBelonging(i, j) == null)
+//                    continue;
+//                District district = District.fromUUID(registry.claimBelonging(i, j), server);
+//                PacketByteBuf responseBuffer = PacketByteBufs.create();
+//                responseBuffer.writeBlockPos(new BlockPos(i, 64, j));
+//                Colour colour = new Colour(district.getTheMapColour(server).getBitmask());
+//                colour.changeTheShade(2);
+//                responseBuffer.writeInt(colour.getBitmask());
+//                responseBuffer.writeBoolean(false);
+//                ServerPlayNetworking.send(player, Packets.UNHIGHLIGHT_A_BLOCK_CLIENT, responseBuffer);
+//            }
+//        }
 
-        for (int i = player.getBlockX() - 3; i <= player.getBlockX() + 3; i++) {
-            for (int j = player.getBlockZ() - 3; j <= player.getBlockZ() + 3; j++) {
-                ChunkClaimRegistry registry = tree.get(new BlockPos(i, 64, j));
-                if (registry == null)
-                    continue;
-                if (registry.claimBelonging(i, j) == null)
-                    continue;
-                District district = District.fromUUID(registry.claimBelonging(i, j), server);
-                if (
-                    registry.claimBelonging(i, j).equals(ChunkClaimRegistry.GET_CLAIMANT(i - 1, j, world)) &&
-                    registry.claimBelonging(i, j).equals(ChunkClaimRegistry.GET_CLAIMANT(i + 1, j, world)) &&
-                    registry.claimBelonging(i, j).equals(ChunkClaimRegistry.GET_CLAIMANT(i, j - 1, world)) &&
-                    registry.claimBelonging(i, j).equals(ChunkClaimRegistry.GET_CLAIMANT(i, j + 1, world)) &&
-                    registry.claimBelonging(i, j).equals(ChunkClaimRegistry.GET_CLAIMANT(i - 1, j - 1, world)) &&
-                    registry.claimBelonging(i, j).equals(ChunkClaimRegistry.GET_CLAIMANT(i + 1, j - 1, world)) &&
-                    registry.claimBelonging(i, j).equals(ChunkClaimRegistry.GET_CLAIMANT(i - 1, j + 1, world)) &&
-                    registry.claimBelonging(i, j).equals(ChunkClaimRegistry.GET_CLAIMANT(i + 1, j + 1, world))
-                )
-                    continue;
-                PacketByteBuf responseBuffer = PacketByteBufs.create();
-                responseBuffer.writeBlockPos(new BlockPos(i, 64, j));
-                Colour colour = new Colour(district.getTheMapColour(server).getBitmask());
-                colour.changeTheShade(2);
-                responseBuffer.writeInt(colour.getBitmask());
-                responseBuffer.writeBoolean(false);
-                ServerPlayNetworking.send(player, Packets.HIGHLIGHT_A_BLOCK_CLIENT, responseBuffer);
-            }
-        }
+//        for (int i = player.getBlockX() - 3; i <= player.getBlockX() + 3; i++) {
+//            for (int j = player.getBlockZ() - 3; j <= player.getBlockZ() + 3; j++) {
+//                ChunkClaimRegistry registry = tree.get(new BlockPos(i, 64, j));
+//                if (registry == null)
+//                    continue;
+//                if (registry.claimBelonging(i, j) == null)
+//                    continue;
+//                District district = District.fromUUID(registry.claimBelonging(i, j), server);
+//                if (
+//                    registry.claimBelonging(i, j).equals(ChunkClaimRegistry.GET_CLAIMANT(i - 1, j, world)) &&
+//                    registry.claimBelonging(i, j).equals(ChunkClaimRegistry.GET_CLAIMANT(i + 1, j, world)) &&
+//                    registry.claimBelonging(i, j).equals(ChunkClaimRegistry.GET_CLAIMANT(i, j - 1, world)) &&
+//                    registry.claimBelonging(i, j).equals(ChunkClaimRegistry.GET_CLAIMANT(i, j + 1, world)) &&
+//                    registry.claimBelonging(i, j).equals(ChunkClaimRegistry.GET_CLAIMANT(i - 1, j - 1, world)) &&
+//                    registry.claimBelonging(i, j).equals(ChunkClaimRegistry.GET_CLAIMANT(i + 1, j - 1, world)) &&
+//                    registry.claimBelonging(i, j).equals(ChunkClaimRegistry.GET_CLAIMANT(i - 1, j + 1, world)) &&
+//                    registry.claimBelonging(i, j).equals(ChunkClaimRegistry.GET_CLAIMANT(i + 1, j + 1, world))
+//                )
+//                    continue;
+//                PacketByteBuf responseBuffer = PacketByteBufs.create();
+//                responseBuffer.writeBlockPos(new BlockPos(i, 64, j));
+//                Colour colour = new Colour(district.getTheMapColour(server).getBitmask());
+//                colour.changeTheShade(2);
+//                responseBuffer.writeInt(colour.getBitmask());
+//                responseBuffer.writeBoolean(false);
+//                ServerPlayNetworking.send(player, Packets.HIGHLIGHT_A_BLOCK_CLIENT, responseBuffer);
+//            }
+//        }
 
         // Generate the tooltip
         PlayerInfo info = 

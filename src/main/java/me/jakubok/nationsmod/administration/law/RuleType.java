@@ -1,6 +1,7 @@
 package me.jakubok.nationsmod.administration.law;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.Function;
@@ -17,7 +18,8 @@ public enum RuleType {
     LISTOFUUID(obj -> obj instanceof List),
     SETOFUUID(obj -> obj instanceof Set),
     SETOFPLAYERACOUNT(obj -> obj instanceof Set),
-    LAWAPPROVEMENT(obj -> obj instanceof LawApprovement);
+    LAWAPPROVEMENT(obj -> obj instanceof LawApprovement),
+    MAPOFUUIDS(obj -> obj instanceof Map);
 
     private final Function<Object, Boolean> isInstance;
     RuleType(Function<Object, Boolean> isInstance) {

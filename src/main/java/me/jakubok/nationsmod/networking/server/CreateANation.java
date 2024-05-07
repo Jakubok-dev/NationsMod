@@ -53,7 +53,7 @@ public class CreateANation implements PlayChannelHandler {
             if (!validated.get())
                 return;
 
-            new Nation(nationName, provinceName, nationCapital, server);
+            new Nation(nationName, nationCapital, server);
         });
     }
 

@@ -60,7 +60,7 @@ class TerritoryShapeRegistry extends PersistentState {
         return manager.getOrCreate(
                 TerritoryShapeRegistry::new,
                 TerritoryShapeRegistry::new,
-                NationsMod.MOD_ID + ":territory_shape_registry"
+                NationsMod.MOD_ID + "-territory_shape_registry"
         );
     }
 }

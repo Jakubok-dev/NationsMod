@@ -3,6 +3,7 @@ package me.jakubok.nationsmod.items;
 import me.jakubok.nationsmod.collection.BorderSlots;
 import me.jakubok.nationsmod.collection.PlayerAccount;
 import me.jakubok.nationsmod.collection.PlayerInfo;
+import me.jakubok.nationsmod.collection.PolygonPlayerStorage;
 import me.jakubok.nationsmod.networking.Packets;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -39,14 +40,14 @@ public class TownIndependenceDeclaration extends Item implements Declaration {
         
         if (!world.isClient) {
             MinecraftServer server = ((ServerWorld)world).getServer();
-            BorderSlots slots = PlayerInfo.fromAccount(new PlayerAccount(user), server).slots;
-            if (slots.selectedSlot == -1) {
-                user.sendMessage(Text.translatable("gui.nationsmod.border_registrator.select_a_slot"), false);
+            PolygonPlayerStorage storage = PlayerInfo.fromAccount(new PlayerAccount(user), server).polygonPlayerStorage;
+            if (storage.selectedSlot == -1) {
+                user.sendMessage(Text.of("Please select a polygon"), false);
                 return super.use(world, user, hand);
             }
 
-            if (slots.getSelectedSlot().getField() == null) {
-                user.sendMessage(Text.translatable("gui.nationsmod.invalid_border"), false);
+            if (!storage.getSelectedPolygon().isThePolygonClosed()) {
+                user.sendMessage(Text.of("Polygon must be closed"), false);
                 return super.use(world, user, hand);
             }
             

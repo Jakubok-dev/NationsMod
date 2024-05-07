@@ -83,7 +83,7 @@ public class PlayerInfoRegistry extends PersistentState {
         PlayerInfoRegistry registry = manager.getOrCreate(
             createFromNbt,
             PlayerInfoRegistry::new, 
-            NationsMod.MOD_ID + ":player_info_registry"
+            NationsMod.MOD_ID + "-player_info_registry"
         );
         return registry;
     }

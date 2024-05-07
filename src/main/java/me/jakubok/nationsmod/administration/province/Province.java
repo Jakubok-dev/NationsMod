@@ -1,13 +1,17 @@
 package me.jakubok.nationsmod.administration.province;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import me.jakubok.nationsmod.administration.abstractEntities.TerritoryClaimer;
 import me.jakubok.nationsmod.administration.nation.Nation;
 import me.jakubok.nationsmod.administration.town.Town;
 import me.jakubok.nationsmod.collection.Colour;
+import me.jakubok.nationsmod.collection.TerritoryShape;
+import me.jakubok.nationsmod.geometry.Polygon;
 import me.jakubok.nationsmod.registries.LegalOrganisationRegistry;
+import me.jakubok.nationsmod.registries.territory.GameTerritoryManager;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
@@ -18,32 +22,39 @@ public class Province extends TerritoryClaimer<ProvinceLawDescription> {
     public Province(String name, Town capital, Nation nation, MinecraftServer server) {
         super(new ProvinceLawDescription(), name, server);
         this.setNationsUUID(nation.getId());
-        this.setCapitalsUUID(capital.getId());
-        capital.setProvince(this);
+        this.setCapitalsUUID(capital.getId(), server);
+        capital.setProvince(this, server);
     }
     public Province(NbtCompound tag, MinecraftServer server) {
         super(new ProvinceLawDescription(), tag, server);
     }
 
     public Town getCapital(MinecraftServer server) {
-        return Town.fromUUID(getCapitalsUUID(), server);
+        return Town.fromUUID(getCapitalsUUID(server), server);
     }
-    public UUID getCapitalsUUID() {
-        return (UUID)this.law.getARule(ProvinceLawDescription.capitalsIDLabel);
+    public UUID getCapitalsUUID(MinecraftServer server) {
+        Nation nation = this.getNation(server);
+        if (nation == null)
+            return null;
+        return nation.getProvincesCapitalRegistry().get(this.getId());
     }
-    public boolean setCapitalsUUID(UUID id) {
-        return this.law.putARule(ProvinceLawDescription.capitalsIDLabel, id);
+    public boolean setCapitalsUUID(UUID id, MinecraftServer server) {
+        Nation nation = this.getNation(server);
+        if (nation == null)
+            return false;
+        return nation.getProvincesCapitalRegistry().put(this.getId(), id) != null;
     }
     
     public List<Town> getTowns(MinecraftServer server) {
-        return this.getTownsIDs().stream()
+        return this.getTownsIDs(server).stream()
         .map(el -> Town.fromUUID(el, server))
         .toList();
     }
-    public List<UUID> getTownsIDs() {
-        @SuppressWarnings("unchecked")
-        List<UUID> result =  (List<UUID>)this.law.getARule(ProvinceLawDescription.townsIDsLabel);
-        return result;
+    public List<UUID> getTownsIDs(MinecraftServer server) {
+        Nation nation = this.getNation(server);
+        if (nation == null)
+            return null;
+        return nation.getTownProvinceRegistry().entrySet().stream().filter(e -> e.getValue().equals(this.getId())).map(Map.Entry::getKey).toList();
     }
 
     public Nation getNation(MinecraftServer server) {
@@ -56,15 +67,15 @@ public class Province extends TerritoryClaimer<ProvinceLawDescription> {
         return this.law.putARule(ProvinceLawDescription.nationsIDLabel, id);
     }
 
-    public static Province fromUUID(UUID id, MinecraftServer server) {
-        return (Province)LegalOrganisationRegistry.getRegistry(server).get(id);
+    @Override
+    public boolean claimTerritory(Polygon polygon, ServerWorld world) {
+        TerritoryShape shape = GameTerritoryManager.register(polygon, this, world);
+        if (shape == null)
+            return false;
+        return this.setTheTerritoryShape(shape);
     }
 
-    @Override
-    public Colour getTheMapColour(MinecraftServer server) {
-        return this.getNation(server).getTheMapColour();
-    }
-    @Override
-    public void sendMapBlockInfo(ServerWorld world, BlockPos pos) {
+    public static Province fromUUID(UUID id, MinecraftServer server) {
+        return (Province)LegalOrganisationRegistry.getRegistry(server).get(id);
     }
 }

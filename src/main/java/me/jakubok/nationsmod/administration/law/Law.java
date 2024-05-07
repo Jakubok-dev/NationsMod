@@ -20,13 +20,13 @@ public class Law<D extends LawDescription> implements Serialisable {
     public Law(D description) {
         this.description = description;
         for (Map.Entry<String, RuleDescription> ruleDescription : this.description.getRulesDescriptions().entrySet()) {
-            this.putARule(ruleDescription.getKey(), ruleDescription.getValue().defaultValue);
+            this.putARule(ruleDescription.getKey(), ruleDescription.getValue().defaultValue.get());
         }
     }
     public Law(D description, NbtCompound nbt) {
         this.description = description;
         for (Map.Entry<String, RuleDescription> ruleDescription : this.description.getRulesDescriptions().entrySet()) {
-            this.putARule(ruleDescription.getKey(), ruleDescription.getValue().defaultValue);
+            this.putARule(ruleDescription.getKey(), ruleDescription.getValue().defaultValue.get());
         }
         this.readFromNbt(nbt);
     }
@@ -117,6 +117,15 @@ public class Law<D extends LawDescription> implements Serialisable {
                         this.putARule(entry.getKey(), LawApprovement.values()[tag.getInt(entry.getKey())]);
                     } catch(Exception ex) {}
                     break;
+                case MAPOFUUIDS:
+                    try {
+                        int size = tag.getInt(entry.getKey() + "Size");
+                        Map<UUID, UUID> map = new HashMap<>();
+                        for (int i = 0; i < size; i++)
+                            map.put(tag.getUuid(entry.getKey() + "Key" + i), tag.getUuid(entry.getKey() + "Value" + i));
+                        this.putARule(entry.getKey(), map);
+                    } catch(Exception ex) {}
+                    break;
                 default:
                     System.out.print(entry + "of an unserialisable type");
                     break;
@@ -179,6 +188,16 @@ public class Law<D extends LawDescription> implements Serialisable {
                     break;
                 case LAWAPPROVEMENT:
                     tag.putInt(entry.getKey(), ((LawApprovement)entry.getValue()).value);
+                    break;
+                case MAPOFUUIDS:
+                    @SuppressWarnings("unchecked")
+                    Map<UUID, UUID> map = (Map<UUID, UUID>)entry.getValue();
+                    List<UUID> keyList = map.keySet().stream().toList();
+                    tag.putInt(entry.getKey() + "Size", keyList.size());
+                    for (int i = 0; i < keyList.size(); i++) {
+                        tag.putUuid(entry.getKey() + "Key" + i, keyList.get(i));
+                        tag.putUuid(entry.getKey() + "Value" + i, map.get(keyList.get(i)));
+                    }
                     break;
                 default:
                     System.out.print(entry + "of an unserialisable type");

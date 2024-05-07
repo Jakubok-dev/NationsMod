@@ -18,7 +18,6 @@ public abstract class LegalOrganisation<D extends LegalOrganisationLawDescriptio
     public LegalOrganisation(D description, String name, MinecraftServer server) {
         this.description = description;
         this.law = new Law<>(this.description);
-        this.law.putARule(LegalOrganisationLawDescription.IdLabel, UUID.randomUUID());
         this.setName(name);
         LegalOrganisationRegistry.getRegistry(server).register(this);
     }
@@ -36,6 +35,10 @@ public abstract class LegalOrganisation<D extends LegalOrganisationLawDescriptio
     }
     public boolean setName(String name) {
         return this.law.putARule(TownLawDescription.NameLabel, name);
+    }
+
+    public boolean deregister(MinecraftServer server) {
+        return LegalOrganisationRegistry.getRegistry(server).remove(this.getId());
     }
 
     public void readFromNbt(NbtCompound tag, MinecraftServer server) {

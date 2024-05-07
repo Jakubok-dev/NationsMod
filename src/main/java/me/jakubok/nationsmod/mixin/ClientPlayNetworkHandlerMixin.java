@@ -24,9 +24,6 @@ public abstract class ClientPlayNetworkHandlerMixin {
     private void renderMap(int x, int z, ChunkData chunkData, CallbackInfo info) {
         for (int blockx = ChunkSectionPos.getBlockCoord(x); blockx < ChunkSectionPos.getBlockCoord(x) + 16; blockx++) {
             for (int blockz = ChunkSectionPos.getBlockCoord(z); blockz < ChunkSectionPos.getBlockCoord(z) + 16; blockz++) {
-                PacketByteBuf buffer = PacketByteBufs.create();
-                buffer.writeBlockPos(new BlockPos(blockx, 64, blockz));
-                ClientPlayNetworking.send(Packets.GET_BLOCKS_CLAIMANT_COLOUR, buffer);
                 NationsClient.map.renderBlockLayer(this.client.world, blockx, blockz);
             }
         }

@@ -3,6 +3,7 @@ package me.jakubok.nationsmod.registries.territory;
 import me.jakubok.nationsmod.collection.BorderEdge;
 import me.jakubok.nationsmod.collection.Pair;
 import me.jakubok.nationsmod.collection.Serialisable;
+import me.jakubok.nationsmod.exception.BorderNotFoundException;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.ChunkPos;
@@ -33,35 +34,51 @@ class UnitaryTerritoryRegistry implements Serialisable {
         return q;
     }
 
-    public UUID getShapesID(double x, double y) {
+    public UUID getLocalShapesID(double x, double y) throws BorderNotFoundException {
         PriorityQueue<Pair<Double, BorderEdge>> q = this.getValuesAt(x);
         while (!q.isEmpty() && q.peek().key > y)
             q.poll();
         if (q.isEmpty()) {
-            UnitaryTerritoryRegistry registryBellow = TerritoryRegistry.getRegistry(this.world).tree.floorEntry(new ChunkPos(this.pos.x, this.pos.z - 1)).getValue();
-            if (registryBellow == null)
-                return null;
-            if (registryBellow.pos.x != this.pos.x)
-                return null;
-            return registryBellow.getShapesID(x, y);
+            throw new BorderNotFoundException();
         }
         BorderEdge edge1 = q.poll().value;
         BorderEdge edge2 = !q.isEmpty() ? q.poll().value : null;
         if (!edge1.startsTheShape && edge2 != null) {
-            BorderEdge temp = edge1;
-            edge1 = edge2;
-            edge2 = temp;
+            if (edge1.fun.equals(edge2.fun)) {
+                BorderEdge temp = edge1;
+                edge1 = edge2;
+                edge2 = temp;
+            }
         }
-        return edge1.startsTheShape ? edge1.shapesID : edge2 != null ? edge2.shapesID : null;
+        return edge1.startsTheShape ? edge1.shapesID : null;
     }
 
-    public boolean doesCollide(BorderEdge edge) {
+    public boolean isColliding(BorderEdge edge) {
         for (BorderEdge registeredEdge : this.borderEdges) {
             if (registeredEdge.collides(edge))
                 return true;
         }
-        double centre = (edge.fun.domain.to - edge.fun.domain.from) / 2;
-        return this.getShapesID(centre, edge.fun.apply(centre)) != null;
+        double centre = (edge.fun.domain.to + edge.fun.domain.from) / 2;
+        //return this.getLocalShapesID(centre, edge.fun.apply(centre)) != null;
+        return false;
+    }
+
+    public Set<UUID> getCollidingShapesIDs(BorderEdge edge) {
+        Set<UUID> res = new HashSet<>();
+        for (BorderEdge registeredEdge : this.borderEdges) {
+            if (registeredEdge.collides(edge))
+                res.add(registeredEdge.shapesID);
+        }
+        if (res.isEmpty()) {
+            double centre = (edge.fun.domain.to - edge.fun.domain.from) / 2;
+            UUID id = null;
+            try {
+                id = this.getLocalShapesID(centre, edge.fun.apply(centre));
+            } catch (BorderNotFoundException ignored) {}
+            if (id != null)
+                res.add(id);
+        }
+        return res;
     }
 
     public ChunkPos getPos() {

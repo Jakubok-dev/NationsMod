@@ -5,6 +5,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import me.jakubok.nationsmod.administration.town.Town;
 import me.jakubok.nationsmod.collection.PlayerAccount;
 import me.jakubok.nationsmod.collection.PlayerInfo;
+import me.jakubok.nationsmod.geometry.Polygon;
 import me.jakubok.nationsmod.registries.LegalOrganisationRegistry;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking.PlayChannelHandler;
@@ -29,7 +30,7 @@ public class CreateATown implements PlayChannelHandler {
             LegalOrganisationRegistry.getRegistry(server).getOrganisations().values().forEach(el -> {
                 if (!(el instanceof Town))
                     return;
-                if (townName.toLowerCase().equals(el.getName().toLowerCase())) {
+                if (townName.equalsIgnoreCase(el.getName())) {
                     player.sendMessage(Text.translatable("gui.nationsmod.town_creation_screen.town_name_not_unique"), false);
                     unique.set(false);
                     return;
@@ -39,9 +40,29 @@ public class CreateATown implements PlayChannelHandler {
             if (!unique.get())
                 return;
 
+            Polygon polygon = PlayerInfo.fromAccount(new PlayerAccount(player), server).polygonPlayerStorage.getSelectedPolygon();
+            if (polygon == null) {
+                player.sendMessage(Text.of("You must select a polygon first"), false);
+                return;
+            }
+
+            if (!polygon.isThePolygonClosed()) {
+                player.sendMessage(Text.of("Polygon must be closed"), false);
+                return;
+            }
+
+
+
             if (!player.isCreative()) player.getMainHandStack().setCount(player.getMainHandStack().getCount()-1);
 
-            Town town = new Town(townName, districtName, player.getChunkPos(), player.getWorld(), PlayerInfo.fromAccount(new PlayerAccount(player), server).slots.getSelectedSlot(), server);
+            Town town = new Town(townName, districtName, server);
+
+            if (!town.getDistricts(server).get(0).claimTerritory(polygon, player.getWorld())) {
+                town.deregister(server);
+                player.sendMessage(Text.of("Polygon interferes with other territories"), false);
+                return;
+            }
+
             town.addAMember(player, server);
         });
     }
