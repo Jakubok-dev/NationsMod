@@ -79,7 +79,7 @@ public class TerritoryShape implements Serialisable {
 
             edges.add(new BorderEdge(
                     (LinearFunction) MathEquation.fromTwoPoints(
-                            new Range(node.value.key + .5d, node.right.value.key + .5d, !startsTheShape && isTheEndingClosed || startsTheShape && isThePreviousLineALinearEquation, startsTheShape && isTheEndingClosed || !startsTheShape && isThePreviousLineALinearEquation),
+                            new Range(node.value.key + .5d, node.right.value.key + .5d, startsTheShape ? isThePreviousLineALinearEquation : isTheEndingClosed, startsTheShape ? isTheEndingClosed : isThePreviousLineALinearEquation),
                             new Range(node.value.value + .5d, node.right.value.value + .5d, true, true),
                             node.value.key + .5d, node.value.value + .5d,
                             node.right.value.key + .5d, node.right.value.value + .5d
@@ -102,13 +102,13 @@ public class TerritoryShape implements Serialisable {
                 continue;
             }
             boolean startsTheShape = node.left.value.key > node.value.key;
-            boolean doesTheNextStartTheShape = node.left.right.value.key > node.left.value.key;
+            boolean doesTheNextStartTheShape = node.left.left.value.key > node.left.value.key;
             boolean isTheEndingClosed = startsTheShape == doesTheNextStartTheShape || node.left.value.key.equals(node.left.left.value.key);
             boolean isThePreviousLineALinearEquation = node.right.value.key.equals(node.value.key);
 
             edges.add(new BorderEdge(
                     (LinearFunction) MathEquation.fromTwoPoints(
-                            new Range(node.value.key + .5d, node.left.value.key + .5d, !startsTheShape && isTheEndingClosed || startsTheShape && isThePreviousLineALinearEquation, startsTheShape && isTheEndingClosed || !startsTheShape && isThePreviousLineALinearEquation),
+                            new Range(node.value.key + .5d, node.left.value.key + .5d, startsTheShape ? isThePreviousLineALinearEquation : isTheEndingClosed, startsTheShape ? isTheEndingClosed : isThePreviousLineALinearEquation),
                             new Range(node.value.value + .5d, node.left.value.value + .5d, true, true),
                             node.value.key + .5d, node.value.value + .5d,
                             node.left.value.key + .5d, node.left.value.value + .5d
@@ -189,6 +189,16 @@ public class TerritoryShape implements Serialisable {
                 break;
             }
         }
-        return new TerritoryShape(null, clone, claimantsID, worldRegistryKey);
+        TerritoryShape sh = new TerritoryShape(null, clone, claimantsID, worldRegistryKey);
+        sh.asBorderEdges().forEach(el -> {
+            System.out.println("Starts the shape:" + el.startsTheShape);
+            System.out.println("ID:" + el.shapesID);
+            System.out.println("a:" + el.fun.a);
+            System.out.println("b:" + el.fun.b);
+            System.out.println("Domain:" + (el.fun.domain.isLeftClosed ? "<" : "(") + el.fun.domain.from + ";" + el.fun.domain.to + (el.fun.domain.isRightClosed ? ">" : ")"));
+            System.out.println("Value set:" + (el.fun.valueSet.isLeftClosed ? "<" : "(") + el.fun.valueSet.from + ";" + el.fun.valueSet.to + (el.fun.valueSet.isRightClosed ? ">" : ")"));
+            System.out.println("------------------------------------------");
+        });
+        return sh;
     }
 }
