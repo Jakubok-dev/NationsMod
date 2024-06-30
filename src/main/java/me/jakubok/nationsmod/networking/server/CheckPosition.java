@@ -1,16 +1,9 @@
 package me.jakubok.nationsmod.networking.server;
 
-import me.jakubok.nationsmod.administration.district.District;
-import me.jakubok.nationsmod.chunk.ChunkClaimRegistry;
-import me.jakubok.nationsmod.collection.ChunkBinaryTree;
-import me.jakubok.nationsmod.collection.Colour;
 import me.jakubok.nationsmod.collection.PlayerAccount;
 import me.jakubok.nationsmod.collection.PlayerInfo;
-import me.jakubok.nationsmod.networking.Packets;
 import me.jakubok.nationsmod.registries.PlayerInfoRegistry;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking.PlayChannelHandler;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
@@ -18,7 +11,6 @@ import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
-import net.minecraft.util.math.BlockPos;
 
 public class CheckPosition implements PlayChannelHandler {
 
@@ -27,7 +19,6 @@ public class CheckPosition implements PlayChannelHandler {
             PacketByteBuf buf, PacketSender responseSender) {
         // Render the visual border
         ServerWorld world = player.getWorld();
-        ChunkBinaryTree tree = ChunkBinaryTree.getRegistry(world);
 
 //        for (int i = player.getBlockX() - 7; i <= player.getBlockX() + 7; i++) {
 //            for (int j = player.getBlockZ() - 7; j <= player.getBlockZ() + 7; j++) {

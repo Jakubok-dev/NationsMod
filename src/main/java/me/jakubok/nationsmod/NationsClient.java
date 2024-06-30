@@ -1,7 +1,5 @@
 package me.jakubok.nationsmod;
 
-import me.jakubok.nationsmod.collection.BorderGroup;
-import me.jakubok.nationsmod.collection.ClientBorderDrawer;
 import me.jakubok.nationsmod.collection.ClientPolygonDrawer;
 import me.jakubok.nationsmod.entity.human.HumanEntityRenderer;
 import me.jakubok.nationsmod.map.MapStorage;
@@ -18,11 +16,9 @@ import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.util.Identifier;
 public class NationsClient implements ClientModInitializer {
 
-    public static ClientBorderDrawer drawer = new ClientBorderDrawer();
     public static ClientPolygonDrawer polygonDrawer = new ClientPolygonDrawer();
     public static MapStorage map = new MapStorage();
     public static int selectedSlot = -1;
-    public static BorderGroup borderSlot = new BorderGroup();
 
     public static final EntityModelLayer MODEL_HUMAN_LAYER = new EntityModelLayer(new Identifier(NationsMod.MOD_ID, "human"), "main");
 

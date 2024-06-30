@@ -1,11 +1,11 @@
 package me.jakubok.nationsmod.items;
 
-import me.jakubok.nationsmod.administration.abstractEntities.TerritoryClaimer;
+import me.jakubok.nationsmod.administration.abstractEntities.LegalOrganisation;
 import me.jakubok.nationsmod.administration.district.District;
-import me.jakubok.nationsmod.chunk.ChunkClaimRegistry;
-import me.jakubok.nationsmod.collection.ChunkBinaryTree;
+import me.jakubok.nationsmod.collection.TerritoryShape;
 import me.jakubok.nationsmod.networking.Packets;
 import me.jakubok.nationsmod.registries.LegalOrganisationRegistry;
+import me.jakubok.nationsmod.registries.territory.GameTerritoryManager;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -19,6 +19,8 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.Rarity;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
+
+import java.util.Objects;
 
 public class NationIndependenceDeclaration extends Item implements Declaration {
     
@@ -38,21 +40,14 @@ public class NationIndependenceDeclaration extends Item implements Declaration {
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         if (!world.isClient) {
-            ChunkClaimRegistry registry = ChunkBinaryTree.getRegistry((ServerWorld)world).get(user.getBlockPos());
+            TerritoryShape shape = GameTerritoryManager.at(user.getBlockX(), user.getBlockZ(), (ServerWorld)world);
 
-            if (registry == null) {
+            if (shape == null) {
                 user.sendMessage(Text.translatable("gui.nationsmod.nation_creation_screen.not_in_a_town"), false);
                 return super.use(world, user, hand);
             }
-
-            if (!registry.isBelonging(user.getBlockPos())) {
-                user.sendMessage(Text.translatable("gui.nationsmod.nation_creation_screen.not_in_a_town"), false);
-                return super.use(world, user, hand);
-            }
-
-            TerritoryClaimer<?> claimer = (TerritoryClaimer<?>)LegalOrganisationRegistry.getRegistry(((ServerWorld)world).getServer()).get(registry.claimBelonging(user.getBlockPos()));
-
-            if (!(claimer instanceof District)) {
+            LegalOrganisation<?> organisation = LegalOrganisationRegistry.getRegistry(user.getServer()).get(shape.claimantsID);
+            if (!(organisation instanceof District)) {
                 user.sendMessage(Text.translatable("gui.nationsmod.nation_creation_screen.not_in_a_town"), false);
                 return super.use(world, user, hand);
             }

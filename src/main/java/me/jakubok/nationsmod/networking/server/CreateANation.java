@@ -1,14 +1,15 @@
 package me.jakubok.nationsmod.networking.server;
 
+import java.util.Objects;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import me.jakubok.nationsmod.administration.abstractEntities.TerritoryClaimer;
 import me.jakubok.nationsmod.administration.district.District;
 import me.jakubok.nationsmod.administration.nation.Nation;
 import me.jakubok.nationsmod.administration.town.Town;
-import me.jakubok.nationsmod.chunk.ChunkClaimRegistry;
-import me.jakubok.nationsmod.collection.ChunkBinaryTree;
 import me.jakubok.nationsmod.registries.LegalOrganisationRegistry;
+import me.jakubok.nationsmod.registries.territory.GameTerritoryManager;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking.PlayChannelHandler;
 import net.minecraft.nbt.NbtCompound;
@@ -58,15 +59,10 @@ public class CreateANation implements PlayChannelHandler {
     }
 
     private Town getTown(ServerWorld world, ServerPlayerEntity player) {
-        ChunkClaimRegistry registry = ChunkBinaryTree.getRegistry(world).get(player.getBlockPos());
-
-        if (registry == null)
+        UUID id = GameTerritoryManager.at(player.getBlockX(), player.getBlockZ(), world).claimantsID;
+        if (id == null)
             return null;
-
-        if (!registry.isBelonging(player.getBlockPos()))
-            return null;
-
-        TerritoryClaimer<?> claimer = (TerritoryClaimer<?>)LegalOrganisationRegistry.getRegistry(player.getServer()).get(registry.claimBelonging(player.getBlockPos()));
+        TerritoryClaimer<?> claimer = (TerritoryClaimer<?>)LegalOrganisationRegistry.getRegistry(Objects.requireNonNull(player.getServer())).get(id);
 
         if (!(claimer instanceof District))
             return null;

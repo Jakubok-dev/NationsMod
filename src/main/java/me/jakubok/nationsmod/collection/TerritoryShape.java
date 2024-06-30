@@ -189,16 +189,6 @@ public class TerritoryShape implements Serialisable {
                 break;
             }
         }
-        TerritoryShape sh = new TerritoryShape(null, clone, claimantsID, worldRegistryKey);
-        sh.asBorderEdges().forEach(el -> {
-            System.out.println("Starts the shape:" + el.startsTheShape);
-            System.out.println("ID:" + el.shapesID);
-            System.out.println("a:" + el.fun.a);
-            System.out.println("b:" + el.fun.b);
-            System.out.println("Domain:" + (el.fun.domain.isLeftClosed ? "<" : "(") + el.fun.domain.from + ";" + el.fun.domain.to + (el.fun.domain.isRightClosed ? ">" : ")"));
-            System.out.println("Value set:" + (el.fun.valueSet.isLeftClosed ? "<" : "(") + el.fun.valueSet.from + ";" + el.fun.valueSet.to + (el.fun.valueSet.isRightClosed ? ">" : ")"));
-            System.out.println("------------------------------------------");
-        });
-        return sh;
+        return new TerritoryShape(null, clone, claimantsID, worldRegistryKey);
     }
 }

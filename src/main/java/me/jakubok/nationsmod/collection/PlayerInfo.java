@@ -7,7 +7,6 @@ import me.jakubok.nationsmod.administration.district.District;
 import me.jakubok.nationsmod.administration.nation.Nation;
 import me.jakubok.nationsmod.administration.province.Province;
 import me.jakubok.nationsmod.administration.town.Town;
-import me.jakubok.nationsmod.chunk.ChunkClaimRegistry;
 import me.jakubok.nationsmod.geometry.Point;
 import me.jakubok.nationsmod.registries.LegalOrganisationRegistry;
 import me.jakubok.nationsmod.registries.PlayerInfoRegistry;
@@ -28,7 +27,6 @@ public class PlayerInfo implements Serialisable {
     public UUID currentNation;
     protected UUID citizenship;
     protected PlayerAccount account;
-    public BorderSlots slots = new BorderSlots();
     public boolean online = false;
     public Point lastlyClickedBorderSign;
     public PolygonPlayerStorage polygonPlayerStorage = new PolygonPlayerStorage();
@@ -151,9 +149,6 @@ public class PlayerInfo implements Serialisable {
         if (!tag.getBoolean("is_citizenship_null"))
             this.citizenship = tag.getUuid("citizenship");
         
-        if (!tag.getBoolean("are_slots_null"))
-            this.slots.readFromNbt(tag.getCompound("slots"));
-
         if (!tag.getBoolean("is_lastly_clicked_border_sign_null")) {
             int x = tag.getInt("lastly_clicked_border_sign_x");
             int z = tag.getInt("lastly_clicked_border_sign_z");
@@ -188,10 +183,6 @@ public class PlayerInfo implements Serialisable {
         if (this.citizenship != null)
             tag.putUuid("citizenship", this.citizenship);
         tag.putBoolean("is_citizenship_null", this.citizenship == null);
-
-        if (this.slots != null)
-            tag.put("slots", this.slots.writeToNbtAndReturn(new NbtCompound(), true));
-        tag.putBoolean("are_slots_null", this.slots == null);
 
         if (this.lastlyClickedBorderSign != null) {
             tag.putInt("lastly_clicked_border_sign_x", this.lastlyClickedBorderSign.key);

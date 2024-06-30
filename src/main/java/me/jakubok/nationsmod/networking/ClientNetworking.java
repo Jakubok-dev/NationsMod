@@ -39,13 +39,8 @@ public class ClientNetworking {
     public static void register() {
         ClientPlayNetworking.registerGlobalReceiver(Packets.OPEN_TOWN_CREATION_SCREEN, new OpenTownCreationScreen());
         ClientPlayNetworking.registerGlobalReceiver(Packets.OPEN_NATION_CREATION_SCREEN, new OpenNationCreationScreen());
-        ClientPlayNetworking.registerGlobalReceiver(Packets.OPEN_BORDER_REGISTRATOR_SCREEN, new OpenBorderRegistratorScreen());
-        ClientPlayNetworking.registerGlobalReceiver(Packets.OPEN_BORDER_SLOT_CREATOR_SCREEN, new OpenBorderSlotCreatorScreen());
         ClientPlayNetworking.registerGlobalReceiver(Packets.RECEIVE, new Receive());
         ClientPlayNetworking.registerGlobalReceiver(Packets.RENDER_CLAIMANTS_COLOUR, new RenderClaimantsColour());
-        ClientPlayNetworking.registerGlobalReceiver(Packets.HIGHLIGHT_A_BLOCK_CLIENT, new HighlightABlock());
-        ClientPlayNetworking.registerGlobalReceiver(Packets.UNHIGHLIGHT_A_BLOCK_CLIENT, new UnhighlightABlock());
-        ClientPlayNetworking.registerGlobalReceiver(Packets.CLEAR_CLAIMANT_ON_THE_MAP, new ClearClaimantOnTheMap());
         ClientPlayNetworking.registerGlobalReceiver(Packets.PULL_MAP_BLOCK_INFO, new PullMapBlockInfo());
         ClientPlayNetworking.registerGlobalReceiver(Packets.OPEN_POLYGONS_STORAGE_SCREEN, new OpenPolygonsStorageScreen());
         ClientPlayNetworking.registerGlobalReceiver(Packets.OPEN_POLYGON_CREATION_SCREEN, new OpenPolygonCreationScreen());

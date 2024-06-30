@@ -1,18 +1,12 @@
 package me.jakubok.nationsmod.administration.abstractEntities;
 
-import me.jakubok.nationsmod.chunk.ChunkClaimRegistry;
-import me.jakubok.nationsmod.collection.ChunkBinaryTree;
-import me.jakubok.nationsmod.collection.Colour;
 import me.jakubok.nationsmod.collection.TerritoryShape;
 import me.jakubok.nationsmod.geometry.Polygon;
 import me.jakubok.nationsmod.registries.territory.GameTerritoryManager;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
 
-import java.util.Objects;
 import java.util.UUID;
 
 public abstract class TerritoryClaimer<D extends TerritoryClaimerLawDescription> extends LegalOrganisation<D> {

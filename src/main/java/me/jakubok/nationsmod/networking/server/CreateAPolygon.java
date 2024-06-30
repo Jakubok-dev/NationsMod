@@ -1,6 +1,5 @@
 package me.jakubok.nationsmod.networking.server;
 
-import me.jakubok.nationsmod.collection.BorderGroup;
 import me.jakubok.nationsmod.collection.PlayerAccount;
 import me.jakubok.nationsmod.collection.PlayerInfo;
 import me.jakubok.nationsmod.geometry.Polygon;

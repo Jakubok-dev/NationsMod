@@ -1,27 +1,16 @@
 package me.jakubok.nationsmod.administration.district;
 
-import java.util.Objects;
 import java.util.UUID;
 
 import me.jakubok.nationsmod.administration.abstractEntities.TerritoryClaimer;
 import me.jakubok.nationsmod.administration.town.Town;
-import me.jakubok.nationsmod.collection.Border;
-import me.jakubok.nationsmod.collection.BorderGroup;
-import me.jakubok.nationsmod.collection.Colour;
 import me.jakubok.nationsmod.collection.TerritoryShape;
 import me.jakubok.nationsmod.geometry.Polygon;
-import me.jakubok.nationsmod.networking.Packets;
 import me.jakubok.nationsmod.registries.LegalOrganisationRegistry;
 import me.jakubok.nationsmod.registries.territory.GameTerritoryManager;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
 
 public class District extends TerritoryClaimer<DistrictLawDescription> {
 

@@ -20,26 +20,12 @@ public class Packets {
 
     public static final Identifier CREATE_A_NATION = new Identifier(NationsMod.MOD_ID, "create_a_nation");
 
-    public static final Identifier OPEN_BORDER_REGISTRATOR_SCREEN = new Identifier(NationsMod.MOD_ID, "open_border_registrator_screen");
-    
-    public static final Identifier PREPARE_BORDER_SLOT_SCREEN = new Identifier(NationsMod.MOD_ID, "prepare_border_slot_screen");
-    public static final Identifier OPEN_BORDER_SLOT_CREATOR_SCREEN = new Identifier(NationsMod.MOD_ID, "open_border_slot_creator_screen");
-
-    public static final Identifier CREATE_A_BORDER_SLOT = new Identifier(NationsMod.MOD_ID, "create_a_border_slot");
-    public static final Identifier DELETE_A_BORDER_SLOT = new Identifier(NationsMod.MOD_ID, "delete_a_border_slot");
-    public static final Identifier SELECT_A_BORDER_SLOT = new Identifier(NationsMod.MOD_ID, "select_a_border_slot");
-    public static final Identifier UNSELECT_A_BORDER_SLOT = new Identifier(NationsMod.MOD_ID, "unselect_a_border_slot");
-
-    public static final Identifier HIGHLIGHT_A_BLOCK_CLIENT = new Identifier(NationsMod.MOD_ID, "highlight_a_block_client");
-    public static final Identifier UNHIGHLIGHT_A_BLOCK_CLIENT = new Identifier(NationsMod.MOD_ID, "unhighlight_a_block_client");
-
     public static final Identifier HIGHLIGHT_A_BLOCK_SERVER = new Identifier(NationsMod.MOD_ID, "highlight_a_block_server");
     public static final Identifier UNHIGHLIGHT_A_BLOCK_SERVER = new Identifier(NationsMod.MOD_ID, "unhighlight_a_block_server");
 
     public static final Identifier RECEIVE = new Identifier(NationsMod.MOD_ID, "receive");
 
     public static final Identifier RENDER_CLAIMANTS_COLOUR = new Identifier(NationsMod.MOD_ID, "render_claimants_colour");
-    public static final Identifier CLEAR_CLAIMANT_ON_THE_MAP = new Identifier(NationsMod.MOD_ID, "clear_claimant_on_the_map");
     public static final Identifier PULL_MAP_BLOCK_INFO = new Identifier(NationsMod.MOD_ID, "pull_map_block_info");
 
     public static final Identifier PREPARE_BORDER_REGISTRATOR_SCREEN = new Identifier(NationsMod.MOD_ID, "prepare_border_registrator_screen");

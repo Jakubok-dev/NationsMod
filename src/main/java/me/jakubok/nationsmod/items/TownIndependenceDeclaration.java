@@ -1,6 +1,5 @@
 package me.jakubok.nationsmod.items;
 
-import me.jakubok.nationsmod.collection.BorderSlots;
 import me.jakubok.nationsmod.collection.PlayerAccount;
 import me.jakubok.nationsmod.collection.PlayerInfo;
 import me.jakubok.nationsmod.collection.PolygonPlayerStorage;

@@ -10,14 +10,6 @@ public class ServerNetworking {
         ServerPlayNetworking.registerGlobalReceiver(Packets.CHECK_POSITION, new CheckPosition());
         ServerPlayNetworking.registerGlobalReceiver(Packets.PREPARE_TOWN_SCREEN, new PrepareTownScreen());
         ServerPlayNetworking.registerGlobalReceiver(Packets.CREATE_A_NATION, new CreateANation());
-        ServerPlayNetworking.registerGlobalReceiver(Packets.PREPARE_BORDER_SLOT_SCREEN, new PrepareBorderSlotScreen());
-        ServerPlayNetworking.registerGlobalReceiver(Packets.CREATE_A_BORDER_SLOT, new CreateABorderSlot());
-        ServerPlayNetworking.registerGlobalReceiver(Packets.DELETE_A_BORDER_SLOT, new DeleteABorderSlot());
-        ServerPlayNetworking.registerGlobalReceiver(Packets.SELECT_A_BORDER_SLOT, new SelectABorderSlot());
-        ServerPlayNetworking.registerGlobalReceiver(Packets.UNSELECT_A_BORDER_SLOT, new UnselectABorderSlot());
-        ServerPlayNetworking.registerGlobalReceiver(Packets.HIGHLIGHT_A_BLOCK_SERVER, new HighlightABlock());
-        ServerPlayNetworking.registerGlobalReceiver(Packets.UNHIGHLIGHT_A_BLOCK_SERVER, new UnhighlightABlock());
-        ServerPlayNetworking.registerGlobalReceiver(Packets.PREPARE_BORDER_REGISTRATOR_SCREEN, new PrepareBorderRegistratorScreen());
         ServerPlayNetworking.registerGlobalReceiver(Packets.GET_A_NATION, new GetANation());
         ServerPlayNetworking.registerGlobalReceiver(Packets.GET_A_PROVINCE, new GetAProvince());
         ServerPlayNetworking.registerGlobalReceiver(Packets.SELECT_A_POLYGON, new SelectAPolygon());

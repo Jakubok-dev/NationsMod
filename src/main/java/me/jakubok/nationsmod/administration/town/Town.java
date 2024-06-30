@@ -10,21 +10,16 @@ import me.jakubok.nationsmod.administration.governmentElements.formsOfGovernment
 import me.jakubok.nationsmod.administration.law.Directive;
 import me.jakubok.nationsmod.administration.nation.Nation;
 import me.jakubok.nationsmod.administration.province.Province;
-import me.jakubok.nationsmod.collection.BorderGroup;
 import me.jakubok.nationsmod.collection.PlayerAccount;
 import me.jakubok.nationsmod.collection.PlayerInfo;
-import me.jakubok.nationsmod.collection.TerritoryShape;
 import me.jakubok.nationsmod.entity.human.HumanEntity;
-import me.jakubok.nationsmod.geometry.Polygon;
 import me.jakubok.nationsmod.registries.LegalOrganisationRegistry;
 import me.jakubok.nationsmod.registries.PlayerInfoRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.crash.CrashException;
 import net.minecraft.util.crash.CrashReport;
-import net.minecraft.util.math.ChunkPos;
 
 
 public class Town extends AdministratingUnit<TownLawDescription> {

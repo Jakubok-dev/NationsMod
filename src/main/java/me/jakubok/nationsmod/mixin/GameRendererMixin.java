@@ -15,7 +15,6 @@ public class GameRendererMixin {
     @Inject(method = "renderWorld(FJLnet/minecraft/client/util/math/MatrixStack;)V", at = @At(value = "INVOKE_STRING", target = "Lnet/minecraft/util/profiler/Profiler;swap(Ljava/lang/String;)V", args = {
         "ldc=hand" }))
     private void onRenderCenterLast(float partialTicks, final long nanoTime, MatrixStack stack, CallbackInfo info) {
-        NationsClient.drawer.render(partialTicks, stack);
         NationsClient.polygonDrawer.render(partialTicks, stack);
     }
 }
