@@ -20,8 +20,6 @@ import net.minecraft.util.Rarity;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 
-import java.util.Objects;
-
 public class NationIndependenceDeclaration extends Item implements Declaration {
     
     public NationIndependenceDeclaration() {

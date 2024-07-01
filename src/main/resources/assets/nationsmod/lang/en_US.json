@@ -1,6 +1,8 @@
 {
     "itemGroup.nationsmod.item_group": "Nations",
     "item.nationsmod.constitution": "Constitution",
+    "item.nationsmod.act": "Act",
+    "item.nationsmod.act_and_quill": "Act and quill",
     "item.nationsmod.town_independence_declaration": "Town independence declaration",
     "item.nationsmod.nation_independence_declaration": "Nation independence declaration",
     "item.nationsmod.border_registrator": "Border registrator",

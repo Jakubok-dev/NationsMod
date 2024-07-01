@@ -2,12 +2,7 @@ package me.jakubok.nationsmod.registries;
 
 import me.jakubok.nationsmod.NationsMod;
 import me.jakubok.nationsmod.block.BorderSignBlockItem;
-import me.jakubok.nationsmod.items.BorderRegistrator;
-import me.jakubok.nationsmod.items.Constitution;
-import me.jakubok.nationsmod.items.DistrictDeclaration;
-import me.jakubok.nationsmod.items.Parchment;
-import me.jakubok.nationsmod.items.NationIndependenceDeclaration;
-import me.jakubok.nationsmod.items.TownIndependenceDeclaration;
+import me.jakubok.nationsmod.items.*;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.item.Item;
@@ -36,9 +31,15 @@ public class ItemRegistry {
 
     public static final BorderSignBlockItem BORDER_SIGN_BLOCK_ITEM = new BorderSignBlockItem();
 
+    public static final Act ACT = new Act();
+
+    public static final ActAndQuill ACT_AND_QUILL = new ActAndQuill();
+
     static {
         Registry.register(Registries.ITEM, new Identifier(NationsMod.MOD_ID, "constitution"), CONSTITUTION);
         Registry.register(Registries.ITEM, new Identifier(NationsMod.MOD_ID, "parchment"), PARCHMENT);
+        Registry.register(Registries.ITEM, new Identifier(NationsMod.MOD_ID, "act"), ACT);
+        Registry.register(Registries.ITEM, new Identifier(NationsMod.MOD_ID, "act_and_quill"), ACT_AND_QUILL);
         Registry.register(Registries.ITEM, new Identifier(NationsMod.MOD_ID, "district_declaration"), DISTRICT_DECLARATION);
         Registry.register(Registries.ITEM, new Identifier(NationsMod.MOD_ID, "town_independence_declaration"), TOWN_INDEPENDENCE_DECLARATION);
         Registry.register(Registries.ITEM, new Identifier(NationsMod.MOD_ID, "nation_independence_declaration"), NATION_INDEPENDENCE_DECLARATION);
@@ -51,6 +52,7 @@ public class ItemRegistry {
         .entries((context, entries) -> {
             entries.add(CONSTITUTION);
             entries.add(PARCHMENT);
+            entries.add(ACT_AND_QUILL);
             entries.add(TOWN_INDEPENDENCE_DECLARATION);
             entries.add(NATION_INDEPENDENCE_DECLARATION);
             entries.add(DISTRICT_DECLARATION);
