@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import me.jakubok.nationsmod.administration.town.Town;
-import me.jakubok.nationsmod.gui.miscellaneous.SimpleWindow;
+import me.jakubok.nationsmod.gui.miscellaneous.ResizableWindow;
 import me.jakubok.nationsmod.gui.townScreen.TownScreen;
 import me.jakubok.nationsmod.networking.ClientNetworking;
 import me.jakubok.nationsmod.networking.Packets;
@@ -25,7 +25,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
 
-public class TownsScreen extends SimpleWindow {
+public class TownsScreen extends ResizableWindow {
 
     protected ButtonWidget left, right;
     protected TextFieldWidget searchBox;
@@ -77,8 +77,8 @@ public class TownsScreen extends SimpleWindow {
                     ClientNetworking.makeARequest(Packets.PREPARE_TOWN_SCREEN, buffer, response);
                 }
             ).dimensions(
-                windowCenterHorizontal - 73,
-                windowTop + 28*i,
+                this.windowCenterHorizontal() - 73,
+                this.getWindowTop() + 28*i,
                 150,
                 20
             ).build());
@@ -92,8 +92,8 @@ public class TownsScreen extends SimpleWindow {
 
         this.searchBox = new TextFieldWidget(
             this.textRenderer, 
-            windowCenterHorizontal - 73,
-            windowBottom - 25,
+            this.windowCenterHorizontal() - 73,
+            this.getWindowBottom() - 25,
             150, 
             20, 
             Text.of("")
@@ -116,8 +116,8 @@ public class TownsScreen extends SimpleWindow {
                 this.drawTowns();
             }
         ).dimensions(
-            windowLeft + 5,
-            windowCenterVertical - 10, 
+            this.getWindowLeft() + 5,
+            this.windowCenterVertical() - 10,
             20, 
             20
         ).build();
@@ -130,8 +130,8 @@ public class TownsScreen extends SimpleWindow {
                 this.drawTowns();
             }
         ).dimensions(
-            windowRight - 25,
-            windowCenterVertical - 10, 
+            this.getWindowRight() - 25,
+            this.windowCenterVertical() - 10,
             20, 
             20
         ).build();

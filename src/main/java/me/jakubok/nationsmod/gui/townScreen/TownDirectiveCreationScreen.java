@@ -1,13 +1,13 @@
 package me.jakubok.nationsmod.gui.townScreen;
 
-import me.jakubok.nationsmod.gui.miscellaneous.SimpleWindow;
+import me.jakubok.nationsmod.gui.miscellaneous.ResizableWindow;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 
-public class TownDirectiveCreationScreen extends SimpleWindow {
+public class TownDirectiveCreationScreen extends ResizableWindow {
 
     public ButtonWidget submit;
     public TextFieldWidget nameField;
@@ -23,7 +23,7 @@ public class TownDirectiveCreationScreen extends SimpleWindow {
             matrices,
             textRenderer, 
             Text.of("Directive name:"), 
-            windowCenterHorizontal - 75, 
+            this.windowCenterHorizontal() - 75,
             windowTop + 30, 
             0xffffff
         );
@@ -37,15 +37,15 @@ public class TownDirectiveCreationScreen extends SimpleWindow {
             Text.translatable("gui.nationsmod.submit"),
             t -> {}
         ).dimensions(
-            windowCenterHorizontal - 64, 
-            windowBottom - 25, 
+            this.windowCenterHorizontal() - 64,
+            this.getWindowBottom() - 25,
             128, 
             20
         ).build();
 
         this.nameField = new TextFieldWidget(
             textRenderer,
-            windowCenterHorizontal,
+            this.windowCenterHorizontal(),
             windowTop + 25,
             100,
             20,

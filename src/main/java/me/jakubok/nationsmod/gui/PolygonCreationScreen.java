@@ -1,6 +1,6 @@
 package me.jakubok.nationsmod.gui;
 
-import me.jakubok.nationsmod.gui.miscellaneous.SimpleWindow;
+import me.jakubok.nationsmod.gui.miscellaneous.ResizableWindow;
 import me.jakubok.nationsmod.networking.Packets;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -11,7 +11,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
 
-public class PolygonCreationScreen extends SimpleWindow {
+public class PolygonCreationScreen extends ResizableWindow {
 
     protected TextFieldWidget nameField;
     protected ButtonWidget submit;
@@ -27,8 +27,8 @@ public class PolygonCreationScreen extends SimpleWindow {
                 matrices,
                 this.textRenderer,
                 Text.of("Name:"),
-                windowCenterHorizontal - 75,
-                windowCenterVertical - 10,
+                this.windowCenterHorizontal() - 75,
+                this.windowCenterVertical() - 10,
                 0xffffff
         );
     }
@@ -38,8 +38,8 @@ public class PolygonCreationScreen extends SimpleWindow {
         super.init();
         this.nameField = new TextFieldWidget(
                 textRenderer,
-                windowCenterHorizontal,
-                windowCenterVertical - 15,
+                this.windowCenterHorizontal(),
+                this.windowCenterVertical() - 15,
                 100,
                 20,
                 Text.of("")
@@ -62,8 +62,8 @@ public class PolygonCreationScreen extends SimpleWindow {
                     this.client.setScreen(null);
                 }
         ).dimensions(
-                windowCenterHorizontal - 50,
-                windowBottom - 25,
+                this.windowCenterHorizontal() - 50,
+                this.getWindowBottom() - 25,
                 100,
                 20
         ).build();

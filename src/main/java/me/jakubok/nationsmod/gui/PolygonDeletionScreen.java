@@ -1,7 +1,6 @@
 package me.jakubok.nationsmod.gui;
 
-import me.jakubok.nationsmod.geometry.Polygon;
-import me.jakubok.nationsmod.gui.miscellaneous.SimpleWindow;
+import me.jakubok.nationsmod.gui.miscellaneous.ResizableWindow;
 import me.jakubok.nationsmod.networking.Packets;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -11,7 +10,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
 
-public class PolygonDeletionScreen extends SimpleWindow {
+public class PolygonDeletionScreen extends ResizableWindow {
     public final int polygonIndex;
     protected ButtonWidget yes, no;
     public PolygonDeletionScreen(int polygonIndex, Screen previousScreen) {
@@ -27,8 +26,8 @@ public class PolygonDeletionScreen extends SimpleWindow {
                 matrices,
                 textRenderer,
                 Text.translatable("gui.nationsmod.delete_a_border_slot_screen.1"),
-                windowCenterHorizontal,
-                windowCenterVertical - 20,
+                this.windowCenterHorizontal(),
+                this.windowCenterVertical() - 20,
                 0xa5081a
         );
 
@@ -36,8 +35,8 @@ public class PolygonDeletionScreen extends SimpleWindow {
                 matrices,
                 textRenderer,
                 Text.translatable("gui.nationsmod.delete_a_border_slot_screen.2"),
-                windowCenterHorizontal,
-                windowCenterVertical,
+                this.windowCenterHorizontal(),
+                this.windowCenterVertical(),
                 0xa5081a
         );
     }
@@ -57,8 +56,8 @@ public class PolygonDeletionScreen extends SimpleWindow {
                 }
         ).dimensions(
                 windowLeft + 7,
-                windowBottom - 25,
-                windowCenterHorizontal / 2 - 5,
+                this.getWindowBottom() - 25,
+                this.windowCenterHorizontal() / 2 - 5,
                 20
         ).build();
         this.addDrawableChild(this.yes);
@@ -67,9 +66,9 @@ public class PolygonDeletionScreen extends SimpleWindow {
                 Text.translatable("gui.nationsmod.no"),
                 t -> this.close()
         ).dimensions(
-                windowCenterHorizontal,
-                windowBottom - 25,
-                windowCenterHorizontal / 2 - 5,
+                this.windowCenterHorizontal(),
+                this.getWindowBottom() - 25,
+                this.windowCenterHorizontal() / 2 - 5,
                 20
         ).build();
         this.addDrawableChild(this.no);

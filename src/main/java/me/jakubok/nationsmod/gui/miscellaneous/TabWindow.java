@@ -16,7 +16,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
-public abstract class TabWindow extends SimpleWindow {
+public abstract class TabWindow extends ResizableWindow {
 
     protected final Identifier TABS_TEXTURE = new Identifier("textures/gui/container/creative_inventory/tabs.png");
     protected int selectedTab = 0;
@@ -67,15 +67,15 @@ public abstract class TabWindow extends SimpleWindow {
 
     protected boolean isClickInTab(int index, double mouseX, double mouseY) {
         if (index / 10 == 0)
-            return mouseX >= windowLeft - 22 + 26*index &&
-            mouseX <= windowLeft + 6 + 26*index &&
-            mouseY >= windowTop - 28 &&
-            mouseY <= windowTop + 4;
+            return mouseX >= this.getWindowLeft() - 22 + 26*index &&
+            mouseX <= this.getWindowLeft() + 6 + 26*index &&
+            mouseY >= this.getWindowTop() - 28 &&
+            mouseY <= this.getWindowTop() + 4;
         else 
-            return mouseX >= windowLeft - 22 + 26*(index % 9) &&
-            mouseX <= windowLeft + 6 + 26*(index % 9) &&
-            mouseY >= windowBottom - 3 &&
-            mouseY <= windowBottom + 25;
+            return mouseX >= this.getWindowLeft() - 22 + 26*(index % 9) &&
+            mouseX <= this.getWindowLeft() + 6 + 26*(index % 9) &&
+            mouseY >= this.getWindowBottom() - 3 &&
+            mouseY <= this.getWindowBottom() + 25;
     }
 
     protected void drawASelectedTab(MatrixStack matrices, int mouseX, int mouseY, float delta) {
@@ -98,7 +98,7 @@ public abstract class TabWindow extends SimpleWindow {
             matrices, 
             this.textRenderer, 
             Text.of(this.title.getString() + " - " + this.getTabs().get(this.selectedTab).name.getString()), 
-            windowCenterHorizontal,
+            this.windowCenterHorizontal(),
             windowTop + 10,
             0xffffff
         );
@@ -139,9 +139,9 @@ public abstract class TabWindow extends SimpleWindow {
 
         int height;
         if (iteration / 10 == 0)
-            height = windowTop - 28;
+            height = this.getWindowTop() - 28;
         else
-            height = windowBottom - 3;
+            height = this.getWindowBottom() - 3;
 
         int width;
         if (iteration / 10 == 0)

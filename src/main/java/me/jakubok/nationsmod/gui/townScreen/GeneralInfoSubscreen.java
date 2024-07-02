@@ -6,7 +6,7 @@ import java.util.List;
 import me.jakubok.nationsmod.administration.nation.Nation;
 import me.jakubok.nationsmod.administration.province.Province;
 import me.jakubok.nationsmod.gui.miscellaneous.Property;
-import me.jakubok.nationsmod.gui.miscellaneous.SimpleWindow;
+import me.jakubok.nationsmod.gui.miscellaneous.ResizableWindow;
 import me.jakubok.nationsmod.gui.miscellaneous.Subscreen;
 import me.jakubok.nationsmod.gui.miscellaneous.TabWindow;
 import me.jakubok.nationsmod.networking.ClientNetworking;
@@ -46,49 +46,49 @@ public class GeneralInfoSubscreen {
                 Text.of("Name:"),
                 Text.of(inst.town.getName()),
                 inst.getClient(),
-                SimpleWindow.windowTop + 35
+                inst.getWindowTop() + 35
             ),
             new Property(
                 Text.of("Government:"),
                 inst.town.formOfGovernment.getDisplayName(),
                 inst.getClient(),
-                SimpleWindow.windowTop + 35 + 21
+                inst.getWindowTop() + 35 + 21
             ),
             new Property(
                 Text.of("Citizens:"),
                 Text.of(inst.town.getAIMembers().size() + inst.town.getPlayerMembers().size() + ""),
                 inst.getClient(),
-                SimpleWindow.windowTop + 35 + 21 * 2
+                inst.getWindowTop() + 35 + 21 * 2
             ),
             new Property(
                 Text.of("Districts:"),
                 Text.of(inst.town.getTheListOfDistrictsIDs().size() + ""),
                 inst.getClient(),
-                SimpleWindow.windowTop + 35 + 21 * 3
+                inst.getWindowTop() + 35 + 21 * 3
             ),
             new Property(
                 Text.of("Province:"),
                 Text.of("-"),
                 inst.getClient(),
-                SimpleWindow.windowTop + 35 + 21 * 4
+                inst.getWindowTop() + 35 + 21 * 4
             ),
             new Property(
                 Text.of("Nation:"),
                 Text.of("-"),
                 inst.getClient(),
-                SimpleWindow.windowTop + 35
+                inst.getWindowTop() + 35
             ),
             new Property(
                 Text.of("Petition support:"),
                 Text.of(inst.town.getThePetitionSupport() + "%"),
                 inst.getClient(),
-                SimpleWindow.windowTop + 35 + 21
+                inst.getWindowTop() + 35 + 21
             ),
             new Property(
                 Text.of("Citizenship:"),
                 inst.town.getTheCitizenshipApprovement().displayText,
                 inst.getClient(),
-                SimpleWindow.windowTop + 35 + 21 * 2
+                inst.getWindowTop() + 35 + 21 * 2
             )
         );
 
@@ -99,8 +99,8 @@ public class GeneralInfoSubscreen {
                 inst.reload();
             }
         ).dimensions(
-            SimpleWindow.windowLeft + 5, 
-            SimpleWindow.windowTop + 5, 
+            inst.getWindowLeft() + 5,
+            inst.getWindowTop() + 5,
             20, 
             20
         ).build();
@@ -112,8 +112,8 @@ public class GeneralInfoSubscreen {
                 inst.reload();
             }
         ).dimensions(
-            SimpleWindow.windowLeft + 5, 
-            SimpleWindow.windowBottom - 25, 
+            inst.getWindowLeft() + 5,
+            inst.getWindowBottom() - 25,
             20, 
             20
         ).build();

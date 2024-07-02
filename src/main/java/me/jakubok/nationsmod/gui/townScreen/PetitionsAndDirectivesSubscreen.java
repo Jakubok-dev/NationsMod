@@ -1,6 +1,6 @@
 package me.jakubok.nationsmod.gui.townScreen;
 
-import me.jakubok.nationsmod.gui.miscellaneous.SimpleWindow;
+import me.jakubok.nationsmod.gui.miscellaneous.ResizableWindow;
 import me.jakubok.nationsmod.gui.miscellaneous.Subscreen;
 import me.jakubok.nationsmod.gui.miscellaneous.TabWindow;
 import me.jakubok.nationsmod.registries.ItemRegistry;
@@ -25,8 +25,8 @@ public class PetitionsAndDirectivesSubscreen {
                 inst.reload();
             }
         ).dimensions(
-            SimpleWindow.windowLeft + 5, 
-            SimpleWindow.windowTop + 5, 
+            inst.getWindowLeft() + 5,
+            inst.getWindowTop() + 5,
             20, 
             20
         ).build();
@@ -38,8 +38,8 @@ public class PetitionsAndDirectivesSubscreen {
                 inst.reload();
             }
         ).dimensions(
-            SimpleWindow.windowLeft + 5, 
-            SimpleWindow.windowBottom - 25, 
+            inst.getWindowLeft() + 5,
+            inst.getWindowBottom() - 25,
             20, 
             20
         ).build();

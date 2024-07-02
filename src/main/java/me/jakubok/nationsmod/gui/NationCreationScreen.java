@@ -1,6 +1,6 @@
 package me.jakubok.nationsmod.gui;
 
-import me.jakubok.nationsmod.gui.miscellaneous.SimpleWindow;
+import me.jakubok.nationsmod.gui.miscellaneous.ResizableWindow;
 import me.jakubok.nationsmod.networking.Packets;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -12,7 +12,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
 
-public class NationCreationScreen extends SimpleWindow {
+public class NationCreationScreen extends ResizableWindow {
 
     TextFieldWidget nationName, provinceName;
     ButtonWidget submit;
@@ -30,8 +30,8 @@ public class NationCreationScreen extends SimpleWindow {
             matrices,
             textRenderer, 
             Text.translatable("gui.nationsmod.nation_creation_screen.nation_name"), 
-            windowCenterHorizontal - 75, 
-            windowCenterVertical - 20, 
+            this.windowCenterHorizontal() - 75,
+            this.windowCenterVertical() - 20,
             0xffffff
         );
 
@@ -40,8 +40,8 @@ public class NationCreationScreen extends SimpleWindow {
             matrices,
             textRenderer, 
             Text.translatable("gui.nationsmod.nation_creation_screen.province_name"), 
-            windowCenterHorizontal - 75, 
-            windowCenterVertical + 5, 
+            this.windowCenterHorizontal() - 75,
+            this.windowCenterVertical() + 5,
             0xffffff
         );
     }
@@ -52,8 +52,8 @@ public class NationCreationScreen extends SimpleWindow {
 
         this.nationName = new TextFieldWidget(
             textRenderer,
-            windowCenterHorizontal,
-            windowCenterVertical - 25,
+            this.windowCenterHorizontal(),
+            this.windowCenterVertical() - 25,
             100,
             20,
             Text.translatable("gui.nationsmod.nation_creation_screen.nation_name")
@@ -62,8 +62,8 @@ public class NationCreationScreen extends SimpleWindow {
 
         this.provinceName = new TextFieldWidget(
             textRenderer, 
-            windowCenterHorizontal, 
-            windowCenterVertical,
+            this.windowCenterHorizontal(),
+            this.windowCenterVertical(),
             100, 
             20, 
             Text.translatable("gui.nationsmod.nation_creation_screen.province_name")
@@ -90,8 +90,8 @@ public class NationCreationScreen extends SimpleWindow {
                 this.client.setScreen(null);
             }
         ).dimensions(
-            windowCenterHorizontal - 64, 
-            windowBottom - 25, 
+            this.windowCenterHorizontal() - 64,
+            this.getWindowBottom() - 25,
             128, 
             20
         ).build();

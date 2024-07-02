@@ -11,12 +11,12 @@ public class Property {
     public MinecraftClient client;
     private int y;
     
-    public void render(MatrixStack matrices, SimpleWindow parentScreen, TextRenderer textRenderer, int mouseX, int mouseY, float delta) {
+    public void render(MatrixStack matrices, ResizableWindow parentScreen, TextRenderer textRenderer, int mouseX, int mouseY, float delta) {
         Screen.drawTextWithShadow(
             matrices,
             textRenderer,
             property,
-            SimpleWindow.windowLeft + 20,
+            parentScreen.getWindowLeft() + 20,
             y,
             0xFFFFFF
         );
@@ -25,7 +25,7 @@ public class Property {
             matrices,
             textRenderer,
             value,
-            19 * SimpleWindow.windowCenterHorizontal / 16,
+            19 * parentScreen.windowCenterHorizontal() / 16,
             y,
             0xFFFFFF
         );

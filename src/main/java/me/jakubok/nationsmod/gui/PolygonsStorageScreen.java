@@ -2,7 +2,7 @@ package me.jakubok.nationsmod.gui;
 
 import me.jakubok.nationsmod.collection.PolygonAlterationMode;
 import me.jakubok.nationsmod.geometry.Polygon;
-import me.jakubok.nationsmod.gui.miscellaneous.SimpleWindow;
+import me.jakubok.nationsmod.gui.miscellaneous.ResizableWindow;
 import me.jakubok.nationsmod.networking.ClientNetworking;
 import me.jakubok.nationsmod.networking.Packets;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -21,7 +21,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-public class PolygonsStorageScreen extends SimpleWindow {
+public class PolygonsStorageScreen extends ResizableWindow {
 
     public final Map<String, Integer> storage;
 
@@ -79,8 +79,8 @@ public class PolygonsStorageScreen extends SimpleWindow {
                         ClientNetworking.makeARequest(Packets.GET_A_POLYGON, buffer, response);
                     }
             ).dimensions(
-                    windowCenterHorizontal - 73,
-                    windowTop + 28*i,
+                    this.windowCenterHorizontal() - 73,
+                    this.getWindowTop() + 28*i,
                     150,
                     20
             ).build());
@@ -94,8 +94,8 @@ public class PolygonsStorageScreen extends SimpleWindow {
 
         this.searchBox = new TextFieldWidget(
                 textRenderer,
-                windowCenterHorizontal - 73,
-                windowBottom - 25,
+                this.windowCenterHorizontal() - 73,
+                this.getWindowBottom() - 25,
                 150,
                 20,
                 Text.of("")
@@ -118,8 +118,8 @@ public class PolygonsStorageScreen extends SimpleWindow {
                     this.drawSlots();
                 }
         ).dimensions(
-                windowLeft + 5,
-                windowCenterVertical - 10,
+                this.getWindowLeft() + 5,
+                this.windowCenterVertical() - 10,
                 20,
                 20
         ).build();
@@ -132,8 +132,8 @@ public class PolygonsStorageScreen extends SimpleWindow {
                     this.drawSlots();
                 }
         ).dimensions(
-                windowRight - 25,
-                windowCenterVertical - 10,
+                this.getWindowRight() - 25,
+                this.windowCenterVertical() - 10,
                 20,
                 20
         ).build();
@@ -153,8 +153,8 @@ public class PolygonsStorageScreen extends SimpleWindow {
                     ClientPlayNetworking.send(Packets.CHANGE_THE_POLYGON_ALTERATION_MODE, buffer);
                 }
         ).dimensions(
-                windowLeft,
-                windowTop - 25,
+                this.getWindowLeft(),
+                this.getWindowTop() - 25,
                 25,
                 20
         ).build();
@@ -175,8 +175,8 @@ public class PolygonsStorageScreen extends SimpleWindow {
                     ClientPlayNetworking.send(Packets.CHANGE_THE_POLYGON_ALTERATION_MODE, buffer);
                 }
         ).dimensions(
-                windowLeft + (windowCenterHorizontal - windowLeft) / 2 + 12,
-                windowTop - 25,
+                this.getWindowLeft() + (this.windowCenterHorizontal() - this.getWindowLeft()) / 2 + 12,
+                this.getWindowTop() - 25,
                 25,
                 20
         ).build();
@@ -197,8 +197,8 @@ public class PolygonsStorageScreen extends SimpleWindow {
                     ClientPlayNetworking.send(Packets.CHANGE_THE_POLYGON_ALTERATION_MODE, buffer);
                 }
         ).dimensions(
-                windowCenterHorizontal + (windowRight - windowCenterHorizontal) / 2 - 37,
-                windowTop - 25,
+                this.windowCenterHorizontal() + (this.getWindowRight() - this.windowCenterHorizontal()) / 2 - 37,
+                this.getWindowTop() - 25,
                 25,
                 20
         ).build();
@@ -219,8 +219,8 @@ public class PolygonsStorageScreen extends SimpleWindow {
                     ClientPlayNetworking.send(Packets.CHANGE_THE_POLYGON_ALTERATION_MODE, buffer);
                 }
         ).dimensions(
-                windowRight - 25,
-                windowTop - 25,
+                this.getWindowRight() - 25,
+                this.getWindowTop() - 25,
                 25,
                 20
         ).build();
