@@ -6,7 +6,7 @@ import java.util.UUID;
 
 import me.jakubok.nationsmod.administration.governmentElements.FormOfGovernment;
 import me.jakubok.nationsmod.administration.governmentElements.formsOfGovernment.AbsoluteMonarchy;
-import me.jakubok.nationsmod.administration.law.Directive;
+import me.jakubok.nationsmod.administration.law.Act;
 import me.jakubok.nationsmod.administration.law.LawApprovement;
 import me.jakubok.nationsmod.collection.Colour;
 import me.jakubok.nationsmod.collection.PlayerAccount;
@@ -27,7 +27,7 @@ public abstract class AdministratingUnit<D extends AdministratingUnitLawDescript
         if (this.getTheMapColour().getB() <= 0)
             this.getTheMapColour().setB(rng.nextInt(255));
         if (formOfGovernment == null)
-            this.formOfGovernment = new AbsoluteMonarchy<AdministratingUnit<D>, D>(this, () -> new Directive<>(this.description), server);
+            this.formOfGovernment = new AbsoluteMonarchy<AdministratingUnit<D>, D>(this, () -> new Act<>(this.description), server);
     }
     public AdministratingUnit(D description) {
         super(description);

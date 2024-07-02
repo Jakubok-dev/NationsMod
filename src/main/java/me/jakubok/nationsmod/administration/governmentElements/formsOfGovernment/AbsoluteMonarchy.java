@@ -8,8 +8,8 @@ import me.jakubok.nationsmod.administration.abstractEntities.AdministratingUnitL
 import me.jakubok.nationsmod.administration.governmentElements.DecisiveEntity.DecisiveEntitysVerdict;
 import me.jakubok.nationsmod.administration.governmentElements.FormOfGovernment;
 import me.jakubok.nationsmod.administration.governmentElements.decisiveEntities.Monarch;
-import me.jakubok.nationsmod.administration.law.Directive;
-import me.jakubok.nationsmod.administration.law.Directive.DirectiveStatus;
+import me.jakubok.nationsmod.administration.law.Act;
+import me.jakubok.nationsmod.administration.law.Act.ActStatus;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.text.Text;
 
@@ -18,7 +18,7 @@ public class AbsoluteMonarchy<U extends AdministratingUnit<D>, D extends Adminis
     private final Monarch monarch;
 
     public AbsoluteMonarchy(U administratedUnit,
-            Supplier<Directive<D>> directiveFactory, MinecraftServer server) {
+                            Supplier<Act<D>> directiveFactory, MinecraftServer server) {
         super(administratedUnit, directiveFactory);
         this.monarch = new Monarch(administratedUnit, this, server);
     }
@@ -33,8 +33,8 @@ public class AbsoluteMonarchy<U extends AdministratingUnit<D>, D extends Adminis
     }
 
     @Override
-    public void putUnderDeliberation(Directive<D> directive) {
-        directive.status = DirectiveStatus.DELIBERATED_BY_THE_LEGISLATIVE;
+    public void putUnderDeliberation(Act<D> directive) {
+        directive.status = ActStatus.DELIBERATED_BY_THE_LEGISLATIVE;
         this.getLegislative().putUnderDeliberation(directive.getID());
         this.mapOfDirectives.put(directive.getID(), directive);
     }
@@ -56,7 +56,7 @@ public class AbsoluteMonarchy<U extends AdministratingUnit<D>, D extends Adminis
 
     @Override
     public void legislativesVerdictListener(UUID directivesID, DecisiveEntitysVerdict verdict) {
-        Directive<D> directive = this.mapOfDirectives.get(directivesID);
+        Act<D> directive = this.mapOfDirectives.get(directivesID);
         this.mapOfDirectives.remove(directivesID);
         if (verdict == DecisiveEntitysVerdict.APPROVED)
             directive.implement(this.administratedUnit.law);

@@ -84,7 +84,7 @@ public class LegalOrganisationRegistry extends PersistentState {
         return manager.getOrCreate(
             createFromNbt,
             LegalOrganisationRegistry::new,
-            NationsMod.MOD_ID + "-legal_organisations_registry"
+            NationsMod.MOD_ID + "-legal_organisation_registry"
         );
     }
 }

@@ -5,17 +5,14 @@ import java.util.UUID;
 
 import net.minecraft.nbt.NbtCompound;
 
-public class Directive<D extends LawDescription> extends Law<D> {
+public class Act<D extends LawDescription> extends LawHolder<D> {
     private UUID id = UUID.randomUUID();
-    public DirectiveStatus status = DirectiveStatus.UNSUBMITTED;
-    public Directive(D description) {
+    public ActStatus status = ActStatus.UNSUBMITTED;
+    public Act(D description) {
         super(description);
-        this.law.clear();
     }
-    public Directive(D description, NbtCompound nbt) {
-        super(description);
-        this.law.clear();
-        this.readFromNbt(nbt);
+    public Act(D description, NbtCompound nbt) {
+        super(description, nbt);
     }
 
     public UUID getID() {
@@ -29,19 +26,19 @@ public class Directive<D extends LawDescription> extends Law<D> {
 
     @Override
     public void readFromNbt(NbtCompound tag) {
-        this.id = tag.getUuid("directivesID");
-        this.status = DirectiveStatus.values()[tag.getInt("status")];
+        this.id = tag.getUuid("actsID");
+        this.status = ActStatus.values()[tag.getInt("status")];
         super.readFromNbt(tag);
     }
 
     @Override
     public NbtCompound writeToNbtAndReturn(NbtCompound tag) {
-        tag.putUuid("directivesID", this.id);
+        tag.putUuid("actsID", this.id);
         tag.putInt("status", this.status.value);
         return super.writeToNbtAndReturn(tag);
     }
 
-    public enum DirectiveStatus {
+    public enum ActStatus {
         UNSUBMITTED(0),
         DELIBERATED_BY_THE_LEGISLATIVE(1),
         REJECTED_BY_THE_LEGISLATIVE(2),
@@ -49,7 +46,7 @@ public class Directive<D extends LawDescription> extends Law<D> {
         REJECTED_BY_THE_EXECUTIVE(4),
         APPROVED(5);
 
-        DirectiveStatus(int value) {
+        ActStatus(int value) {
             this.value = value;
         }
 

@@ -7,7 +7,7 @@ import java.util.UUID;
 import me.jakubok.nationsmod.administration.abstractEntities.AdministratingUnit;
 import me.jakubok.nationsmod.administration.district.District;
 import me.jakubok.nationsmod.administration.governmentElements.formsOfGovernment.AbsoluteMonarchy;
-import me.jakubok.nationsmod.administration.law.Directive;
+import me.jakubok.nationsmod.administration.law.Act;
 import me.jakubok.nationsmod.administration.nation.Nation;
 import me.jakubok.nationsmod.administration.province.Province;
 import me.jakubok.nationsmod.collection.PlayerAccount;
@@ -167,7 +167,7 @@ public class Town extends AdministratingUnit<TownLawDescription> {
     public void readTheFormOfGovernment(NbtCompound nbt, MinecraftServer server) {
         switch (nbt.getString("formOfGovernment")) {
             case "absolute_monarchy":
-                this.formOfGovernment = new AbsoluteMonarchy<Town, TownLawDescription>(this, () -> new Directive<>(this.description), server);
+                this.formOfGovernment = new AbsoluteMonarchy<Town, TownLawDescription>(this, () -> new Act<>(this.description), server);
                 break;
             default:
                 throw new CrashException(CrashReport.create(new Throwable(), "Unknown form of government"));
