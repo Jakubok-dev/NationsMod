@@ -12,6 +12,7 @@ public class Property {
     private int y;
     
     public void render(MatrixStack matrices, ResizableWindow parentScreen, TextRenderer textRenderer, int mouseX, int mouseY, float delta) {
+        int valueWidth = textRenderer.getWidth(value);
         Screen.drawTextWithShadow(
             matrices,
             textRenderer,
@@ -21,15 +22,14 @@ public class Property {
             0xFFFFFF
         );
         
-        Screen.drawCenteredTextWithShadow(
+        Screen.drawTextWithShadow(
             matrices,
             textRenderer,
             value,
-            19 * parentScreen.windowCenterHorizontal() / 16,
+            parentScreen.getWindowRight() - 20 - valueWidth,
             y,
             0xFFFFFF
         );
-
     }
 
     public Property(Text property, Text value, MinecraftClient client, int y) {

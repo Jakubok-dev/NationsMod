@@ -8,6 +8,7 @@ import me.jakubok.nationsmod.gui.miscellaneous.Subscreen;
 import me.jakubok.nationsmod.gui.miscellaneous.TabWindow;
 import me.jakubok.nationsmod.registries.ItemRegistry;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.ElementListWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;

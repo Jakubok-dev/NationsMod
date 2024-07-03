@@ -1,21 +1,25 @@
 package me.jakubok.nationsmod.gui.townScreen;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import me.jakubok.nationsmod.administration.nation.Nation;
 import me.jakubok.nationsmod.administration.province.Province;
-import me.jakubok.nationsmod.gui.miscellaneous.Property;
-import me.jakubok.nationsmod.gui.miscellaneous.ResizableWindow;
-import me.jakubok.nationsmod.gui.miscellaneous.Subscreen;
-import me.jakubok.nationsmod.gui.miscellaneous.TabWindow;
+import me.jakubok.nationsmod.collection.Pair;
+import me.jakubok.nationsmod.gui.miscellaneous.*;
 import me.jakubok.nationsmod.networking.ClientNetworking;
 import me.jakubok.nationsmod.networking.Packets;
 import me.jakubok.nationsmod.registries.ItemRegistry;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.Element;
+import net.minecraft.client.gui.Selectable;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.option.ControlsListWidget;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.gui.widget.ElementListWidget;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
@@ -26,157 +30,37 @@ import net.minecraft.text.Text;
 public class GeneralInfoSubscreen {
     public final Subscreen<TabWindow> subscreen;
 
-    public final List<Property> properties;
-    int page = 0;
-    public ButtonWidget settingsUp, settingsDown;
-    public Province province; public Nation nation;
+    public final List<Pair<Text, Text>> propertyEntries;
+    public PropertyListWidget list;
 
     public GeneralInfoSubscreen(TownScreen inst) {
-        this.subscreen = new Subscreen<TabWindow>(Text.of("General info"), new ItemStack(ItemRegistry.TOWN_INDEPENDENCE_DECLARATION), this::render, this::init);
+        this.subscreen = new Subscreen<>(Text.of("General info"), new ItemStack(ItemRegistry.TOWN_INDEPENDENCE_DECLARATION), this::render, this::init);
 
-        if (inst.town.getNationsID() == null) {
-            province = null; nation = null;
-        } else {
-            //this.getTheProvince(inst);
-            province = null; nation = null;
-        }
-        
-        this.properties = Arrays.asList(
-            new Property(
-                Text.of("Name:"),
-                Text.of(inst.town.getName()),
-                inst.getClient(),
-                0
-            ),
-            new Property(
-                Text.of("Government:"),
-                inst.town.formOfGovernment.getDisplayName(),
-                inst.getClient(),
-                0
-            ),
-            new Property(
-                Text.of("Citizens:"),
-                Text.of(inst.town.getAIMembers().size() + inst.town.getPlayerMembers().size() + ""),
-                inst.getClient(),
-                0
-            ),
-            new Property(
-                Text.of("Districts:"),
-                Text.of(inst.town.getTheListOfDistrictsIDs().size() + ""),
-                inst.getClient(),
-                0
-            ),
-            new Property(
-                Text.of("Province:"),
-                Text.of("-"),
-                inst.getClient(),
-                0
-            ),
-            new Property(
-                Text.of("Nation:"),
-                Text.of("-"),
-                inst.getClient(),
-                0
-            ),
-            new Property(
-                Text.of("Petition support:"),
-                Text.of(inst.town.getThePetitionSupport() + "%"),
-                inst.getClient(),
-                0
-            ),
-            new Property(
-                Text.of("Citizenship:"),
-                inst.town.getTheCitizenshipApprovement().displayText,
-                inst.getClient(),
-                0
-            )
+        this.propertyEntries = Arrays.asList(
+                new Pair<>(Text.of("Name:"), Text.of(inst.town.getName())),
+                new Pair<>(Text.of("Government:"), inst.town.formOfGovernment.getDisplayName()),
+                new Pair<>(Text.of("Citizens:"), Text.of(inst.town.getAIMembers().size() + inst.town.getPlayerMembers().size() + "")),
+                new Pair<>(Text.of("Districts:"), Text.of(inst.town.getTheListOfDistrictsIDs().size() + "")),
+                new Pair<>(Text.of("Province:"), Text.of("-")),
+                new Pair<>(Text.of("Nation:"), Text.of("-")),
+                new Pair<>(Text.of("Petition support:"), Text.of(inst.town.getThePetitionSupport() + "%")),
+                new Pair<>(Text.of("Citizenship:"), inst.town.getTheCitizenshipApprovement().displayText)
         );
-
-
     }
 
-//    protected void getTheProvince(TownScreen inst) {
-//        PacketByteBuf buffer = PacketByteBufs.create();
-//        NbtCompound nbt = new NbtCompound();
-//        nbt.putUuid("id", inst.town.getProvincesID());
-//        buffer.writeNbt(nbt);
-//        ClientNetworking.makeARequest(Packets.GET_A_PROVINCE, buffer,
-//        (MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) -> {
-//            NbtCompound nbtresponse = buf.readNbt();
-//            client.execute(() -> {
-//                this.province = new Province(nbtresponse, null);
-//                this.properties.get(4).value = Text.of(this.province.getName());
-//                this.getTheNation(inst);
-//            });
-//        });
-//    }
-
-    protected void getTheNation(TownScreen inst) {
-        PacketByteBuf buffer = PacketByteBufs.create();
-        NbtCompound nbt = new NbtCompound();
-        nbt.putUuid("id", this.province.getNationsUUID());
-        buffer.writeNbt(nbt);
-        ClientNetworking.makeARequest(Packets.GET_A_NATION, buffer,
-        (MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) -> {
-            NbtCompound nbtresponse = buf.readNbt();
-            client.execute(() -> {
-                this.nation = new Nation(nbtresponse, null);
-                this.properties.get(5).value = Text.of(this.nation.getName());
-            });
-        });
-    }
-
-    protected void render(MatrixStack matrices, int mouseX, int mouseY, float delta, TabWindow instance) {
-        for (int i = page*5; i < 5*(page + 1) && i < this.properties.size(); i++) {
-            this.properties.get(i).render(matrices, instance, instance.getTextRenderer(), mouseX, mouseY, delta);
-        }
-    }
+    protected void render(MatrixStack matrices, int mouseX, int mouseY, float delta, TabWindow instance) {}
 
     protected void init(TabWindow instance) {
-        settingsUp = ButtonWidget.builder(
-                Text.of("▲"),
-                t -> {
-                    page--;
-                    instance.reload();
-                }
-        ).dimensions(
-                instance.getWindowLeft() + 5,
-                instance.getWindowTop() + 5,
-                20,
+        this.list = new PropertyListWidget(
+                instance.getClient(),
+                this.propertyEntries,
+                instance.getWindowLeft() + 3,
+                instance.getWindowWidth() - 8,
+                instance.getWindowHeight() - 30,
+                instance.getWindowTop() + 25,
+                instance.getWindowBottom() - 5,
                 20
-        ).build();
-
-        settingsDown = ButtonWidget.builder(
-                Text.of("▼"),
-                t -> {
-                    page++;
-                    instance.reload();
-                }
-        ).dimensions(
-                instance.getWindowLeft() + 5,
-                instance.getWindowBottom() - 25,
-                20,
-                20
-        ).build();
-        this.settingsUp.active = isUpActive();
-        this.settingsDown.active = isDownActive();
-        instance.addDrawableChild(this.settingsUp);
-        instance.addDrawableChild(this.settingsDown);
-        for (int i = page*5; i < 5*(page + 1) && i < this.properties.size(); i++) {
-            this.properties.get(i).setY(instance.getWindowTop() + 35 + 21 * (i % 5));
-            this.properties.get(i).client = instance.getClient();
-        }
-    }
-
-    protected void remove(TabWindow instance) {
-        instance.drawables.clear();
-    }
-
-    public boolean isUpActive() {
-        return this.page > 0;
-    }
-
-    public boolean isDownActive() {
-        return (this.page + 1) * 5 < this.properties.size();
+        );
+        instance.addDrawableChild(this.list);
     }
 }

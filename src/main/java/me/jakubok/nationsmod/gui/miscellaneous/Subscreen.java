@@ -17,6 +17,8 @@ public class Subscreen<T> {
         this.init = init;
     }
 
+
+
     @FunctionalInterface
     public interface RenderFunction<T> {
         void render(MatrixStack matrices, int mouseX, int mouseY, float delta, T instance);
