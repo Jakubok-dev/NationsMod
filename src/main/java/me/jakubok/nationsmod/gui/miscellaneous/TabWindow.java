@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.Selectable;
@@ -23,8 +24,12 @@ public abstract class TabWindow extends ResizableWindow {
 
     public List<Drawable> drawables = new ArrayList<>();
 
-    public TabWindow(Text title, Screen previousScreen) {
-        super(title, previousScreen);
+    public int getTabCountPerSide() {
+        return this.getWindowWidth() / 28;
+    }
+
+    public TabWindow(Text title, int width, int height, int borderRadius, Screen previousScreen) {
+        super(title, width, height, borderRadius, previousScreen);
     }
 
     protected abstract List<Subscreen<TabWindow>> getTabs();
@@ -41,7 +46,15 @@ public abstract class TabWindow extends ResizableWindow {
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         renderBackground(matrices);
         this.drawUnselectedTabs(matrices, delta, mouseX, mouseY);
-        this.drawBackground(matrices);
+        this.drawBackground(matrices, this.getWindowLeft(), this.getWindowTop(), this.windowWidth, this.windowHeight, this.getBorderRadius(), 0, 0, 4, 16, 16);
+        drawCenteredTextWithShadow(
+                matrices,
+                this.textRenderer,
+                this.title,
+                this.windowCenterHorizontal(),
+                this.getWindowTop() + 10,
+                0xffffff
+        );
         this.drawASelectedTab(matrices, mouseX, mouseY, delta);
         this.drawWidgets(matrices, mouseX, mouseY, delta);
     }
@@ -59,6 +72,12 @@ public abstract class TabWindow extends ResizableWindow {
         return super.mouseReleased(mouseX, mouseY, button);
     }
 
+    @Override
+    public void resize(MinecraftClient client, int width, int height) {
+        super.resize(client, width, height);
+        this.reload();
+    }
+
     public void reload() {
         this.drawables.clear();
         this.clearChildren();
@@ -66,14 +85,14 @@ public abstract class TabWindow extends ResizableWindow {
     }
 
     protected boolean isClickInTab(int index, double mouseX, double mouseY) {
-        if (index / 10 == 0)
-            return mouseX >= this.getWindowLeft() - 22 + 26*index &&
-            mouseX <= this.getWindowLeft() + 6 + 26*index &&
+        if (index / (this.getTabCountPerSide() + 1) == 0)
+            return mouseX >= this.getWindowLeft() - 22 + 28*index &&
+            mouseX <= this.getWindowLeft() + 6 + 28*index &&
             mouseY >= this.getWindowTop() - 28 &&
             mouseY <= this.getWindowTop() + 4;
         else 
-            return mouseX >= this.getWindowLeft() - 22 + 26*(index % 9) &&
-            mouseX <= this.getWindowLeft() + 6 + 26*(index % 9) &&
+            return mouseX >= this.getWindowLeft() - 22 + 28*(index - this.getTabCountPerSide()) &&
+            mouseX <= this.getWindowLeft() + 6 + 28*(index - this.getTabCountPerSide()) &&
             mouseY >= this.getWindowBottom() - 3 &&
             mouseY <= this.getWindowBottom() + 25;
     }
@@ -87,21 +106,6 @@ public abstract class TabWindow extends ResizableWindow {
 
         if (this.getTabs().get(this.selectedTab).render != null)
             this.getTabs().get(this.selectedTab).render.render(matrices, mouseX, mouseY, delta, this);
-    }
-
-    protected void drawBackground(MatrixStack matrices) {
-        RenderSystem.setShaderTexture(0, new Identifier("minecraft", "textures/gui/demo_background.png"));
-
-        drawTexture(matrices, 120, 50, 0, 0, 256, 256, 256, 256);
-
-        drawCenteredTextWithShadow(
-            matrices, 
-            this.textRenderer, 
-            Text.of(this.title.getString() + " - " + this.getTabs().get(this.selectedTab).name.getString()), 
-            this.windowCenterHorizontal(),
-            windowTop + 10,
-            0xffffff
-        );
     }
 
     protected void drawWidgets(MatrixStack matrices, int mouseX, int mouseY, float delta) {
@@ -128,26 +132,26 @@ public abstract class TabWindow extends ResizableWindow {
     protected void renderTabIcon(MatrixStack matrices, Subscreen<TabWindow> option, int iteration, boolean selected) {
 
         int textureHeight;
-        if (selected && iteration / 10 == 0)
+        if (selected && iteration / (this.getTabCountPerSide() + 1) == 0)
             textureHeight = 32;
-        else if (selected && iteration / 10 != 0)
+        else if (selected && iteration / (this.getTabCountPerSide() + 1) != 0)
             textureHeight = 96;
-        else if (!selected && iteration / 10 == 0)
+        else if (!selected && iteration / (this.getTabCountPerSide() + 1) == 0)
             textureHeight = 0;
         else
             textureHeight = 64;
 
         int height;
-        if (iteration / 10 == 0)
+        if (iteration / (this.getTabCountPerSide() + 1) == 0)
             height = this.getWindowTop() - 28;
         else
             height = this.getWindowBottom() - 3;
 
         int width;
-        if (iteration / 10 == 0)
-            width = windowLeft - 22 + 26*iteration;
+        if (iteration / (this.getTabCountPerSide() + 1) == 0)
+             width = this.getWindowLeft() - 22 + 28*iteration;
         else
-            width = windowLeft - 22 + 26*(iteration % 9);
+            width = this.getWindowLeft() - 22 + 28*(iteration - this.getTabCountPerSide());
 
         drawTexture(
             matrices, 
@@ -159,7 +163,6 @@ public abstract class TabWindow extends ResizableWindow {
             32
         );
         
-        //this.itemRenderer.zOffset = 100.0F;
         ItemStack itemStack = option.icon;
         this.itemRenderer.renderInGuiWithOverrides(
             matrices,
@@ -174,8 +177,7 @@ public abstract class TabWindow extends ResizableWindow {
             width + 5,
             height + 8
         );
-        //this.itemRenderer.zOffset = 0.0F;
-    } 
+    }
 
     @Override
     public <T extends Element & Drawable & Selectable> T addDrawableChild(T drawableElement) {

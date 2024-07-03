@@ -12,29 +12,29 @@ import net.minecraft.util.Identifier;
 
 public abstract class ResizableWindow extends Screen {
 
-    protected int windowLeft;
-    protected int windowTop;
-    protected int width;
-    protected int height;
+//    protected int windowLeft;
+//    protected int windowTop;
+    protected int windowWidth;
+    protected int windowHeight;
     protected int borderRadius;
 
     public int getWindowLeft() {
-        return windowLeft;
+        return (this.width - windowWidth) / 2;
     }
     public int getWindowTop() {
-        return windowTop;
+        return (this.height - windowHeight) / 2;
     }
     public int getWindowRight() {
-        return windowLeft + width;
+        return this.getWindowLeft() + windowWidth;
     }
     public int getWindowBottom() {
-        return windowTop + height;
+        return this.getWindowTop() + windowHeight;
     }
-    public int getWidth() {
-        return width;
+    public int getWindowWidth() {
+        return windowWidth;
     }
-    public int getHeight() {
-        return height;
+    public int getWindowHeight() {
+        return windowHeight;
     }
     public int getBorderRadius() {
         return borderRadius;
@@ -46,14 +46,12 @@ public abstract class ResizableWindow extends Screen {
     private final Screen previousScreen;
 
     public ResizableWindow(Text title, Screen previousScreen) {
-        this(title, 120, 50, 248, 165, 4, previousScreen);
+        this(title, 248, 165, 4, previousScreen);
     }
-    public ResizableWindow(Text title, int x, int y, int width, int height, int borderRadius, Screen previousScreen) {
+    public ResizableWindow(Text title, int width, int height, int borderRadius, Screen previousScreen) {
         super(title);
-        this.windowLeft = x;
-        this.windowTop = y;
-        this.width = width;
-        this.height = height;
+        this.windowWidth = width;
+        this.windowHeight = height;
         this.borderRadius = borderRadius;
         this.previousScreen = previousScreen;
     }
@@ -79,13 +77,13 @@ public abstract class ResizableWindow extends Screen {
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         renderBackground(matrices);
 
-        drawBackground(matrices, 120, 50, 248, 165, this.getBorderRadius(), 0, 0, 4, 16, 16);
+        drawBackground(matrices, this.getWindowLeft(), this.getWindowTop(), this.windowWidth, this.windowHeight, this.getBorderRadius(), 0, 0, 4, 16, 16);
         drawCenteredTextWithShadow(
             matrices, 
             this.textRenderer, 
             this.title, 
             this.windowCenterHorizontal(),
-            windowTop + 10,
+            this.getWindowTop() + 10,
             0xffffff
         );
 

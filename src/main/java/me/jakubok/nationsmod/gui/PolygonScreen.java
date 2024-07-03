@@ -114,7 +114,7 @@ public class PolygonScreen extends ResizableWindow {
                     this.makeSelected();
                 }
         ).dimensions(
-                (windowLeft) + 5,
+                this.getWindowLeft() + 5,
                 this.getWindowBottom() - 25,
                 (this.getWindowRight() - this.getWindowLeft()) / 3 - 5,
                 20

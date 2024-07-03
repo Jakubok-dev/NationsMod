@@ -55,7 +55,7 @@ public class PolygonDeletionScreen extends ResizableWindow {
                     this.client.setScreen(null);
                 }
         ).dimensions(
-                windowLeft + 7,
+                this.getWindowLeft() + 7,
                 this.getWindowBottom() - 25,
                 this.windowCenterHorizontal() / 2 - 5,
                 20

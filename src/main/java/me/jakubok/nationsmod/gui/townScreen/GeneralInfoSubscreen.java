@@ -28,7 +28,7 @@ public class GeneralInfoSubscreen {
 
     public final List<Property> properties;
     int page = 0;
-    public final ButtonWidget settingsUp, settingsDown; 
+    public ButtonWidget settingsUp, settingsDown;
     public Province province; public Nation nation;
 
     public GeneralInfoSubscreen(TownScreen inst) {
@@ -46,77 +46,53 @@ public class GeneralInfoSubscreen {
                 Text.of("Name:"),
                 Text.of(inst.town.getName()),
                 inst.getClient(),
-                inst.getWindowTop() + 35
+                0
             ),
             new Property(
                 Text.of("Government:"),
                 inst.town.formOfGovernment.getDisplayName(),
                 inst.getClient(),
-                inst.getWindowTop() + 35 + 21
+                0
             ),
             new Property(
                 Text.of("Citizens:"),
                 Text.of(inst.town.getAIMembers().size() + inst.town.getPlayerMembers().size() + ""),
                 inst.getClient(),
-                inst.getWindowTop() + 35 + 21 * 2
+                0
             ),
             new Property(
                 Text.of("Districts:"),
                 Text.of(inst.town.getTheListOfDistrictsIDs().size() + ""),
                 inst.getClient(),
-                inst.getWindowTop() + 35 + 21 * 3
+                0
             ),
             new Property(
                 Text.of("Province:"),
                 Text.of("-"),
                 inst.getClient(),
-                inst.getWindowTop() + 35 + 21 * 4
+                0
             ),
             new Property(
                 Text.of("Nation:"),
                 Text.of("-"),
                 inst.getClient(),
-                inst.getWindowTop() + 35
+                0
             ),
             new Property(
                 Text.of("Petition support:"),
                 Text.of(inst.town.getThePetitionSupport() + "%"),
                 inst.getClient(),
-                inst.getWindowTop() + 35 + 21
+                0
             ),
             new Property(
                 Text.of("Citizenship:"),
                 inst.town.getTheCitizenshipApprovement().displayText,
                 inst.getClient(),
-                inst.getWindowTop() + 35 + 21 * 2
+                0
             )
         );
 
-        settingsUp = ButtonWidget.builder(
-            Text.of("▲"), 
-            t -> {
-                page--;
-                inst.reload();
-            }
-        ).dimensions(
-            inst.getWindowLeft() + 5,
-            inst.getWindowTop() + 5,
-            20, 
-            20
-        ).build();
 
-        settingsDown = ButtonWidget.builder(
-            Text.of("▼"), 
-            t -> {
-                page++;
-                inst.reload();
-            }
-        ).dimensions(
-            inst.getWindowLeft() + 5,
-            inst.getWindowBottom() - 25,
-            20, 
-            20
-        ).build();
     }
 
 //    protected void getTheProvince(TownScreen inst) {
@@ -157,11 +133,37 @@ public class GeneralInfoSubscreen {
     }
 
     protected void init(TabWindow instance) {
+        settingsUp = ButtonWidget.builder(
+                Text.of("▲"),
+                t -> {
+                    page--;
+                    instance.reload();
+                }
+        ).dimensions(
+                instance.getWindowLeft() + 5,
+                instance.getWindowTop() + 5,
+                20,
+                20
+        ).build();
+
+        settingsDown = ButtonWidget.builder(
+                Text.of("▼"),
+                t -> {
+                    page++;
+                    instance.reload();
+                }
+        ).dimensions(
+                instance.getWindowLeft() + 5,
+                instance.getWindowBottom() - 25,
+                20,
+                20
+        ).build();
         this.settingsUp.active = isUpActive();
         this.settingsDown.active = isDownActive();
         instance.addDrawableChild(this.settingsUp);
         instance.addDrawableChild(this.settingsDown);
         for (int i = page*5; i < 5*(page + 1) && i < this.properties.size(); i++) {
+            this.properties.get(i).setY(instance.getWindowTop() + 35 + 21 * (i % 5));
             this.properties.get(i).client = instance.getClient();
         }
     }

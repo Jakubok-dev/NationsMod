@@ -20,17 +20,35 @@ import net.minecraft.text.Text;
 
 public class MainScreen extends Screen {
 
-    protected final int windowLeft = 0;
-    protected final int windowRight = windowLeft + 480;
-    
-    protected final int windowTop = 0;
-    protected final int windowBottom = windowTop + 255;
+    protected int windowWidth;
+    protected int windowHeight;
 
-    protected final int windowCenterHorizontal = (windowLeft + windowRight) / 2;
-    protected final int windowCenterVertical = (windowTop + windowBottom) / 2;
+    public int getWindowLeft() {
+        return (this.width - windowWidth) / 2;
+    }
+    public int getWindowTop() {
+        return (this.height - windowHeight) / 2;
+    }
+    public int getWindowRight() {
+        return this.getWindowLeft() + windowWidth;
+    }
+    public int getWindowBottom() {
+        return this.getWindowTop() + windowHeight;
+    }
+    public int getWindowWidth() {
+        return windowWidth;
+    }
+    public int getWindowHeight() {
+        return windowHeight;
+    }
+
+    protected int windowCenterHorizontal() { return (this.getWindowLeft() + this.getWindowRight()) / 2; }
+    protected int windowCenterVertical() { return (this.getWindowTop() + this.getWindowBottom()) / 2; }
 
     public MainScreen() {
         super(Text.translatable("gui.nationsmod.main_screen.title"));
+        this.windowWidth = 480;
+        this.windowHeight = 255;
     }
 
     @Override
@@ -41,8 +59,8 @@ public class MainScreen extends Screen {
             matrices, 
             this.textRenderer, 
             this.title, 
-            windowCenterHorizontal, 
-            windowCenterVertical - 50,
+            this.windowCenterHorizontal(),
+            this.windowCenterVertical() - 50,
             0xffffff
         );
         
@@ -62,8 +80,8 @@ public class MainScreen extends Screen {
                 this.client.setScreen(new MapScreen(this.client, this));
             }
         ).dimensions(
-            windowCenterHorizontal - 100, 
-            windowCenterVertical - 12, 
+            this.windowCenterHorizontal() - 100,
+            this.windowCenterVertical() - 12,
             200, 
             20
         ).build());
@@ -86,8 +104,8 @@ public class MainScreen extends Screen {
                 ClientNetworking.makeARequest(Packets.PREPARE_TOWNS_SCREEN, PacketByteBufs.create(), response);
             }
         ).dimensions(
-            this.windowCenterHorizontal - 100, 
-            windowCenterVertical + 12, 
+            this.windowCenterHorizontal() - 100,
+            this.windowCenterVertical() + 12,
             200, 
             20
         ).build());
@@ -96,8 +114,8 @@ public class MainScreen extends Screen {
             Text.translatable("gui.nationsmod.main_screen.nations_button"), 
             b -> {}
         ).dimensions(
-            windowCenterHorizontal - 100, 
-            windowCenterVertical + 36, 
+            this.windowCenterHorizontal() - 100,
+            this.windowCenterVertical() + 36,
             200, 
             20
         ).build());

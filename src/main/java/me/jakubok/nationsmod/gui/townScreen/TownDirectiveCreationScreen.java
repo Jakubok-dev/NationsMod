@@ -24,7 +24,7 @@ public class TownDirectiveCreationScreen extends ResizableWindow {
             textRenderer, 
             Text.of("Directive name:"), 
             this.windowCenterHorizontal() - 75,
-            windowTop + 30, 
+            this.getWindowTop() + 30,
             0xffffff
         );
     }
@@ -46,7 +46,7 @@ public class TownDirectiveCreationScreen extends ResizableWindow {
         this.nameField = new TextFieldWidget(
             textRenderer,
             this.windowCenterHorizontal(),
-            windowTop + 25,
+            this.getWindowTop() + 25,
             100,
             20,
             Text.of("Directive name:")

@@ -20,7 +20,7 @@ public class TownScreen extends TabWindow {
     public final PetitionsAndDirectivesSubscreen petitionsAndDirectives;
 
     public TownScreen(Town town, Screen previousScreen) {
-        super(Text.of(town.getName()), previousScreen);
+        super(Text.of(town.getName()), 250, 170, 4, previousScreen);
         this.town = town;
         this.generalInfo = new GeneralInfoSubscreen(this);
         this.petitionsAndDirectives = new PetitionsAndDirectivesSubscreen(this);
