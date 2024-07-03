@@ -54,8 +54,8 @@ public class GeneralInfoSubscreen {
         this.list = new PropertyListWidget(
                 instance.getClient(),
                 this.propertyEntries,
-                instance.getWindowLeft() + 3,
-                instance.getWindowWidth() - 8,
+                instance.getWindowLeft(),
+                instance.getWindowWidth() - 5,
                 instance.getWindowHeight() - 30,
                 instance.getWindowTop() + 25,
                 instance.getWindowBottom() - 5,

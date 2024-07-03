@@ -1,14 +1,14 @@
 package me.jakubok.nationsmod.gui;
 
+import me.jakubok.nationsmod.collection.Pair;
 import me.jakubok.nationsmod.geometry.Polygon;
-import me.jakubok.nationsmod.gui.miscellaneous.Property;
+import me.jakubok.nationsmod.gui.miscellaneous.PropertyListWidget;
 import me.jakubok.nationsmod.gui.miscellaneous.ResizableWindow;
 import me.jakubok.nationsmod.networking.Packets;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
 
@@ -22,7 +22,8 @@ public class PolygonScreen extends ResizableWindow {
     protected boolean selected;
     protected final int index;
 
-    public List<Property> properties = new ArrayList<>();
+    public List<Pair<Text, Text>> properties = new ArrayList<>();
+    public PropertyListWidget propertyListWidget;
 
     public PolygonScreen(Screen previousScreen, Polygon polygon, int index, boolean selected) {
         super(Text.of("Polygon screen - " + polygon.name), previousScreen);
@@ -30,41 +31,31 @@ public class PolygonScreen extends ResizableWindow {
         this.selected = selected;
         this.polygon = polygon;
         this.properties.add(
-            new Property(
+            new Pair<>(
                 Text.of("Nodes"),
-                Text.of(String.valueOf(this.polygon.size())),
-                this.getClient(),
-                this.getWindowTop() + 35
+                Text.of(String.valueOf(this.polygon.size()))
             )
         );
 
         if (this.polygon.getDomain() != null) {
-            this.properties.add(new Property(
+            this.properties.add(new Pair<>(
                     Text.of("Min X"),
-                    Text.of(String.valueOf(this.polygon.getDomain().from)),
-                    this.getClient(),
-                    this.getWindowTop() + 35 + 21 * this.properties.size()
+                    Text.of(String.valueOf(this.polygon.getDomain().from))
             ));
-            this.properties.add(new Property(
+            this.properties.add(new Pair<>(
                     Text.of("Max X"),
-                    Text.of(String.valueOf(this.polygon.getDomain().to)),
-                    this.getClient(),
-                    this.getWindowTop() + 35 + 21 * this.properties.size()
+                    Text.of(String.valueOf(this.polygon.getDomain().to))
             ));
         }
 
         if (this.polygon.getValueSet() != null) {
-            this.properties.add(new Property(
+            this.properties.add(new Pair<>(
                     Text.of("Min Y"),
-                    Text.of(String.valueOf(this.polygon.getValueSet().from)),
-                    this.getClient(),
-                    this.getWindowTop() + 35 + 21 * this.properties.size()
+                    Text.of(String.valueOf(this.polygon.getValueSet().from))
             ));
-            this.properties.add(new Property(
+            this.properties.add(new Pair<>(
                     Text.of("Max Y"),
-                    Text.of(String.valueOf(this.polygon.getValueSet().to)),
-                    this.getClient(),
-                    this.getWindowTop() + 35 + 21 * this.properties.size()
+                    Text.of(String.valueOf(this.polygon.getValueSet().to))
             ));
         }
     }
@@ -77,14 +68,6 @@ public class PolygonScreen extends ResizableWindow {
     public void makeUnselected() {
         this.selected = false;
         this.select.setMessage(Text.translatable("Select"));
-    }
-
-    @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        super.render(matrices, mouseX, mouseY, delta);
-        for (int i = 0; i < 5 && i < this.properties.size(); i++) {
-            this.properties.get(i).render(matrices, this, this.getTextRenderer(), mouseX, mouseY, delta);
-        }
     }
 
     @Override
@@ -122,7 +105,10 @@ public class PolygonScreen extends ResizableWindow {
         this.addDrawableChild(this.select);
         this.remove = ButtonWidget.builder(
                 Text.of("Remove"),
-                t -> { this.client.setScreen(new PolygonDeletionScreen(this.index, null)); }
+                t -> {
+                    assert this.client != null;
+                    this.client.setScreen(new PolygonDeletionScreen(this.index, null));
+                }
         ).dimensions(
                 (this.getWindowLeft() + (this.getWindowRight() - this.getWindowLeft()) / 3) + 1,
                 this.getWindowBottom() - 25,
@@ -141,5 +127,17 @@ public class PolygonScreen extends ResizableWindow {
                 20
         ).build();
         this.addDrawableChild(this.close);
+
+        this.propertyListWidget = new PropertyListWidget(
+                this.client,
+                this.properties,
+                this.getWindowLeft(),
+                this.getWindowWidth() - 5,
+                this.getWindowHeight() - 30,
+                this.getWindowTop() + 25,
+                this.getWindowBottom() - 5,
+                20
+        );
+        this.addDrawableChild(this.propertyListWidget);
     }
 }
