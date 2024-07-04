@@ -23,7 +23,7 @@ public class CreateAPolygon implements ServerPlayNetworking.PlayChannelHandler {
                                 ||
                                 name.equals("+")
                 ) {
-                    player.sendMessage(Text.translatable("gui.nationsmod.border_slot_creator_screen.name_not_unique"), false);
+                    player.sendMessage(Text.translatable("gui.nationsmod.polygon_creator_screen.name_not_unique"), false);
                     return;
                 }
             }

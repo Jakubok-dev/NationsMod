@@ -1,7 +1,10 @@
 package me.jakubok.nationsmod.gui;
 
 
+import com.google.common.collect.ImmutableList;
 import me.jakubok.nationsmod.gui.miscellaneous.ResizableWindow;
+import me.jakubok.nationsmod.gui.miscellaneous.form.FormWindow;
+import me.jakubok.nationsmod.gui.miscellaneous.form.TextInput;
 import me.jakubok.nationsmod.networking.Packets;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -13,95 +16,66 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 
-public class TownCreationScreen extends ResizableWindow {
-
-    protected TextFieldWidget townName;
-    protected TextFieldWidget mainDistrictName;
-    protected ButtonWidget submit;
+public class TownCreationScreen extends FormWindow {
 
     protected MinecraftClient client;
 
     public TownCreationScreen(MinecraftClient client, Screen previousScreen) {
-        super(Text.translatable("gui.nationsmod.town_creation_screen.title"), previousScreen);
+        super(
+                Text.translatable("gui.nationsmod.town_creation_screen.title"),
+                230,
+                110,
+                4,
+                previousScreen
+        );
         this.client = client;
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        super.render(matrices, mouseX, mouseY, delta);
+    protected void init() {
+        this.fillInTheDescription(
+                ImmutableList.of(
+                        new TextInput(
+                                Text.translatable("gui.nationsmod.town_creation_screen.town_name"),
+                                Text.literal("..."),
+                                o -> {
+                                    if (!(o instanceof String str))
+                                        return Text.literal("ERROR, Object is not an instance of string").formatted(Formatting.RED);
+                                    if (str.trim().equals(""))
+                                        return Text.literal("Input is empty!").formatted(Formatting.RED);
+                                    return Text.of("");
+                                },
+                                this.client
+                        ),
+                        new TextInput(
+                                Text.translatable("gui.nationsmod.town_creation_screen.district_name"),
+                                Text.literal("..."),
+                                o -> {
+                                    if (!(o instanceof String str))
+                                        return Text.literal("ERROR, Object is not an instance of string").formatted(Formatting.RED);
+                                    if (str.trim().equals(""))
+                                        return Text.literal("Input is empty!").formatted(Formatting.RED);
+                                    return Text.of("");
+                                },
+                                this.client
+                        )
+                ),
+                l -> {
+                    PacketByteBuf buf = PacketByteBufs.create();
 
-        // Town name:
-        drawCenteredTextWithShadow(
-            matrices,
-            textRenderer, 
-            Text.translatable("gui.nationsmod.town_creation_screen.town_name"), 
-            this.windowCenterHorizontal() - 75,
-            this.windowCenterVertical() - 20,
-            0xffffff
+                    NbtCompound compound = new NbtCompound();
+                    compound.putString("town_name", (String) l.get(0));
+                    compound.putString("district_name", (String) l.get(1));
+
+                    buf.writeNbt(compound);
+
+                    ClientPlayNetworking.send(Packets.CREATE_A_TOWN, buf);
+
+                    this.client.setScreen(null);
+                }
         );
-
-        // District name:
-        drawCenteredTextWithShadow(
-            matrices,
-            textRenderer, 
-            Text.translatable("gui.nationsmod.town_creation_screen.district_name"), 
-            this.windowCenterHorizontal() - 75,
-            this.windowCenterVertical() + 5,
-            0xffffff
-        );
-    }
-
-    @Override
-	protected void init() {
         super.init();
-        
-        this.townName = new TextFieldWidget(
-            textRenderer,
-            this.windowCenterHorizontal(),
-            this.windowCenterVertical() - 25,
-            100,
-            20,
-            Text.translatable("gui.nationsmod.town_creation_screen.town_name")
-        );
-        this.addDrawableChild(townName);
-
-        this.mainDistrictName = new TextFieldWidget(
-            textRenderer, 
-            this.windowCenterHorizontal(),
-            this.windowCenterVertical(),
-            100, 
-            20, 
-            Text.translatable("gui.nationsmod.town_creation_screen.district_name")
-        );
-        this.addDrawableChild(mainDistrictName);
-
-        this.submit = ButtonWidget.builder(
-            Text.translatable("gui.nationsmod.submit"), 
-            b -> {
-
-                if (this.mainDistrictName.getText().length() <= 0 || this.townName.getText().length() <= 0)
-                    return;
-
-                PacketByteBuf buf = PacketByteBufs.create();
-
-                NbtCompound compound = new NbtCompound();
-                compound.putString("town_name", this.townName.getText());
-                compound.putString("district_name", this.mainDistrictName.getText());
-
-                buf.writeNbt(compound);
-
-                ClientPlayNetworking.send(Packets.CREATE_A_TOWN, buf);
-
-                b.active = false;
-                this.client.setScreen(null);
-            }
-        ).dimensions(
-            this.windowCenterHorizontal() - 64,
-            this.getWindowBottom() - 25,
-            128, 
-            20
-        ).build();
-        this.addDrawableChild(this.submit);
     }
 }

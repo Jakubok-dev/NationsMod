@@ -1,6 +1,9 @@
 package me.jakubok.nationsmod.gui;
 
+import com.google.common.collect.ImmutableList;
 import me.jakubok.nationsmod.gui.miscellaneous.ResizableWindow;
+import me.jakubok.nationsmod.gui.miscellaneous.form.FormWindow;
+import me.jakubok.nationsmod.gui.miscellaneous.form.TextInput;
 import me.jakubok.nationsmod.networking.Packets;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -10,63 +13,52 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 
-public class PolygonCreationScreen extends ResizableWindow {
+import java.util.List;
 
-    protected TextFieldWidget nameField;
-    protected ButtonWidget submit;
+public class PolygonCreationScreen extends FormWindow {
 
     public PolygonCreationScreen(Screen previousScreen) {
-        super(Text.of("Polygon creation"), previousScreen);
-    }
-
-    @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        super.render(matrices, mouseX, mouseY, delta);
-        drawCenteredTextWithShadow(
-                matrices,
-                this.textRenderer,
-                Text.of("Name:"),
-                this.windowCenterHorizontal() - 75,
-                this.windowCenterVertical() - 10,
-                0xffffff
+        super(
+                Text.of("Polygon creation"),
+                230,
+                85,
+                4,
+                previousScreen
         );
     }
 
     @Override
     protected void init() {
-        super.init();
-        this.nameField = new TextFieldWidget(
-                textRenderer,
-                this.windowCenterHorizontal(),
-                this.windowCenterVertical() - 15,
-                100,
-                20,
-                Text.of("")
-        );
-        this.addDrawableChild(this.nameField);
-
-        this.submit = ButtonWidget.builder(
-                Text.translatable("gui.nationsmod.submit"),
-                t -> {
-
-                    if (this.nameField.getText().trim().equals("") || this.nameField.getText().trim().equals("+"))
-                        return;
-
+        this.fillInTheDescription(
+                ImmutableList.of(
+                        new TextInput(
+                                Text.of("Name:"),
+                                Text.literal("Write..."),
+                                o -> {
+                                    if (!(o instanceof String str))
+                                        return Text.literal("ERROR, Object is not an instance of string").formatted(Formatting.RED);
+                                    if (str.trim().equals(""))
+                                        return Text.literal("Input is empty!").formatted(Formatting.RED);
+                                    if (str.trim().equals("+"))
+                                        return Text.literal("The name must not be \"+\"!").formatted(Formatting.RED);
+                                    return Text.of("");
+                                },
+                                this.client
+                        )
+                ),
+                l -> {
+                    String name = (String)l.get(0);
                     PacketByteBuf buffer = PacketByteBufs.create();
-                    buffer.writeString(this.nameField.getText());
+                    buffer.writeString(name);
 
                     ClientPlayNetworking.send(Packets.CREATE_A_POLYGON, buffer);
 
-                    t.active = false;
+                    assert this.client != null;
                     this.client.setScreen(null);
                 }
-        ).dimensions(
-                this.windowCenterHorizontal() - 50,
-                this.getWindowBottom() - 25,
-                100,
-                20
-        ).build();
-        this.addDrawableChild(this.submit);
+        );
+        super.init();
     }
 }
