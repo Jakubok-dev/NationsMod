@@ -1,7 +1,9 @@
-package me.jakubok.nationsmod.gui;
+package me.jakubok.nationsmod.gui.polygonsStorageScreen;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import me.jakubok.nationsmod.collection.PolygonAlterationMode;
 import me.jakubok.nationsmod.geometry.Polygon;
+import me.jakubok.nationsmod.gui.PolygonScreen;
 import me.jakubok.nationsmod.gui.miscellaneous.ResizableWindow;
 import me.jakubok.nationsmod.networking.ClientNetworking;
 import me.jakubok.nationsmod.networking.Packets;
@@ -13,8 +15,11 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
+import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,119 +30,55 @@ public class PolygonsStorageScreen extends ResizableWindow {
 
     public final Map<String, Integer> storage;
 
-    protected ButtonWidget left, right, addition, deletion, insertion, opening;
+    protected ButtonWidget addition, deletion, insertion, opening;
     protected PolygonAlterationMode mode;
     protected TextFieldWidget searchBox;
+    protected PolygonsListWidget polygonsListWidget;
+    protected int selectedSlot;
 
-    protected int page = 0;
-    protected boolean isPageAtLeft() { return page > 0;  }
-    protected boolean isPageAtRight() { return (page+1)*4 < this.filteredSlotsNames.size(); }
-
-    List<String> slotsNames = new ArrayList<>();
-    List<String> filteredSlotsNames = new ArrayList<>();
-    List<ButtonWidget> slotsButtons = new ArrayList<>();
-
-    public PolygonsStorageScreen(Map<String, Integer> storage, PolygonAlterationMode mode, Screen previousScreen) {
+    public PolygonsStorageScreen(Map<String, Integer> storage, int selectedSlot, PolygonAlterationMode mode, Screen previousScreen) {
         super(Text.of("Polygons storage screen"), previousScreen);
         this.mode = mode;
         this.storage = storage;
-        this.slotsNames.addAll(this.storage.keySet());
-        Collections.sort(this.slotsNames);
-
-        this.storage.put("+", -1);
-        this.slotsNames.add("+");
-
-        this.filteredSlotsNames = this.slotsNames;
+        this.selectedSlot = selectedSlot;
     }
 
-    protected void drawSlots() {
-        this.left.active = isPageAtLeft();
-        this.right.active = isPageAtRight();
-
-        this.slotsButtons.forEach(this::remove);
-        this.slotsButtons.clear();
-
-        for (int i = 1; i <= 4 && (page*4)+i <= this.filteredSlotsNames.size(); i++) {
-            final int temp = i;
-
-            this.slotsButtons.add(ButtonWidget.builder(
-                    Text.of(this.filteredSlotsNames.get((page*4) + i - 1)),
-                    b -> {
-                        PacketByteBuf buffer = PacketByteBufs.create();
-                        buffer.writeInt(this.storage.get(this.filteredSlotsNames.get((page*4) + temp - 1)));
-
-
-                        ClientPlayNetworking.PlayChannelHandler response = (MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) -> {
-                            Polygon polygon = new Polygon(buf.readNbt());
-                            boolean selected = buf.readBoolean();
-
-                            client.execute(() -> {
-                                client.setScreen(new PolygonScreen(this, polygon, this.storage.get(this.filteredSlotsNames.get((page*4) + temp - 1)), selected));
-                            });
-                        };
-
-                        ClientNetworking.makeARequest(Packets.GET_A_POLYGON, buffer, response);
-                    }
-            ).dimensions(
-                    this.windowCenterHorizontal() - 73,
-                    this.getWindowTop() + 28*i,
-                    150,
-                    20
-            ).build());
-            this.addDrawableChild(this.slotsButtons.get(i-1));
-        }
+    @Override
+    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        super.render(matrices, mouseX, mouseY, delta);
+        RenderSystem.setShaderTexture(0, new Identifier("textures/gui/social_interactions.png"));
+        drawTexture(matrices, this.windowCenterHorizontal() - 73, this.getWindowBottom() - 21, 243, 1, 12, 12);
     }
 
     @Override
     protected void init() {
         super.init();
 
+        this.polygonsListWidget = new PolygonsListWidget(
+                this.client,
+                this.storage,
+                this.selectedSlot,
+                this.getWindowLeft(),
+                this.getWindowWidth() - 5,
+                this.getWindowHeight() - 52,
+                this.getWindowTop() + 25,
+                this.getWindowBottom() - 27,
+                25,
+                this
+        );
+        this.addDrawableChild(this.polygonsListWidget);
+
         this.searchBox = new TextFieldWidget(
                 textRenderer,
-                this.windowCenterHorizontal() - 73,
+                this.windowCenterHorizontal() - 56,
                 this.getWindowBottom() - 25,
-                150,
+                133,
                 20,
                 Text.of("")
         );
-        this.searchBox.setChangedListener(text -> {
-            this.page = 0;
-
-            this.filteredSlotsNames = this.slotsNames.stream()
-                    .filter(el -> el.contains(text) || el.equals("+"))
-                    .toList();
-
-            this.drawSlots();
-        });
+        this.searchBox.setPlaceholder(Text.literal("Search...").formatted(Formatting.ITALIC).formatted(Formatting.GRAY));
+        this.searchBox.setChangedListener(polygonsListWidget::onSearchChange);
         this.addDrawableChild(this.searchBox);
-
-        this.left = ButtonWidget.builder(
-                Text.of("<"),
-                b -> {
-                    page--;
-                    this.drawSlots();
-                }
-        ).dimensions(
-                this.getWindowLeft() + 5,
-                this.windowCenterVertical() - 10,
-                20,
-                20
-        ).build();
-        this.addDrawableChild(this.left);
-
-        this.right = ButtonWidget.builder(
-                Text.of(">"),
-                b -> {
-                    page++;
-                    this.drawSlots();
-                }
-        ).dimensions(
-                this.getWindowRight() - 25,
-                this.windowCenterVertical() - 10,
-                20,
-                20
-        ).build();
-        this.addDrawableChild(this.right);
 
         this.addition = ButtonWidget.builder(
                 Text.of("ADD"),
@@ -226,7 +167,5 @@ public class PolygonsStorageScreen extends ResizableWindow {
         ).build();
         this.opening.active = this.mode != PolygonAlterationMode.OPENING;
         this.addDrawableChild(this.opening);
-
-        this.drawSlots();
     }
 }

@@ -48,6 +48,7 @@ public class BorderRegistratorClicked implements ServerPlayNetworking.PlayChanne
                     nbt.putString("polygon" + i, polygonNames.get(i));
                 nbt.putInt("size", polygonNames.size());
                 nbt.putInt("mode", storage.mode.ordinal());
+                nbt.putInt("selectedSlot", info.polygonPlayerStorage.selectedSlot);
                 buffer.writeNbt(nbt);
                 ServerPlayNetworking.send(player, Packets.OPEN_POLYGONS_STORAGE_SCREEN, buffer);
                 return;

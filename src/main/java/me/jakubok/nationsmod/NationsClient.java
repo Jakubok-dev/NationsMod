@@ -27,8 +27,6 @@ public class NationsClient implements ClientModInitializer {
         ClientNetworking.register();
         KeyBindingRegistry.init();
         EntityRendererRegistry.register(EntityRegistry.HUMAN, HumanEntityRenderer::new);
-        EntityModelLayerRegistry.registerModelLayer(MODEL_HUMAN_LAYER, () -> {
-            return TexturedModelData.of(PlayerEntityModel.getTexturedModelData(Dilation.NONE, false), 64, 64);
-        });
+        EntityModelLayerRegistry.registerModelLayer(MODEL_HUMAN_LAYER, () -> TexturedModelData.of(PlayerEntityModel.getTexturedModelData(Dilation.NONE, false), 64, 64));
     }
 }

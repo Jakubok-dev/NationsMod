@@ -58,6 +58,11 @@ public class PolygonScreen extends ResizableWindow {
                     Text.of(String.valueOf(this.polygon.getValueSet().to))
             ));
         }
+
+        this.properties.add(new Pair<>(
+                Text.of("Closed"),
+                this.polygon.isThePolygonClosed() ? Text.of("Yes") : Text.of("No")
+        ));
     }
 
     public void makeSelected() {
@@ -80,8 +85,6 @@ public class PolygonScreen extends ResizableWindow {
                     if (this.selected) {
 
                         ClientPlayNetworking.send(Packets.UNSELECT_A_POLYGON, PacketByteBufs.create());
-//                        NationsClient.selectedSlot = -1;
-//                        NationsClient.borderSlot = new BorderGroup();
 
                         this.makeUnselected();
                         return;
@@ -90,9 +93,7 @@ public class PolygonScreen extends ResizableWindow {
                     PacketByteBuf buffer = PacketByteBufs.create();
                     buffer.writeInt(this.index);
 
-//                    NationsClient.borderSlot = new BorderGroup();
                     ClientPlayNetworking.send(Packets.SELECT_A_POLYGON, buffer);
-//                    NationsClient.selectedSlot = this.index;
 
                     this.makeSelected();
                 }

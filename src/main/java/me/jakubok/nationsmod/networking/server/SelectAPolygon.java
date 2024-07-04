@@ -21,8 +21,12 @@ public class SelectAPolygon implements ServerPlayNetworking.PlayChannelHandler {
         int polygonIndex = buf.readInt();
         server.execute(() -> {
             PlayerInfo info = PlayerInfo.fromAccount(new PlayerAccount(player), server);
-            if (info.polygonPlayerStorage.selectedSlot != -1)
+            if (info.polygonPlayerStorage.selectedSlot != -1) {
                 info.polygonPlayerStorage.getSelectedPolygon().unsubscribe("client" + player.getUuid().toString());
+                PacketByteBuf buffer = PacketByteBufs.create();
+                buffer.writeString(info.polygonPlayerStorage.getSelectedPolygon().name);
+                ServerPlayNetworking.send(player, Packets.UNCACHE_A_POLYGON, buffer);
+            }
             info.polygonPlayerStorage.selectedSlot = polygonIndex;
 
             Consumer<Polygon> subscriber = p -> {
