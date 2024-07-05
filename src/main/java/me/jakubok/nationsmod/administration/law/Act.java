@@ -39,6 +39,10 @@ public class Act<D extends LegalOrganisationLawDescription> extends LawHolder<D>
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     @SuppressWarnings("unchecked")
     public LegalOrganisation<D> getAffectedBody(MinecraftServer server) {
         return (LegalOrganisation<D>)LegalOrganisationRegistry.getRegistry(server).get(this.getAffectedBodyID());
@@ -51,19 +55,19 @@ public class Act<D extends LegalOrganisationLawDescription> extends LawHolder<D>
 
     @Override
     public void readFromNbt(NbtCompound tag) {
-        this.id = tag.getUuid("actsID");
-        this.name = tag.getString("name");
-        this.status = ActStatus.values()[tag.getInt("status")];
-        this.affectedBodyID = tag.getUuid("affectedBodyID");
+        this.id = tag.getUuid("act_id");
+        this.name = tag.getString("act_name");
+        this.status = ActStatus.values()[tag.getInt("act_status")];
+        this.affectedBodyID = tag.getUuid("act_affectedBodyID");
         super.readFromNbt(tag);
     }
 
     @Override
     public NbtCompound writeToNbtAndReturn(NbtCompound tag) {
-        tag.putUuid("id", this.id);
-        tag.putString("name", this.name);
-        tag.putInt("status", this.status.value);
-        tag.putUuid("affectedBodyID", this.affectedBodyID);
+        tag.putUuid("act_id", this.id);
+        tag.putString("act_name", this.name);
+        tag.putInt("act_status", this.status.value);
+        tag.putUuid("act_affectedBodyID", this.affectedBodyID);
         return super.writeToNbtAndReturn(tag);
     }
 

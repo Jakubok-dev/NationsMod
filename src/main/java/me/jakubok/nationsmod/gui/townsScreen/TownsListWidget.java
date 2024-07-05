@@ -76,7 +76,7 @@ public class TownsListWidget extends ElementListWidget<TownsListWidget.TownEntry
                 ClientPlayNetworking.PlayChannelHandler response = (MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) -> {
                     Town town = new Town(buf.readNbt(), null);
 
-                    client.execute(() -> client.setScreen(new TownScreen(town, TownsListWidget.this.parentScreen)));
+                    client.execute(() -> client.setScreen(new TownScreen(town, TownsListWidget.this.parentScreen, null)));
                 };
                 ClientNetworking.makeARequest(Packets.PREPARE_TOWN_SCREEN, buffer, response);
             }).dimensions(0, 0, 0, 20).build();

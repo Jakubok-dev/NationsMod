@@ -1,9 +1,10 @@
 package me.jakubok.nationsmod.gui;
 
-import me.jakubok.nationsmod.collection.Pair;
 import me.jakubok.nationsmod.geometry.Polygon;
-import me.jakubok.nationsmod.gui.miscellaneous.PropertyListWidget;
+import me.jakubok.nationsmod.gui.miscellaneous.property.PropertyEntry;
+import me.jakubok.nationsmod.gui.miscellaneous.property.PropertyListWidget;
 import me.jakubok.nationsmod.gui.miscellaneous.ResizableWindow;
+import me.jakubok.nationsmod.gui.miscellaneous.property.TextProperty;
 import me.jakubok.nationsmod.networking.Packets;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -22,7 +23,7 @@ public class PolygonScreen extends ResizableWindow {
     protected boolean selected;
     protected final int index;
 
-    public List<Pair<Text, Text>> properties = new ArrayList<>();
+    public List<PropertyEntry> properties = new ArrayList<>();
     public PropertyListWidget propertyListWidget;
 
     public PolygonScreen(Screen previousScreen, Polygon polygon, int index, boolean selected) {
@@ -30,39 +31,6 @@ public class PolygonScreen extends ResizableWindow {
         this.index = index;
         this.selected = selected;
         this.polygon = polygon;
-        this.properties.add(
-            new Pair<>(
-                Text.of("Nodes"),
-                Text.of(String.valueOf(this.polygon.size()))
-            )
-        );
-
-        if (this.polygon.getDomain() != null) {
-            this.properties.add(new Pair<>(
-                    Text.of("Min X"),
-                    Text.of(String.valueOf(this.polygon.getDomain().from))
-            ));
-            this.properties.add(new Pair<>(
-                    Text.of("Max X"),
-                    Text.of(String.valueOf(this.polygon.getDomain().to))
-            ));
-        }
-
-        if (this.polygon.getValueSet() != null) {
-            this.properties.add(new Pair<>(
-                    Text.of("Min Y"),
-                    Text.of(String.valueOf(this.polygon.getValueSet().from))
-            ));
-            this.properties.add(new Pair<>(
-                    Text.of("Max Y"),
-                    Text.of(String.valueOf(this.polygon.getValueSet().to))
-            ));
-        }
-
-        this.properties.add(new Pair<>(
-                Text.of("Closed"),
-                this.polygon.isThePolygonClosed() ? Text.of("Yes") : Text.of("No")
-        ));
     }
 
     public void makeSelected() {
@@ -77,6 +45,46 @@ public class PolygonScreen extends ResizableWindow {
 
     @Override
     protected void init() {
+        this.properties.add(
+                new TextProperty(
+                        this.client,
+                        Text.of("Nodes"),
+                        Text.of(String.valueOf(this.polygon.size()))
+                )
+        );
+
+        if (this.polygon.getDomain() != null) {
+            this.properties.add(new TextProperty(
+                    this.client,
+                    Text.of("Min X"),
+                    Text.of(String.valueOf(this.polygon.getDomain().from))
+            ));
+            this.properties.add(new TextProperty(
+                    this.client,
+                    Text.of("Max X"),
+                    Text.of(String.valueOf(this.polygon.getDomain().to))
+            ));
+        }
+
+        if (this.polygon.getValueSet() != null) {
+            this.properties.add(new TextProperty(
+                    this.client,
+                    Text.of("Min Y"),
+                    Text.of(String.valueOf(this.polygon.getValueSet().from))
+            ));
+            this.properties.add(new TextProperty(
+                    this.client,
+                    Text.of("Max Y"),
+                    Text.of(String.valueOf(this.polygon.getValueSet().to))
+            ));
+        }
+
+        this.properties.add(new TextProperty(
+                this.client,
+                Text.of("Closed"),
+                this.polygon.isThePolygonClosed() ? Text.of("Yes") : Text.of("No")
+        ));
+
         super.init();
 
         this.select = ButtonWidget.builder(

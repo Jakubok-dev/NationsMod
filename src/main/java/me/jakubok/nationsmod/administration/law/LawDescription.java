@@ -8,9 +8,9 @@ import net.minecraft.util.crash.CrashReport;
 
 public interface LawDescription {
 
-    public Map<String, RuleDescription> getRulesDescriptions();
+    Map<String, RuleDescription> getRulesDescriptions();
 
-    public class RuleDescription {
+    class RuleDescription {
         protected final RuleType type;
         protected final String description;
         public final Supplier<Object> defaultValue;

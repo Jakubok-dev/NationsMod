@@ -2,6 +2,7 @@ package me.jakubok.nationsmod.gui;
 
 import com.google.common.collect.ImmutableList;
 import me.jakubok.nationsmod.gui.miscellaneous.ResizableWindow;
+import me.jakubok.nationsmod.gui.miscellaneous.form.BasicValidations;
 import me.jakubok.nationsmod.gui.miscellaneous.form.FormWindow;
 import me.jakubok.nationsmod.gui.miscellaneous.form.TextInput;
 import me.jakubok.nationsmod.networking.Packets;
@@ -37,11 +38,10 @@ public class PolygonCreationScreen extends FormWindow {
                                 Text.of("Name:"),
                                 Text.literal("Write..."),
                                 o -> {
-                                    if (!(o instanceof String str))
-                                        return Text.literal("ERROR, Object is not an instance of string").formatted(Formatting.RED);
-                                    if (str.trim().equals(""))
-                                        return Text.literal("Input is empty!").formatted(Formatting.RED);
-                                    if (str.trim().equals("+"))
+                                    Text res = BasicValidations.BASIC_STRING_VALIDATION(o);
+                                    if (!res.getString().equals(""))
+                                        return res;
+                                    if (((String)o).trim().equals("+"))
                                         return Text.literal("The name must not be \"+\"!").formatted(Formatting.RED);
                                     return Text.of("");
                                 },

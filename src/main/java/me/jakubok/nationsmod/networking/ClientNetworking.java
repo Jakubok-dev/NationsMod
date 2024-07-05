@@ -47,5 +47,6 @@ public class ClientNetworking {
         ClientPlayNetworking.registerGlobalReceiver(Packets.CACHE_A_POLYGON, new CacheAPolygon());
         ClientPlayNetworking.registerGlobalReceiver(Packets.UNCACHE_A_POLYGON, new UncacheAPolygon());
         ClientPlayNetworking.registerGlobalReceiver(Packets.OPEN_ACT_CREATION_SCREEN, new OpenActCreationScreen());
+        ClientPlayNetworking.registerGlobalReceiver(Packets.OPEN_TOWN_SCREEN_WITH_A_PETITION, new OpenTownScreenWithAPetition());
     }
 }

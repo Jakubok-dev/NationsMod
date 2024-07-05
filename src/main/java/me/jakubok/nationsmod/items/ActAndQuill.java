@@ -6,6 +6,7 @@ import me.jakubok.nationsmod.administration.abstractEntities.LegalOrganisationLa
 import me.jakubok.nationsmod.administration.law.Act;
 import me.jakubok.nationsmod.administration.nation.Nation;
 import me.jakubok.nationsmod.administration.town.Town;
+import me.jakubok.nationsmod.administration.town.TownLawDescription;
 import me.jakubok.nationsmod.collection.PlayerAccount;
 import me.jakubok.nationsmod.collection.PlayerInfo;
 import me.jakubok.nationsmod.networking.Packets;
@@ -45,7 +46,7 @@ public class ActAndQuill extends Item {
         return bodyID != null && actNbt != null || super.hasGlint(stack);
     }
 
-    public Act<LegalOrganisationLawDescription> getTheAct(ItemStack stack, MinecraftServer server) {
+    public Act<?> getTheAct(ItemStack stack, MinecraftServer server) {
         NbtCompound nbt = stack.getSubNbt(NationsMod.MOD_ID);
         if (nbt == null)
             return null;
@@ -59,6 +60,7 @@ public class ActAndQuill extends Item {
         return new Act<>(organisation.description, actNbt);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         if (world.isClient)
@@ -94,6 +96,18 @@ public class ActAndQuill extends Item {
             PacketByteBuf buffer = PacketByteBufs.create();
             buffer.writeNbt(sentNbt);
             ServerPlayNetworking.send((ServerPlayerEntity) user, Packets.OPEN_ACT_CREATION_SCREEN, buffer);
+        }
+
+        Act<?> rawAct = this.getTheAct(stack, user.getServer());
+        if (rawAct.description instanceof TownLawDescription) {
+            Act<TownLawDescription> act = (Act<TownLawDescription>)rawAct;
+            Town town = (Town)act.getAffectedBody(user.getServer());
+            NbtCompound sentNbt = new NbtCompound();
+            sentNbt.put("act", act.writeToNbtAndReturn(new NbtCompound()));
+            sentNbt.put("town", town.writeToNbtAndReturn(new NbtCompound()));
+            PacketByteBuf buffer = PacketByteBufs.create();
+            buffer.writeNbt(sentNbt);
+            ServerPlayNetworking.send((ServerPlayerEntity) user, Packets.OPEN_TOWN_SCREEN_WITH_A_PETITION, buffer);
         }
 
         return TypedActionResult.success(user.getMainHandStack());

@@ -46,6 +46,7 @@ public class CreateAnAct implements ServerPlayNetworking.PlayChannelHandler {
             NbtCompound stackNbt = stack.getOrCreateSubNbt(NationsMod.MOD_ID);
             stackNbt.putUuid("bodyID", bodyID);
             stackNbt.put("act", act.writeToNbtAndReturn(new NbtCompound()));
+            stack.use(player.getWorld(), player, player.preferredHand);
         });
     }
 }

@@ -1,7 +1,8 @@
 package me.jakubok.nationsmod.gui.miscellaneous.form;
 
 import me.jakubok.nationsmod.collection.Pair;
-import me.jakubok.nationsmod.gui.miscellaneous.PropertyListWidget;
+import me.jakubok.nationsmod.gui.miscellaneous.property.PropertyEntry;
+import me.jakubok.nationsmod.gui.miscellaneous.property.PropertyListWidget;
 import me.jakubok.nationsmod.gui.miscellaneous.ResizableWindow;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -12,8 +13,8 @@ import java.util.List;
 public class InvalidFormWindow extends ResizableWindow {
     public ButtonWidget comeBack;
     public PropertyListWidget properties;
-    public final List<Pair<Text, Text>> errors;
-    public InvalidFormWindow(Text title, List<Pair<Text, Text>> errors, int width, int height, int borderRadius, Screen previousScreen) {
+    public final List<PropertyEntry> errors;
+    public InvalidFormWindow(Text title, List<PropertyEntry> errors, int width, int height, int borderRadius, Screen previousScreen) {
         super(title, width, height, borderRadius, previousScreen);
         this.errors = errors;
     }

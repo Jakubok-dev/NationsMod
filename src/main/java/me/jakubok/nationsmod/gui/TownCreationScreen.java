@@ -3,6 +3,7 @@ package me.jakubok.nationsmod.gui;
 
 import com.google.common.collect.ImmutableList;
 import me.jakubok.nationsmod.gui.miscellaneous.ResizableWindow;
+import me.jakubok.nationsmod.gui.miscellaneous.form.BasicValidations;
 import me.jakubok.nationsmod.gui.miscellaneous.form.FormWindow;
 import me.jakubok.nationsmod.gui.miscellaneous.form.TextInput;
 import me.jakubok.nationsmod.networking.Packets;
@@ -40,13 +41,7 @@ public class TownCreationScreen extends FormWindow {
                         new TextInput(
                                 Text.translatable("gui.nationsmod.town_creation_screen.town_name"),
                                 Text.literal("..."),
-                                o -> {
-                                    if (!(o instanceof String str))
-                                        return Text.literal("ERROR, Object is not an instance of string").formatted(Formatting.RED);
-                                    if (str.trim().equals(""))
-                                        return Text.literal("Input is empty!").formatted(Formatting.RED);
-                                    return Text.of("");
-                                },
+                                BasicValidations::BASIC_STRING_VALIDATION,
                                 this.client
                         ),
                         new TextInput(

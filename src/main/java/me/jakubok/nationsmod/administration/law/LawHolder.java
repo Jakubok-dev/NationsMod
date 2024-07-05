@@ -34,6 +34,8 @@ public abstract class LawHolder<D extends LawDescription> implements Serialisabl
     @Override
     public void readFromNbt(NbtCompound tag) {
         for (Map.Entry<String, LawDescription.RuleDescription> entry : this.description.getRulesDescriptions().entrySet()) {
+            if (!tag.contains(entry.getKey()))
+                continue;
             Object val;
             switch(entry.getValue().type) {
                 case INTEGER:

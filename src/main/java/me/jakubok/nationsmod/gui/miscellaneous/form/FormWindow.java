@@ -1,6 +1,8 @@
 package me.jakubok.nationsmod.gui.miscellaneous.form;
 
 import me.jakubok.nationsmod.gui.miscellaneous.ResizableWindow;
+import me.jakubok.nationsmod.gui.miscellaneous.property.PropertyEntry;
+import me.jakubok.nationsmod.gui.miscellaneous.property.TextProperty;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
@@ -45,7 +47,7 @@ public abstract class FormWindow extends ResizableWindow {
             assert this.client != null;
             this.client.setScreen(new InvalidFormWindow(
                     Text.of(this.title.getString() + " - " + "Invalid prompt"),
-                    this.formListWidget.getValidationFeedback(),
+                    this.formListWidget.getValidationFeedback().stream().map(p -> (PropertyEntry)(new TextProperty(this.client, p.key, p.value))).toList(),
                     this.getWindowWidth(),
                     this.getWindowHeight(),
                     this.getBorderRadius(),
