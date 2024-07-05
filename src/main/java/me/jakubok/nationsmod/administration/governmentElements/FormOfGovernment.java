@@ -16,11 +16,9 @@ import net.minecraft.text.Text;
 public abstract class FormOfGovernment<L extends DecisiveEntity, E extends DecisiveEntity, U extends AdministratingUnit<D>, D extends AdministratingUnitLawDescription> implements Serialisable {
     public final U administratedUnit;
     public final Map<UUID, Act<D>> mapOfDirectives = new HashMap<>();
-    protected final Supplier<Act<D>> directiveFactory;
 
-    public FormOfGovernment(U administratedUnit, Supplier<Act<D>> directiveFactory) {
+    public FormOfGovernment(U administratedUnit) {
         this.administratedUnit = administratedUnit;
-        this.directiveFactory = directiveFactory;
     }
 
     public abstract L getLegislative();
@@ -40,8 +38,7 @@ public abstract class FormOfGovernment<L extends DecisiveEntity, E extends Decis
         this.mapOfDirectives.clear();
         for (int i = 0; i < nbt.getInt("Size"); i++) {
             UUID id = nbt.getUuid("directivesID" + i);
-            Act<D> directive = this.directiveFactory.get();
-            directive.readFromNbt(nbt.getCompound("directive" + i));
+            Act<D> directive = new Act<>(administratedUnit.description, nbt.getCompound("directive" + i));
             this.mapOfDirectives.put(id, directive);
         }
         this.getLegislative().readFromNbt(nbt.getCompound("legislative"));

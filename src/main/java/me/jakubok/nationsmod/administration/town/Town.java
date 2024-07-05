@@ -167,7 +167,7 @@ public class Town extends AdministratingUnit<TownLawDescription> {
     public void readTheFormOfGovernment(NbtCompound nbt, MinecraftServer server) {
         switch (nbt.getString("formOfGovernment")) {
             case "absolute_monarchy":
-                this.formOfGovernment = new AbsoluteMonarchy<Town, TownLawDescription>(this, () -> new Act<>(this.description), server);
+                this.formOfGovernment = new AbsoluteMonarchy<>(this, server);
                 break;
             default:
                 throw new CrashException(CrashReport.create(new Throwable(), "Unknown form of government"));

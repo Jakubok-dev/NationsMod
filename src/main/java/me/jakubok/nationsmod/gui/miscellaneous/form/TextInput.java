@@ -15,11 +15,9 @@ import java.util.function.Function;
 
 public class TextInput extends FormListWidget.FormInputEntry {
     public TextFieldWidget textFieldWidget;
-    public final MinecraftClient client;
     public TextInput(Text label, MutableText placeholder, Function<Object, Text> validateFunction, MinecraftClient client) {
-        super(ImmutableList.of(label, placeholder), validateFunction);
+        super(ImmutableList.of(label, placeholder), validateFunction, client);
         placeholder.formatted(Formatting.ITALIC).formatted(Formatting.GRAY);
-        this.client = client;
         this.textFieldWidget = new TextFieldWidget(this.client.textRenderer, 0, 0, 0, 20, Text.of(""));
         this.textFieldWidget.setPlaceholder(placeholder);
     }

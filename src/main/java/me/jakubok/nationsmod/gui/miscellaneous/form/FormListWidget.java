@@ -58,10 +58,12 @@ public class FormListWidget extends ElementListWidget<FormListWidget.FormInputEn
     public static abstract class FormInputEntry extends ElementListWidget.Entry<FormInputEntry> {
         protected Function<Object, Text> validateFunction;
         protected List<Text> labels;
+        public final MinecraftClient client;
 
-        FormInputEntry(List<Text> labels, Function<Object, Text> validateFunction) {
+        FormInputEntry(List<Text> labels, Function<Object, Text> validateFunction, MinecraftClient client) {
             this.labels = labels;
             this.validateFunction = validateFunction;
+            this.client = client;
         }
 
         public abstract Object getInput();

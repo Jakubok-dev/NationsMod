@@ -59,7 +59,7 @@ public class PropertyListWidget extends ElementListWidget<PropertyListWidget.Pro
                 matrices,
                 textRenderer,
                 property,
-                x,
+                x + 2,
                 y,
                 0xFFFFFF
             );

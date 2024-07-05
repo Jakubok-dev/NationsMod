@@ -19,5 +19,6 @@ public class ServerNetworking {
         ServerPlayNetworking.registerGlobalReceiver(Packets.CREATE_A_POLYGON, new CreateAPolygon());
         ServerPlayNetworking.registerGlobalReceiver(Packets.BORDER_REGISTRATOR_CLICKED, new BorderRegistratorClicked());
         ServerPlayNetworking.registerGlobalReceiver(Packets.CHANGE_THE_POLYGON_ALTERATION_MODE, new ChangeThePolygonAlterationMode());
+        ServerPlayNetworking.registerGlobalReceiver(Packets.CREATE_AN_ACT, new CreateAnAct());
     }
 }

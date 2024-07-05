@@ -20,15 +20,10 @@ public class Packets {
 
     public static final Identifier CREATE_A_NATION = new Identifier(NationsMod.MOD_ID, "create_a_nation");
 
-    public static final Identifier HIGHLIGHT_A_BLOCK_SERVER = new Identifier(NationsMod.MOD_ID, "highlight_a_block_server");
-    public static final Identifier UNHIGHLIGHT_A_BLOCK_SERVER = new Identifier(NationsMod.MOD_ID, "unhighlight_a_block_server");
-
     public static final Identifier RECEIVE = new Identifier(NationsMod.MOD_ID, "receive");
 
     public static final Identifier RENDER_CLAIMANTS_COLOUR = new Identifier(NationsMod.MOD_ID, "render_claimants_colour");
     public static final Identifier PULL_MAP_BLOCK_INFO = new Identifier(NationsMod.MOD_ID, "pull_map_block_info");
-
-    public static final Identifier PREPARE_BORDER_REGISTRATOR_SCREEN = new Identifier(NationsMod.MOD_ID, "prepare_border_registrator_screen");
 
     public static final Identifier GET_A_NATION = new Identifier(NationsMod.MOD_ID, "get_a_nation");
     public static final Identifier GET_A_PROVINCE = new Identifier(NationsMod.MOD_ID, "get_a_province");
@@ -45,4 +40,7 @@ public class Packets {
     public static final Identifier CACHE_A_POLYGON = new Identifier(NationsMod.MOD_ID, "cache_a_polygon");
     public static final Identifier UNCACHE_A_POLYGON = new Identifier(NationsMod.MOD_ID, "uncache_a_polygon");
     public static final Identifier CHANGE_THE_POLYGON_ALTERATION_MODE = new Identifier(NationsMod.MOD_ID, "change_the_polygon_alteration_mode");
+
+    public static final Identifier OPEN_ACT_CREATION_SCREEN = new Identifier(NationsMod.MOD_ID, "open_act_creation_screen");
+    public static final Identifier CREATE_AN_ACT = new Identifier(NationsMod.MOD_ID, "create_an_act");
 }

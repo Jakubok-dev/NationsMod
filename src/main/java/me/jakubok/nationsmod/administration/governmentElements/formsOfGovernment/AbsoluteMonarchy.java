@@ -17,9 +17,8 @@ public class AbsoluteMonarchy<U extends AdministratingUnit<D>, D extends Adminis
 
     private final Monarch monarch;
 
-    public AbsoluteMonarchy(U administratedUnit,
-                            Supplier<Act<D>> directiveFactory, MinecraftServer server) {
-        super(administratedUnit, directiveFactory);
+    public AbsoluteMonarchy(U administratedUnit, MinecraftServer server) {
+        super(administratedUnit);
         this.monarch = new Monarch(administratedUnit, this, server);
     }
 

@@ -3,13 +3,21 @@ package me.jakubok.nationsmod.administration.law;
 import java.util.Map;
 import java.util.UUID;
 
+import me.jakubok.nationsmod.administration.abstractEntities.LegalOrganisation;
+import me.jakubok.nationsmod.administration.abstractEntities.LegalOrganisationLawDescription;
+import me.jakubok.nationsmod.registries.LegalOrganisationRegistry;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.MinecraftServer;
 
-public class Act<D extends LawDescription> extends LawHolder<D> {
+public class Act<D extends LegalOrganisationLawDescription> extends LawHolder<D> {
     private UUID id = UUID.randomUUID();
+    protected String name;
+    protected UUID affectedBodyID;
     public ActStatus status = ActStatus.UNSUBMITTED;
-    public Act(D description) {
+    public Act(String name, D description, LegalOrganisation<D> affectedBody) {
         super(description);
+        this.name = name;
+        this.affectedBodyID = affectedBody.getId();
     }
     public Act(D description, NbtCompound nbt) {
         super(description, nbt);
@@ -17,6 +25,23 @@ public class Act<D extends LawDescription> extends LawHolder<D> {
 
     public UUID getID() {
         return id;
+    }
+
+    public UUID getAffectedBodyID() {
+        return affectedBodyID;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    @SuppressWarnings("unchecked")
+    public LegalOrganisation<D> getAffectedBody(MinecraftServer server) {
+        return (LegalOrganisation<D>)LegalOrganisationRegistry.getRegistry(server).get(this.getAffectedBodyID());
     }
 
     public void implement(Law<D> law) {
@@ -27,14 +52,18 @@ public class Act<D extends LawDescription> extends LawHolder<D> {
     @Override
     public void readFromNbt(NbtCompound tag) {
         this.id = tag.getUuid("actsID");
+        this.name = tag.getString("name");
         this.status = ActStatus.values()[tag.getInt("status")];
+        this.affectedBodyID = tag.getUuid("affectedBodyID");
         super.readFromNbt(tag);
     }
 
     @Override
     public NbtCompound writeToNbtAndReturn(NbtCompound tag) {
-        tag.putUuid("actsID", this.id);
+        tag.putUuid("id", this.id);
+        tag.putString("name", this.name);
         tag.putInt("status", this.status.value);
+        tag.putUuid("affectedBodyID", this.affectedBodyID);
         return super.writeToNbtAndReturn(tag);
     }
 

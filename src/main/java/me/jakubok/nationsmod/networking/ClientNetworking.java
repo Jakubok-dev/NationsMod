@@ -46,5 +46,6 @@ public class ClientNetworking {
         ClientPlayNetworking.registerGlobalReceiver(Packets.OPEN_POLYGON_CREATION_SCREEN, new OpenPolygonCreationScreen());
         ClientPlayNetworking.registerGlobalReceiver(Packets.CACHE_A_POLYGON, new CacheAPolygon());
         ClientPlayNetworking.registerGlobalReceiver(Packets.UNCACHE_A_POLYGON, new UncacheAPolygon());
+        ClientPlayNetworking.registerGlobalReceiver(Packets.OPEN_ACT_CREATION_SCREEN, new OpenActCreationScreen());
     }
 }

@@ -27,7 +27,7 @@ public abstract class AdministratingUnit<D extends AdministratingUnitLawDescript
         if (this.getTheMapColour().getB() <= 0)
             this.getTheMapColour().setB(rng.nextInt(255));
         if (formOfGovernment == null)
-            this.formOfGovernment = new AbsoluteMonarchy<AdministratingUnit<D>, D>(this, () -> new Act<>(this.description), server);
+            this.formOfGovernment = new AbsoluteMonarchy<>(this, server);
     }
     public AdministratingUnit(D description) {
         super(description);

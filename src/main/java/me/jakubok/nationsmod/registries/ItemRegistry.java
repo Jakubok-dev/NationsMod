@@ -31,7 +31,7 @@ public class ItemRegistry {
 
     public static final BorderSignBlockItem BORDER_SIGN_BLOCK_ITEM = new BorderSignBlockItem();
 
-    public static final Act ACT = new Act();
+    public static final ActItem ACT = new ActItem();
 
     public static final ActAndQuill ACT_AND_QUILL = new ActAndQuill();
 
