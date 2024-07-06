@@ -12,8 +12,6 @@ import net.minecraft.util.Identifier;
 
 public abstract class ResizableWindow extends Screen {
 
-//    protected int windowLeft;
-//    protected int windowTop;
     protected int windowWidth;
     protected int windowHeight;
     protected int borderRadius;
@@ -101,6 +99,13 @@ public abstract class ResizableWindow extends Screen {
 
     @Override
     public void close() {
+        assert this.client != null;
         this.client.setScreen(previousScreen);
+    }
+
+    @Override
+    protected void init() {
+        this.clearChildren();
+        super.init();
     }
 }

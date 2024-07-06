@@ -44,6 +44,7 @@ public class GeneralInfoSubscreen {
                                 Text.of("New name:"),
                                 Text.literal("Write..."),
                                 this.inst.act,
+                                this.inst.town,
                                 TownLawDescription.NameLabel,
                                 BasicValidations::BASIC_STRING_VALIDATION
                         ),

@@ -88,7 +88,7 @@ public class MutableTextProperty<T> extends TextProperty implements MutablePrope
                 this.client.textRenderer,
                 renderProp,
                 x + 2,
-                y,
+                y + (entryHeight - this.client.textRenderer.fontHeight) / 2,
                 0xFFFFFF
         );
 

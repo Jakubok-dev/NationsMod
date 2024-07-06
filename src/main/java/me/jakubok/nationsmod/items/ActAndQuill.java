@@ -96,6 +96,7 @@ public class ActAndQuill extends Item {
             PacketByteBuf buffer = PacketByteBufs.create();
             buffer.writeNbt(sentNbt);
             ServerPlayNetworking.send((ServerPlayerEntity) user, Packets.OPEN_ACT_CREATION_SCREEN, buffer);
+            return TypedActionResult.success(user.getMainHandStack());
         }
 
         Act<?> rawAct = this.getTheAct(stack, user.getServer());
@@ -105,9 +106,10 @@ public class ActAndQuill extends Item {
             NbtCompound sentNbt = new NbtCompound();
             sentNbt.put("act", act.writeToNbtAndReturn(new NbtCompound()));
             sentNbt.put("town", town.writeToNbtAndReturn(new NbtCompound()));
+            sentNbt.putString("type", "town");
             PacketByteBuf buffer = PacketByteBufs.create();
             buffer.writeNbt(sentNbt);
-            ServerPlayNetworking.send((ServerPlayerEntity) user, Packets.OPEN_TOWN_SCREEN_WITH_A_PETITION, buffer);
+            ServerPlayNetworking.send((ServerPlayerEntity) user, Packets.OPEN_ACT_SCREEN, buffer);
         }
 
         return TypedActionResult.success(user.getMainHandStack());

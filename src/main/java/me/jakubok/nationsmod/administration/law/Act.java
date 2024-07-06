@@ -43,6 +43,10 @@ public class Act<D extends LegalOrganisationLawDescription> extends LawHolder<D>
         this.name = name;
     }
 
+    public Object resetARule(String ruleName) {
+        return this.law.remove(ruleName);
+    }
+
     @SuppressWarnings("unchecked")
     public LegalOrganisation<D> getAffectedBody(MinecraftServer server) {
         return (LegalOrganisation<D>)LegalOrganisationRegistry.getRegistry(server).get(this.getAffectedBodyID());

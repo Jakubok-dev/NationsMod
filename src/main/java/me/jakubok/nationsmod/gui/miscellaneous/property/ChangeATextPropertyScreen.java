@@ -1,6 +1,7 @@
 package me.jakubok.nationsmod.gui.miscellaneous.property;
 
 import com.google.common.collect.ImmutableList;
+import me.jakubok.nationsmod.administration.abstractEntities.LegalOrganisation;
 import me.jakubok.nationsmod.administration.law.Act;
 import me.jakubok.nationsmod.gui.miscellaneous.form.FormWindow;
 import me.jakubok.nationsmod.gui.miscellaneous.form.TextInput;
@@ -16,12 +17,14 @@ public class ChangeATextPropertyScreen extends FormWindow {
     public final Act<?> act;
     public final String ruleLabel;
     public final Function<Object, Text> validateFunction;
+    public final LegalOrganisation<?> organisation;
 
-    public ChangeATextPropertyScreen(Text title, int width, int height, int borderRadius, Screen previousScreen, Text label, MutableText placeholder, Act<?> act, String ruleLabel, Function<Object, Text> validateFunction) {
+    public ChangeATextPropertyScreen(Text title, int width, int height, int borderRadius, Screen previousScreen, Text label, MutableText placeholder, Act<?> act, LegalOrganisation<?> organisation, String ruleLabel, Function<Object, Text> validateFunction) {
         super(title, width, height, borderRadius, previousScreen);
         this.label = label;
         this.placeholder = placeholder;
         this.act = act;
+        this.organisation = organisation;
         this.ruleLabel = ruleLabel;
         this.validateFunction = validateFunction;
     }
@@ -38,6 +41,13 @@ public class ChangeATextPropertyScreen extends FormWindow {
                     )
                 ),
                 l -> {
+                    if (this.organisation.law.getARule(this.ruleLabel) != null) {
+                        if (this.organisation.law.getARule(this.ruleLabel).equals(l.get(0))) {
+                            this.act.resetARule(this.ruleLabel);
+                            this.close();
+                            return;
+                        }
+                    }
                     this.act.putARule(this.ruleLabel, l.get(0));
                     this.close();
                 }

@@ -192,5 +192,11 @@ public abstract class TabWindow extends ResizableWindow {
         }
         super.remove(child);
     }
+
+    @Override
+    protected void clearChildren() {
+        this.drawables.clear();
+        super.clearChildren();
+    }
 }
 

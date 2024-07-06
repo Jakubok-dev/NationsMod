@@ -23,6 +23,7 @@ public class SynchroniseAnAct implements ServerPlayNetworking.PlayChannelHandler
             ItemStack stack = player.getStackInHand(player.preferredHand);
             NbtCompound stackNbt = stack.getOrCreateSubNbt(NationsMod.MOD_ID);
             stackNbt.put("act", nbtCompound);
+            stack.use(player.getWorld(), player, player.preferredHand);
         });
     }
 }
