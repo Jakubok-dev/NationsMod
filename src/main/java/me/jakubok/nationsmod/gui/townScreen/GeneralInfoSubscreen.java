@@ -2,6 +2,8 @@ package me.jakubok.nationsmod.gui.townScreen;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import me.jakubok.nationsmod.administration.town.TownLawDescription;
 import me.jakubok.nationsmod.collection.Pair;
@@ -55,7 +57,56 @@ public class GeneralInfoSubscreen {
                 new TextProperty(inst.getClient(), Text.of("Districts:"), Text.of(inst.town.getTheListOfDistrictsIDs().size() + "")),
                 new TextProperty(inst.getClient(), Text.of("Province:"), Text.of("-")),
                 new TextProperty(inst.getClient(), Text.of("Nation:"), Text.of("-")),
-                new TextProperty(inst.getClient(), Text.of("Petition support:"), Text.of(inst.town.getThePetitionSupport() + "%")),
+                MutableTextProperty.of(
+                        this.inst.getClient(),
+                        new Pair<>(TownLawDescription.petitionSupportLabel, inst.town.getThePetitionSupport()),
+                        o -> Text.of("Petition support:"),
+                        o -> Text.of(o + "%"),
+                        (property, client) -> new ChangeATextPropertyScreen(
+                                Text.of("Changing the petition support"),
+                                265,
+                                85,
+                                4,
+                                this.inst,
+                                Text.of("New percentage:"),
+                                Text.literal("0..100"),
+                                this.inst.act,
+                                this.inst.town,
+                                TownLawDescription.petitionSupportLabel,
+                                o -> {
+                                    Text res = BasicValidations.BASIC_PERCENTAGE_VALIDATION(o);
+                                    if (!res.getString().equals(""))
+                                        return res;
+                                    Pattern pattern = Pattern.compile("^(-?[1-9]\\d*)%?$|^(-?\\d)%?$");
+                                    Matcher matcher = pattern.matcher((String)o);
+                                    matcher.find();
+                                    String capture = matcher.group(1) != null ? matcher.group(1) : matcher.group(2);
+                                    int intCapture = Integer.parseInt(capture);
+                                    if (intCapture < 0 || intCapture > 100)
+                                        return Text.literal("Illegal range!").formatted(Formatting.RED);;
+                                    return Text.of("");
+                                },
+                                l -> {
+                                    Pattern pattern = Pattern.compile("^(-?[1-9]\\d*)%?$|^(-?\\d)%?$");
+                                    Matcher matcher = pattern.matcher((String)l.get(0));
+                                    matcher.find();
+                                    String capture = matcher.group(1) != null ? matcher.group(1) : matcher.group(2);
+                                    Integer intCapture = Integer.parseInt(capture);
+                                    if (this.inst.town.law.getARule(TownLawDescription.petitionSupportLabel) != null) {
+                                        if (this.inst.town.law.getARule(TownLawDescription.petitionSupportLabel).equals(intCapture)) {
+                                            this.inst.act.resetARule(TownLawDescription.petitionSupportLabel);
+                                            assert client.currentScreen != null;
+                                            client.currentScreen.close();
+                                            return;
+                                        }
+                                    }
+                                    this.inst.act.putARule(TownLawDescription.petitionSupportLabel, intCapture);
+                                    assert client.currentScreen != null;
+                                    client.currentScreen.close();
+                                }
+                        ),
+                        this.inst.act
+                ),
                 new TextProperty(inst.getClient(), Text.of("Citizenship:"), inst.town.getTheCitizenshipApprovement().displayText)
         );
         this.list = new PropertyListWidget(

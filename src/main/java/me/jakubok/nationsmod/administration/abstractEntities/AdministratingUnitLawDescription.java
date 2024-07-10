@@ -10,7 +10,10 @@ public class AdministratingUnitLawDescription extends LegalOrganisationLawDescri
     public static final String mapColourLabel = "mapColour";
     public static final RuleDescription citizenshipApprovement = new RuleDescription(RuleType.LAWAPPROVEMENT, Text.literal("Citizenship approved by"), "Which institutions need to consent in order for a person to get a citizenship.", false, () -> LawApprovement.BY_LEGISLATIVE_OR_EXECUTIVE);
     public static final String citizenshipApprovementLabel = "citizenshipApprovement";
-    public static final RuleDescription petitionSupport = new RuleDescription(RuleType.INTEGER, Text.literal("Petition support"), "The percentage of people in a nation which support a petition so that the petition must be deliberated by the government.", false, () -> 10);
+    public static final RuleDescription petitionSupport = new RuleDescription(RuleType.INTEGER, Text.literal("Petition support"), "The percentage of people in a nation which support a petition so that the petition must be deliberated by the government.", false, () -> 10, (oldValue, newValue, renderer, width) -> {
+        Text message = Text.literal("Change Petition support from " + oldValue + "% to " + newValue  + "%");
+        return renderer.wrapLines(message, width);
+    });
     public static final String petitionSupportLabel = "petitionSupport";
     static {
         rulesDescriptions.put(mapColourLabel, mapColour);
