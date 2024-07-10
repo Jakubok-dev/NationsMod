@@ -1,8 +1,9 @@
 package me.jakubok.nationsmod.administration.law;
 
+import me.jakubok.nationsmod.collection.EnumWithText;
 import net.minecraft.text.Text;
 
-public enum LawApprovement {
+public enum LawApprovement implements EnumWithText {
     CONSENT_NOT_NEEDED(0, Text.of("no consent needed")),
     BY_LEGISLATIVE_OR_EXECUTIVE(1, Text.of("consented by any institution")),
     LEGISLATIVE_ONLY(2, Text.of("consented by legislative")),
@@ -16,4 +17,9 @@ public enum LawApprovement {
 
     public final int value;
     public final Text displayText;
+
+    @Override
+    public Text getDisplayText() {
+        return this.displayText;
+    }
 }

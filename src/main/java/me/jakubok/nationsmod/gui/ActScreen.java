@@ -35,6 +35,7 @@ public class ActScreen<T extends LegalOrganisationLawDescription> extends Resiza
     @SuppressWarnings("unchecked")
     @Override
     protected void init() {
+        this.text.clear();
         super.init();
         assert this.client != null;
         for (String ruleName : this.act.existingRules()) {

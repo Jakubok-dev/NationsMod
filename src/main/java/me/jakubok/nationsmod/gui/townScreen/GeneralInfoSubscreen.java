@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 
 import me.jakubok.nationsmod.administration.town.TownLawDescription;
 import me.jakubok.nationsmod.collection.Pair;
+import me.jakubok.nationsmod.gui.ChangeLawApprovementScreen;
 import me.jakubok.nationsmod.gui.miscellaneous.*;
 import me.jakubok.nationsmod.gui.miscellaneous.form.BasicValidations;
 import me.jakubok.nationsmod.gui.miscellaneous.property.*;
@@ -107,7 +108,20 @@ public class GeneralInfoSubscreen {
                         ),
                         this.inst.act
                 ),
-                new TextProperty(inst.getClient(), Text.of("Citizenship:"), inst.town.getTheCitizenshipApprovement().displayText)
+                MutableTextProperty.of(
+                        this.inst.getClient(),
+                        new Pair<>(TownLawDescription.citizenshipApprovementLabel, inst.town.getTheCitizenshipApprovement()),
+                        o -> Text.of("Citizenship:"),
+                        o -> o.displayText,
+                        (property, client) -> new ChangeLawApprovementScreen(
+                                Text.of("Change the citizenship approvement"),
+                                this.inst,
+                                this.inst.act,
+                                this.inst.town,
+                                TownLawDescription.citizenshipApprovementLabel
+                        ),
+                        this.inst.act
+                )
         );
         this.list = new PropertyListWidget(
                 instance.getClient(),
