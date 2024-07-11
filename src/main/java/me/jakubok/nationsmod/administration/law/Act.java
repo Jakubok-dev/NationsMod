@@ -1,7 +1,7 @@
 package me.jakubok.nationsmod.administration.law;
 
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import me.jakubok.nationsmod.administration.abstractEntities.LegalOrganisation;
 import me.jakubok.nationsmod.administration.abstractEntities.LegalOrganisationLawDescription;
@@ -12,12 +12,14 @@ import net.minecraft.server.MinecraftServer;
 public class Act<D extends LegalOrganisationLawDescription> extends LawHolder<D> {
     private UUID id = UUID.randomUUID();
     protected String name;
+    protected Map<String, NbtCompound> orders;
     protected UUID affectedBodyID;
     public ActStatus status = ActStatus.UNSUBMITTED;
     public Act(String name, D description, LegalOrganisation<D> affectedBody) {
         super(description);
         this.name = name;
         this.affectedBodyID = affectedBody.getId();
+        this.orders = new HashMap<>();
     }
     public Act(D description, NbtCompound nbt) {
         super(description, nbt);
@@ -47,14 +49,33 @@ public class Act<D extends LegalOrganisationLawDescription> extends LawHolder<D>
         return this.law.remove(ruleName);
     }
 
+    public Map<String, NbtCompound> getOrders() {
+        return Map.copyOf(this.orders);
+    }
+
+    public boolean order(String orderLabel, NbtCompound nbt) {
+        if (this.description.getOrders().get(orderLabel) == null)
+            return false;
+        return this.orders.put(orderLabel, nbt) != null;
+    }
+
+    public boolean removeAnOrder(String orderLabel) {
+        return this.orders.remove(orderLabel) != null;
+    }
+
     @SuppressWarnings("unchecked")
     public LegalOrganisation<D> getAffectedBody(MinecraftServer server) {
         return (LegalOrganisation<D>)LegalOrganisationRegistry.getRegistry(server).get(this.getAffectedBodyID());
     }
 
-    public void implement(Law<D> law) {
+    public void implement(MinecraftServer server) {
+        LegalOrganisation<D> organisation = this.getAffectedBody(server);
         for (Map.Entry<String, Object> entry : this.law.entrySet())
-            law.putARule(entry.getKey(), entry.getValue());
+            organisation.law.putARule(entry.getKey(), entry.getValue());
+        for (Map.Entry<String, NbtCompound> entry : this.orders.entrySet()) {
+            Order order = this.description.getOrders().get(entry.getKey());
+            order.onTrigger().trigger(entry.getValue(), organisation, server);
+        }
     }
 
     @Override
@@ -63,6 +84,9 @@ public class Act<D extends LegalOrganisationLawDescription> extends LawHolder<D>
         this.name = tag.getString("act_name");
         this.status = ActStatus.values()[tag.getInt("act_status")];
         this.affectedBodyID = tag.getUuid("act_affectedBodyID");
+        this.orders = new HashMap<>();
+        for (int i = 0; i < tag.getInt("ordersSize"); i++)
+            this.orders.put(tag.getString("orderKey" + i), tag.getCompound("orderValue" + i));
         super.readFromNbt(tag);
     }
 
@@ -72,6 +96,13 @@ public class Act<D extends LegalOrganisationLawDescription> extends LawHolder<D>
         tag.putString("act_name", this.name);
         tag.putInt("act_status", this.status.value);
         tag.putUuid("act_affectedBodyID", this.affectedBodyID);
+        int size = 0;
+        for (String key : this.orders.keySet()) {
+            tag.putString("orderKey" + size, key);
+            tag.put("orderValue" + size, this.orders.get(key));
+            size++;
+        }
+        tag.putInt("ordersSize", size);
         return super.writeToNbtAndReturn(tag);
     }
 

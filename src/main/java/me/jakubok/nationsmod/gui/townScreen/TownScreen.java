@@ -27,6 +27,7 @@ public class TownScreen extends TabWindow {
     public final GeneralInfoSubscreen generalInfo;
     public final PetitionsAndDirectivesSubscreen petitionsAndDirectives;
     public final DistrictsSubscreen districtsSubscreen;
+    public final OrdersSubscreen ordersSubscreen;
     public final Act<TownLawDescription> act;
     public ButtonWidget submitPetitionButton;
 
@@ -37,6 +38,7 @@ public class TownScreen extends TabWindow {
         this.generalInfo = new GeneralInfoSubscreen(this);
         this.petitionsAndDirectives = new PetitionsAndDirectivesSubscreen(this);
         this.districtsSubscreen = new DistrictsSubscreen(this);
+        this.ordersSubscreen = new OrdersSubscreen(this);
     }
 
     @Override
@@ -44,6 +46,8 @@ public class TownScreen extends TabWindow {
         
         List<Subscreen<TabWindow>> tabs = new ArrayList<>();
         tabs.add(this.generalInfo.subscreen);
+        if (this.act != null)
+            tabs.add(this.ordersSubscreen.subscreen);
         tabs.add(this.districtsSubscreen.subscreen);
 
         tabs.add(new Subscreen<>(

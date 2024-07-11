@@ -11,7 +11,7 @@ public class ProvinceLawDescription extends TerritoryClaimerLawDescription {
     public static final RuleDescription nationsID = new RuleDescription(RuleType.UUID, Text.literal("Nation's ID"), "The UUID of the nation the province belongs to", true, () -> null);
     public static final String nationsIDLabel = "nationsID";
 
-    static {
-        rulesDescriptions.put(nationsIDLabel, nationsID);
+    public ProvinceLawDescription() {
+        this.rulesDescriptions.put(nationsIDLabel, nationsID);
     }
 }

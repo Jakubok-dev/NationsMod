@@ -16,6 +16,7 @@ import net.minecraft.util.crash.CrashReport;
 public interface LawDescription {
 
     Map<String, RuleDescription> getRulesDescriptions();
+    Map<String, Order> getOrders();
 
     class RuleDescription {
         protected final RuleType type;

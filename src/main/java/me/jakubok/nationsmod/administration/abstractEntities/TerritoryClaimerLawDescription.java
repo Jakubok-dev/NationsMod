@@ -9,7 +9,7 @@ public abstract class TerritoryClaimerLawDescription extends LegalOrganisationLa
     public static final RuleDescription shapesID = new RuleDescription(RuleType.UUID, Text.literal("Shape's ID"), "The id of the claimer's territory shape", false, UUID::randomUUID);
     public static final String shapesIDLabel = "shapesID";
     
-    static {
-        rulesDescriptions.put(shapesIDLabel, shapesID);
+    public TerritoryClaimerLawDescription() {
+        this.rulesDescriptions.put(shapesIDLabel, shapesID);
     }
 }

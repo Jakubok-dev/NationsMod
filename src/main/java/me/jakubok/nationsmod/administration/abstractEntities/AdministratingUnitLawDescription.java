@@ -15,9 +15,9 @@ public class AdministratingUnitLawDescription extends LegalOrganisationLawDescri
         return renderer.wrapLines(message, width);
     });
     public static final String petitionSupportLabel = "petitionSupport";
-    static {
-        rulesDescriptions.put(mapColourLabel, mapColour);
-        rulesDescriptions.put(citizenshipApprovementLabel, citizenshipApprovement);
-        rulesDescriptions.put(petitionSupportLabel, petitionSupport);
+    public AdministratingUnitLawDescription() {
+        this.rulesDescriptions.put(mapColourLabel, mapColour);
+        this.rulesDescriptions.put(citizenshipApprovementLabel, citizenshipApprovement);
+        this.rulesDescriptions.put(petitionSupportLabel, petitionSupport);
     }
 }

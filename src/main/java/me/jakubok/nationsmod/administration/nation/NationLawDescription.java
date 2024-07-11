@@ -19,11 +19,11 @@ public class NationLawDescription extends AdministratingUnitLawDescription {
     public static final String townProvinceRegistryLabel = "townProvinceRegistry";
     public static final RuleDescription provincesCapitalRegistry = new RuleDescription(RuleType.MAPOFUUIDS, Text.literal("Province's capital registry"), "Contains the UUID of a province and a UUID of a town which is province's capital", false, HashMap<UUID, UUID>::new);
     public static final String provincesCapitalRegistryLabel = "provincesCapitalRegistry";
-    static {
-        rulesDescriptions.put(capitalsIDLabel, capitalsID);
-        rulesDescriptions.put(listOfProvincesIDsLabel, listOfProvincesIDs);
-        rulesDescriptions.put(listOfTownsIDsLabel, listOfTownsIDs);
-        rulesDescriptions.put(townProvinceRegistryLabel, townProvinceRegistry);
-        rulesDescriptions.put(provincesCapitalRegistryLabel, provincesCapitalRegistry);
+    public NationLawDescription() {
+        this.rulesDescriptions.put(capitalsIDLabel, capitalsID);
+        this.rulesDescriptions.put(listOfProvincesIDsLabel, listOfProvincesIDs);
+        this.rulesDescriptions.put(listOfTownsIDsLabel, listOfTownsIDs);
+        this.rulesDescriptions.put(townProvinceRegistryLabel, townProvinceRegistry);
+        this.rulesDescriptions.put(provincesCapitalRegistryLabel, provincesCapitalRegistry);
     }
 }

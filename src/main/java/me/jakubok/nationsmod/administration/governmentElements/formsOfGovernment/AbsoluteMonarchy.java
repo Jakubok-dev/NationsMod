@@ -16,9 +16,11 @@ import net.minecraft.text.Text;
 public class AbsoluteMonarchy<U extends AdministratingUnit<D>, D extends AdministratingUnitLawDescription> extends FormOfGovernment<Monarch, Monarch, U, D> {
 
     private final Monarch monarch;
+    public final MinecraftServer server;
 
     public AbsoluteMonarchy(U administratedUnit, MinecraftServer server) {
         super(administratedUnit);
+        this.server = server;
         this.monarch = new Monarch(administratedUnit, this, server);
     }
 
@@ -58,7 +60,7 @@ public class AbsoluteMonarchy<U extends AdministratingUnit<D>, D extends Adminis
         Act<D> directive = this.mapOfDirectives.get(directivesID);
         this.mapOfDirectives.remove(directivesID);
         if (verdict == DecisiveEntitysVerdict.APPROVED)
-            directive.implement(this.administratedUnit.law);
+            directive.implement(this.server);
     }
 
     @Override

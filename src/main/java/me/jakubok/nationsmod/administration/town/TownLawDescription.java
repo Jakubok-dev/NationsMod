@@ -19,10 +19,10 @@ public class TownLawDescription extends AdministratingUnitLawDescription{
     public static final String setOfPlayerMembersLabel = "setOfPlayerMembers";
     public static final RuleDescription setOfAIMembers = new RuleDescription(RuleType.SETOFUUID, Text.literal("NPC members"), "The UUIDs of citizens belonigng to the town", false, HashSet<UUID>::new);
     public static final String setOfAIMembersLabel = "setOfAIMembers"; 
-    static {
-        rulesDescriptions.put(nationsIDLabel, nationsID);
-        rulesDescriptions.put(listOfDistrictsIDsLabel, listOfDistrictsIDs);
-        rulesDescriptions.put(setOfPlayerMembersLabel, setOfPlayerMembers);
-        rulesDescriptions.put(setOfAIMembersLabel, setOfAIMembers);
+    public TownLawDescription() {
+        this.rulesDescriptions.put(nationsIDLabel, nationsID);
+        this.rulesDescriptions.put(listOfDistrictsIDsLabel, listOfDistrictsIDs);
+        this.rulesDescriptions.put(setOfPlayerMembersLabel, setOfPlayerMembers);
+        this.rulesDescriptions.put(setOfAIMembersLabel, setOfAIMembers);
     }
 }

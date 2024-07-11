@@ -3,6 +3,7 @@ package me.jakubok.nationsmod.gui;
 import me.jakubok.nationsmod.administration.abstractEntities.LegalOrganisation;
 import me.jakubok.nationsmod.administration.abstractEntities.LegalOrganisationLawDescription;
 import me.jakubok.nationsmod.administration.law.Act;
+import me.jakubok.nationsmod.administration.law.Order;
 import me.jakubok.nationsmod.administration.nation.Nation;
 import me.jakubok.nationsmod.administration.nation.NationLawDescription;
 import me.jakubok.nationsmod.administration.town.Town;
@@ -38,6 +39,16 @@ public class ActScreen<T extends LegalOrganisationLawDescription> extends Resiza
         this.text.clear();
         super.init();
         assert this.client != null;
+        for (String orderName : this.act.getOrders().keySet()) {
+            Order order = this.act.description.getOrders().get(orderName);
+            this.text.addAll(order
+                    .getOnTriggerMessage()
+                    .get(this.act.getOrders().get(orderName), this.organisation, this.client.textRenderer, this.getWindowWidth() - 10)
+                    .stream()
+                    .map(t -> new TextEntry(this.client, t))
+                    .toList()
+            );
+        }
         for (String ruleName : this.act.existingRules()) {
             List<TextEntry> message = this.act.description.getRulesDescriptions().get(ruleName).getOnChangeMessage.get(
                     this.organisation.law.toString(ruleName),
