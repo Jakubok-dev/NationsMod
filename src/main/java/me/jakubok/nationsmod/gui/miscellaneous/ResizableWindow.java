@@ -38,8 +38,8 @@ public abstract class ResizableWindow extends Screen {
         return borderRadius;
     }
 
-    protected int windowCenterHorizontal() { return (this.getWindowLeft() + this.getWindowRight()) / 2; }
-    protected int windowCenterVertical() { return (this.getWindowTop() + this.getWindowBottom()) / 2; }
+    public int windowCenterHorizontal() { return (this.getWindowLeft() + this.getWindowRight()) / 2; }
+    public int windowCenterVertical() { return (this.getWindowTop() + this.getWindowBottom()) / 2; }
 
     private final Screen previousScreen;
 
@@ -79,7 +79,7 @@ public abstract class ResizableWindow extends Screen {
         drawCenteredTextWithShadow(
             matrices, 
             this.textRenderer, 
-            this.title, 
+            this.getTitle(),
             this.windowCenterHorizontal(),
             this.getWindowTop() + 10,
             0xffffff

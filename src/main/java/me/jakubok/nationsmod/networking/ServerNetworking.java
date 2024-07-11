@@ -21,5 +21,6 @@ public class ServerNetworking {
         ServerPlayNetworking.registerGlobalReceiver(Packets.CHANGE_THE_POLYGON_ALTERATION_MODE, new ChangeThePolygonAlterationMode());
         ServerPlayNetworking.registerGlobalReceiver(Packets.CREATE_AN_ACT, new CreateAnAct());
         ServerPlayNetworking.registerGlobalReceiver(Packets.SYNCHRONISE_AN_ACT, new SynchroniseAnAct());
+        ServerPlayNetworking.registerGlobalReceiver(Packets.GET_DISTRICTS_NAMES, new GetDistrictsNames());
     }
 }

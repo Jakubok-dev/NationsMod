@@ -7,7 +7,6 @@ import java.util.UUID;
 import me.jakubok.nationsmod.administration.abstractEntities.AdministratingUnit;
 import me.jakubok.nationsmod.administration.district.District;
 import me.jakubok.nationsmod.administration.governmentElements.formsOfGovernment.AbsoluteMonarchy;
-import me.jakubok.nationsmod.administration.law.Act;
 import me.jakubok.nationsmod.administration.nation.Nation;
 import me.jakubok.nationsmod.administration.province.Province;
 import me.jakubok.nationsmod.collection.PlayerAccount;

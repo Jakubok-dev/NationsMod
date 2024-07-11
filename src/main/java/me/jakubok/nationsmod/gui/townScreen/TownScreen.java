@@ -26,6 +26,7 @@ public class TownScreen extends TabWindow {
     protected final Town town;
     public final GeneralInfoSubscreen generalInfo;
     public final PetitionsAndDirectivesSubscreen petitionsAndDirectives;
+    public final DistrictsSubscreen districtsSubscreen;
     public final Act<TownLawDescription> act;
     public ButtonWidget submitPetitionButton;
 
@@ -35,21 +36,15 @@ public class TownScreen extends TabWindow {
         this.act = act;
         this.generalInfo = new GeneralInfoSubscreen(this);
         this.petitionsAndDirectives = new PetitionsAndDirectivesSubscreen(this);
+        this.districtsSubscreen = new DistrictsSubscreen(this);
     }
 
     @Override
-    protected List<Subscreen<TabWindow>> getTabs() {
+    public List<Subscreen<TabWindow>> getTabs() {
         
         List<Subscreen<TabWindow>> tabs = new ArrayList<>();
         tabs.add(this.generalInfo.subscreen);
-
-        tabs.add(new Subscreen<>(
-            Text.of("Districts"),
-            new ItemStack(ItemRegistry.DISTRICT_DECLARATION), 
-            (MatrixStack matrices, int mouseX, int mouseY, float delta, TabWindow instance) -> {
-            },
-            null
-        ));
+        tabs.add(this.districtsSubscreen.subscreen);
 
         tabs.add(new Subscreen<>(
             Text.of("Citizens"),

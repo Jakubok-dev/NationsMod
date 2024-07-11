@@ -46,4 +46,6 @@ public class Packets {
     public static final Identifier SYNCHRONISE_AN_ACT = new Identifier(NationsMod.MOD_ID, "synchronise_an_act");
     public static final Identifier OPEN_TOWN_SCREEN_WITH_A_PETITION = new Identifier(NationsMod.MOD_ID, "open_town_screen_with_a_petition");
     public static final Identifier OPEN_ACT_SCREEN = new Identifier(NationsMod.MOD_ID, "open_act_screen");
+
+    public static final Identifier GET_DISTRICTS_NAMES = new Identifier(NationsMod.MOD_ID, "get_districts_names");
 }

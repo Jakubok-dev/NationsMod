@@ -147,6 +147,7 @@ public abstract class LawHolder<D extends LawDescription> implements Serialisabl
                 case LISTOFUUID -> {
                     @SuppressWarnings("unchecked")
                     List<UUID> listOfUUID = (List<UUID>) entry.getValue();
+                    tag.putString(entry.getKey(), "present");
                     tag.putInt(entry.getKey() + "Size", listOfUUID.size());
                     for (int i = 0; i < listOfUUID.size(); i++)
                         tag.putUuid(entry.getKey() + i, listOfUUID.get(i));
@@ -154,6 +155,7 @@ public abstract class LawHolder<D extends LawDescription> implements Serialisabl
                 case SETOFUUID -> {
                     @SuppressWarnings("unchecked")
                     UUID[] arrayOfUUID = ((Set<UUID>) entry.getValue()).toArray(new UUID[]{});
+                    tag.putString(entry.getKey(), "present");
                     tag.putInt(entry.getKey() + "Size", arrayOfUUID.length);
                     for (int i = 0; i < arrayOfUUID.length; i++)
                         tag.putUuid(entry.getKey() + i, arrayOfUUID[i]);
@@ -161,6 +163,7 @@ public abstract class LawHolder<D extends LawDescription> implements Serialisabl
                 case SETOFPLAYERACOUNT -> {
                     @SuppressWarnings("unchecked")
                     PlayerAccount[] arrayOfPlayerAccount = ((Set<PlayerAccount>) entry.getValue()).toArray(new PlayerAccount[]{});
+                    tag.putString(entry.getKey(), "present");
                     tag.putInt(entry.getKey() + "Size", arrayOfPlayerAccount.length);
                     for (int i = 0; i < arrayOfPlayerAccount.length; i++)
                         tag.put(entry.getKey() + i, arrayOfPlayerAccount[i].writeToNbtAndReturn(new NbtCompound()));
@@ -170,6 +173,7 @@ public abstract class LawHolder<D extends LawDescription> implements Serialisabl
                     @SuppressWarnings("unchecked")
                     Map<UUID, UUID> map = (Map<UUID, UUID>) entry.getValue();
                     List<UUID> keyList = map.keySet().stream().toList();
+                    tag.putString(entry.getKey(), "present");
                     tag.putInt(entry.getKey() + "Size", keyList.size());
                     for (int i = 0; i < keyList.size(); i++) {
                         tag.putUuid(entry.getKey() + "Key" + i, keyList.get(i));

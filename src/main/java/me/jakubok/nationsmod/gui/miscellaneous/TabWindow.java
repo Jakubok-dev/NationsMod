@@ -27,19 +27,29 @@ public abstract class TabWindow extends ResizableWindow {
     public int getTabCountPerSide() {
         return this.getWindowWidth() / 28;
     }
+    public final Text titleRoot;
 
     public TabWindow(Text title, int width, int height, int borderRadius, Screen previousScreen) {
         super(title, width, height, borderRadius, previousScreen);
+        this.titleRoot = title;
     }
 
-    protected abstract List<Subscreen<TabWindow>> getTabs();
+    public abstract List<Subscreen<TabWindow>> getTabs();
+
+    public int getSelectedTab() {
+        return selectedTab;
+    }
 
     @Override
     protected void init() {
         super.init();
-
-        if (this.getTabs().get(this.selectedTab).init != null) 
+        if (this.getTabs().get(this.selectedTab).init != null)
             this.getTabs().get(this.selectedTab).init.init(this);
+    }
+
+    @Override
+    public Text getTitle() {
+        return Text.of(this.titleRoot.getString() + " - " + this.getTabs().get(this.selectedTab).name);
     }
 
     @Override
