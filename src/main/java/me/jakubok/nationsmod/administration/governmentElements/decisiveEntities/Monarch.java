@@ -20,8 +20,8 @@ public class Monarch extends DecisiveEntity {
         if (server != null) {
             if (!this.administratedUnit.getPlayerMembers(server).isEmpty()) {
                 this.monarch = this.administratedUnit.getPlayerMembers(server).stream().findAny().get();
-            } else if (!this.administratedUnit.getAIMembers(server).isEmpty()) {
-                this.AIMonarch = this.administratedUnit.getAIMembers(server).stream().findAny().get();
+            } else if (!this.administratedUnit.getNPCMembers(server).isEmpty()) {
+                this.AIMonarch = this.administratedUnit.getNPCMembers(server).stream().findAny().get();
             }
         }
     }

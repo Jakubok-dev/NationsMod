@@ -1,5 +1,6 @@
 package me.jakubok.nationsmod.gui;
 
+import com.google.common.collect.ImmutableList;
 import me.jakubok.nationsmod.administration.abstractEntities.LegalOrganisation;
 import me.jakubok.nationsmod.administration.abstractEntities.LegalOrganisationLawDescription;
 import me.jakubok.nationsmod.administration.law.Act;
@@ -13,8 +14,12 @@ import me.jakubok.nationsmod.gui.miscellaneous.TextEntry;
 import me.jakubok.nationsmod.gui.miscellaneous.property.PropertyEntry;
 import me.jakubok.nationsmod.gui.miscellaneous.property.PropertyListWidget;
 import me.jakubok.nationsmod.gui.townScreen.TownScreen;
+import me.jakubok.nationsmod.networking.Packets;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
@@ -22,15 +27,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ActScreen<T extends LegalOrganisationLawDescription> extends ResizableWindow {
-    public ButtonWidget edit, submit, close;
+    public ButtonWidget edit, seal, submit, close;
+    public final boolean sealed;
     public Act<T> act;
     public LegalOrganisation<T> organisation;
     public PropertyListWidget list;
     List<PropertyEntry> text = new ArrayList<>();
-    public ActScreen(Act<T> act, LegalOrganisation<T> organisation, Screen previousScreen) {
+    public ActScreen(Act<T> act, LegalOrganisation<T> organisation, boolean sealed, Screen previousScreen) {
         super(Text.literal(act.getName()).formatted(Formatting.BOLD), 170, 200, 4, previousScreen);
         this.act = act;
         this.organisation = organisation;
+        this.sealed = sealed;
     }
 
     @SuppressWarnings("unchecked")
@@ -77,35 +84,53 @@ public class ActScreen<T extends LegalOrganisationLawDescription> extends Resiza
                         Nation nation = (Nation) this.organisation;
                     }
                 }
-        ).dimensions(
-                this.getWindowLeft() + 5,
-                this.getWindowBottom() - 25,
-                (this.getWindowWidth() - 10) / 3 - 5,
-                20
-        ).build();
-        this.addDrawableChild(this.edit);
+        ).dimensions(0, 0, 0, 20).build();
         this.submit = ButtonWidget.builder(
                 Text.of("Submit"),
                 b -> {
 
                 }
-        ).dimensions(
-                this.getWindowLeft() + 5 + (this.getWindowWidth() - 10) / 3,
-                this.getWindowBottom() - 25,
-                (this.getWindowWidth() - 10) / 3 - 5,
-                20
-        ).build();
-        this.addDrawableChild(this.submit);
+        ).dimensions(0, 0, 0, 20).build();
+        this.seal = ButtonWidget.builder(
+                Text.of("Seal"),
+                b -> {
+                    this.client.setScreen(
+                            new AreYouSureScreen(
+                                    Text.of("Sealing the act"),
+                                    s -> {
+                                        ClientPlayNetworking.send(Packets.SEAL_AN_ACT, PacketByteBufs.create());
+                                        this.client.setScreen(null);
+                                    },
+                                    this
+                            )
+                    );
+                }
+        ).dimensions(0, 0, 0, 20).build();
         this.close = ButtonWidget.builder(
                 Text.of("Close"),
                 b -> this.close()
-        ).dimensions(
-                this.getWindowLeft() + 5 + 2 * ((this.getWindowWidth() - 10) / 3),
-                this.getWindowBottom() - 25,
-                (this.getWindowWidth() - 10) / 3,
-                20
-        ).build();
-        this.addDrawableChild(this.close);
+        ).dimensions(0, 0, 0, 20).build();
+
+        if (this.sealed) {
+            ResizableWindow.alignButtons(
+                    ImmutableList.of(this.submit, this.close),
+                    this.getWindowLeft() + 5,
+                    this.getWindowBottom() - 25,
+                    this.getWindowWidth() - 10
+            );
+            this.addDrawableChild(this.submit);
+            this.addDrawableChild(this.close);
+        } else {
+            ResizableWindow.alignButtons(
+                    ImmutableList.of(this.edit, this.seal, this.close),
+                    this.getWindowLeft() + 5,
+                    this.getWindowBottom() - 25,
+                    this.getWindowWidth() - 10
+            );
+            this.addDrawableChild(this.edit);
+            this.addDrawableChild(this.seal);
+            this.addDrawableChild(this.close);
+        }
 
         this.list = new PropertyListWidget(
                 this.getClient(),

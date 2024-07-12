@@ -3,7 +3,6 @@ package me.jakubok.nationsmod.administration.governmentElements;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.function.Supplier;
 
 import me.jakubok.nationsmod.administration.abstractEntities.AdministratingUnit;
 import me.jakubok.nationsmod.administration.abstractEntities.AdministratingUnitLawDescription;
@@ -24,7 +23,7 @@ public abstract class FormOfGovernment<L extends DecisiveEntity, E extends Decis
     public abstract L getLegislative();
     public abstract E getExecutive();
 
-    public abstract void putUnderDeliberation(Act<D> directive);
+    public abstract void putUnderDeliberation(Act<D> act);
 
     public abstract String getName();
     public abstract Text getDisplayName();

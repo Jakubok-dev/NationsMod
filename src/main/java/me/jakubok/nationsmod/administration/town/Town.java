@@ -51,7 +51,7 @@ public class Town extends AdministratingUnit<TownLawDescription> {
     }
 
     @Override
-    public Set<UUID> getAIMembers(MinecraftServer server) {
+    public Set<UUID> getNPCMembers(MinecraftServer server) {
         return this.getAIMembers();
     }
     public Set<UUID> getAIMembers() {

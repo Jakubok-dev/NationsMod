@@ -20,18 +20,19 @@ public class OpenActScreen implements ClientPlayNetworking.PlayChannelHandler {
         assert nbt != null;
         String type = nbt.getString("type");
         NbtCompound actNbt = nbt.getCompound("act");
+        boolean sealed = nbt.getBoolean("sealed");
         switch (type) {
             case "town" -> {
                 NbtCompound townNbt = nbt.getCompound("town");
                 Town town = new Town(townNbt, null);
                 Act<TownLawDescription> act = new Act<>(town.description, actNbt);
-                client.execute(() -> client.setScreen(new ActScreen<>(act, town, null)));
+                client.execute(() -> client.setScreen(new ActScreen<>(act, town, sealed, null)));
             }
             case "nation" -> {
                 NbtCompound nationNbt = nbt.getCompound("nation");
                 Nation nation = new Nation(nationNbt, null);
                 Act<NationLawDescription> act = new Act<>(nation.description, actNbt);
-                client.execute(() -> client.setScreen(new ActScreen<>(act, nation, null)));
+                client.execute(() -> client.setScreen(new ActScreen<>(act, nation, sealed, null)));
             }
         }
     }

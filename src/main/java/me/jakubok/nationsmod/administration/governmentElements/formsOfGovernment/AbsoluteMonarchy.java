@@ -10,6 +10,7 @@ import me.jakubok.nationsmod.administration.governmentElements.FormOfGovernment;
 import me.jakubok.nationsmod.administration.governmentElements.decisiveEntities.Monarch;
 import me.jakubok.nationsmod.administration.law.Act;
 import me.jakubok.nationsmod.administration.law.Act.ActStatus;
+import me.jakubok.nationsmod.administration.law.Petition;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.text.Text;
 
@@ -34,10 +35,10 @@ public class AbsoluteMonarchy<U extends AdministratingUnit<D>, D extends Adminis
     }
 
     @Override
-    public void putUnderDeliberation(Act<D> directive) {
-        directive.status = ActStatus.DELIBERATED_BY_THE_LEGISLATIVE;
-        this.getLegislative().putUnderDeliberation(directive.getID());
-        this.mapOfDirectives.put(directive.getID(), directive);
+    public void putUnderDeliberation(Act<D> act) {
+        act.status = ActStatus.DELIBERATED_BY_THE_LEGISLATIVE;
+        this.getLegislative().putUnderDeliberation(act.getID());
+        this.mapOfDirectives.put(act.getID(), act);
     }
 
     @Override
@@ -67,5 +68,4 @@ public class AbsoluteMonarchy<U extends AdministratingUnit<D>, D extends Adminis
     public void executivesVerdictListener(UUID directivesID, DecisiveEntitysVerdict verdict) {
         this.legislativesVerdictListener(directivesID, verdict);
     }
-    
 }

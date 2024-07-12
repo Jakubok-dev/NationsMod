@@ -39,7 +39,7 @@ public class Nation extends AdministratingUnit<NationLawDescription> {
         return result;
     }
     @Override
-    public Set<UUID> getAIMembers(MinecraftServer server) {
+    public Set<UUID> getNPCMembers(MinecraftServer server) {
         Set<UUID> result = new HashSet<>();
         for (Province province : this.getProvinces(server)) {
             if (province == null)

@@ -6,9 +6,12 @@ import me.jakubok.nationsmod.NationsMod;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+
+import java.util.List;
 
 public abstract class ResizableWindow extends Screen {
 
@@ -107,5 +110,17 @@ public abstract class ResizableWindow extends Screen {
     protected void init() {
         this.clearChildren();
         super.init();
+    }
+
+    public static void alignButtons(List<ButtonWidget> buttons, int x, int y, int width) {
+        int span = 5 * (buttons.size() - 1);
+        int entryWidth = (width - span) / buttons.size();
+        int position = x;
+        for (ButtonWidget button : buttons) {
+            button.setWidth(entryWidth);
+            button.setY(y);
+            button.setX(position);
+            position += 5 + entryWidth;
+        }
     }
 }
