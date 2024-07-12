@@ -49,7 +49,7 @@ public abstract class TabWindow extends ResizableWindow {
 
     @Override
     public Text getTitle() {
-        return Text.of(this.titleRoot.getString() + " - " + this.getTabs().get(this.selectedTab).name);
+        return Text.of(this.titleRoot.getString() + " - " + this.getTabs().get(this.selectedTab).name.getString());
     }
 
     @Override
@@ -60,7 +60,7 @@ public abstract class TabWindow extends ResizableWindow {
         drawCenteredTextWithShadow(
                 matrices,
                 this.textRenderer,
-                this.title,
+                this.getTitle(),
                 this.windowCenterHorizontal(),
                 this.getWindowTop() + 10,
                 0xffffff

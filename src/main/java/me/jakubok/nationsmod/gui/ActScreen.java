@@ -13,13 +13,13 @@ import me.jakubok.nationsmod.gui.miscellaneous.ResizableWindow;
 import me.jakubok.nationsmod.gui.miscellaneous.TextEntry;
 import me.jakubok.nationsmod.gui.miscellaneous.property.PropertyEntry;
 import me.jakubok.nationsmod.gui.miscellaneous.property.PropertyListWidget;
+import me.jakubok.nationsmod.gui.miscellaneous.property.TextProperty;
 import me.jakubok.nationsmod.gui.townScreen.TownScreen;
 import me.jakubok.nationsmod.networking.Packets;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
@@ -34,7 +34,7 @@ public class ActScreen<T extends LegalOrganisationLawDescription> extends Resiza
     public PropertyListWidget list;
     List<PropertyEntry> text = new ArrayList<>();
     public ActScreen(Act<T> act, LegalOrganisation<T> organisation, boolean sealed, Screen previousScreen) {
-        super(Text.literal(act.getName()).formatted(Formatting.BOLD), 170, 200, 4, previousScreen);
+        super(Text.literal(act.getName()).formatted(Formatting.BOLD), 225, 200, 4, previousScreen);
         this.act = act;
         this.organisation = organisation;
         this.sealed = sealed;
@@ -46,6 +46,8 @@ public class ActScreen<T extends LegalOrganisationLawDescription> extends Resiza
         this.text.clear();
         super.init();
         assert this.client != null;
+        this.text.add(new TextProperty(this.client, Text.literal("Act status"), this.act.status.getDisplayText()));
+        this.text.add(new TextProperty(this.client, Text.literal("Affected body"), Text.literal(this.organisation.getName())));
         for (String orderName : this.act.getOrders().keySet()) {
             Order order = this.act.description.getOrders().get(orderName);
             this.text.addAll(order
@@ -66,7 +68,7 @@ public class ActScreen<T extends LegalOrganisationLawDescription> extends Resiza
             this.text.addAll(message);
         }
 
-        if (this.text.isEmpty()) {
+        if (this.text.size() < 3) {
             this.text.add(new TextEntry(this.client, Text.literal("The act is empty").asOrderedText()));
         }
         this.windowHeight = Math.min(this.windowHeight, 65 + 15 * this.text.size());
@@ -88,7 +90,8 @@ public class ActScreen<T extends LegalOrganisationLawDescription> extends Resiza
         this.submit = ButtonWidget.builder(
                 Text.of("Submit"),
                 b -> {
-
+                    ClientPlayNetworking.send(Packets.SUBMIT_AN_ACT, PacketByteBufs.create());
+                    this.client.setScreen(null);
                 }
         ).dimensions(0, 0, 0, 20).build();
         this.seal = ButtonWidget.builder(

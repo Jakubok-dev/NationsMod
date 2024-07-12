@@ -5,18 +5,22 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import me.jakubok.nationsmod.administration.abstractEntities.LegalOrganisation;
 import me.jakubok.nationsmod.administration.abstractEntities.LegalOrganisationLawDescription;
+import me.jakubok.nationsmod.collection.EnumWithText;
 import me.jakubok.nationsmod.registries.LegalOrganisationRegistry;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 
 public class Act<D extends LegalOrganisationLawDescription> extends LawHolder<D> {
-    private UUID id = UUID.randomUUID();
+    private UUID id;
     protected String name;
     protected Map<String, NbtCompound> orders;
     protected UUID affectedBodyID;
     public ActStatus status = ActStatus.UNSUBMITTED;
     public Act(String name, D description, LegalOrganisation<D> affectedBody) {
         super(description);
+        this.id = UUID.randomUUID();
         this.name = name;
         this.affectedBodyID = affectedBody.getId();
         this.orders = new HashMap<>();
@@ -106,18 +110,26 @@ public class Act<D extends LegalOrganisationLawDescription> extends LawHolder<D>
         return super.writeToNbtAndReturn(tag);
     }
 
-    public enum ActStatus {
-        UNSUBMITTED(0),
-        DELIBERATED_BY_THE_LEGISLATIVE(1),
-        REJECTED_BY_THE_LEGISLATIVE(2),
-        DELIBERATED_BY_THE_EXECUTIVE(3),
-        REJECTED_BY_THE_EXECUTIVE(4),
-        APPROVED(5);
+    public enum ActStatus implements EnumWithText {
+        UNSUBMITTED(0, Text.literal("Unsubmitted").formatted(Formatting.GRAY)),
+        DELIBERATED_BY_THE_LEGISLATIVE(1, Text.literal("Deliberated by the legislative")),
+        REJECTED_BY_THE_LEGISLATIVE(2, Text.literal("Rejected by the legislative").formatted(Formatting.RED)),
+        DELIBERATED_BY_THE_EXECUTIVE(3, Text.literal("Deliberated by the executive")),
+        REJECTED_BY_THE_EXECUTIVE(4, Text.literal("Rejected by the executive").formatted(Formatting.RED)),
+        APPROVED(5, Text.literal("Approved").formatted(Formatting.GREEN));
 
-        ActStatus(int value) {
+        ActStatus(int value, Text displayText) {
             this.value = value;
+            this.displayText = displayText;
         }
 
         public final int value;
+
+        public final Text displayText;
+
+        @Override
+        public Text getDisplayText() {
+            return this.displayText;
+        }
     }
 }

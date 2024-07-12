@@ -1,6 +1,7 @@
 package me.jakubok.nationsmod.collection;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 import java.util.UUID;
 
 import net.minecraft.entity.player.PlayerEntity;
@@ -57,5 +58,10 @@ public class PlayerAccount implements Serialisable {
             return true;
 
         return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.name, this.playersID, this.playersOfflineID);
     }
 }

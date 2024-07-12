@@ -9,7 +9,6 @@ import me.jakubok.nationsmod.administration.town.TownLawDescription;
 import me.jakubok.nationsmod.gui.miscellaneous.Subscreen;
 import me.jakubok.nationsmod.gui.miscellaneous.TabWindow;
 import me.jakubok.nationsmod.networking.Packets;
-import me.jakubok.nationsmod.registries.ItemRegistry;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.gui.screen.Screen;
@@ -25,7 +24,7 @@ public class TownScreen extends TabWindow {
 
     protected final Town town;
     public final GeneralInfoSubscreen generalInfo;
-    public final PetitionsAndDirectivesSubscreen petitionsAndDirectives;
+    public final ActsAndPetitionsSubscreen petitionsAndDirectives;
     public final DistrictsSubscreen districtsSubscreen;
     public final OrdersSubscreen ordersSubscreen;
     public final Act<TownLawDescription> act;
@@ -36,7 +35,7 @@ public class TownScreen extends TabWindow {
         this.town = town;
         this.act = act;
         this.generalInfo = new GeneralInfoSubscreen(this);
-        this.petitionsAndDirectives = new PetitionsAndDirectivesSubscreen(this);
+        this.petitionsAndDirectives = new ActsAndPetitionsSubscreen(this);
         this.districtsSubscreen = new DistrictsSubscreen(this);
         this.ordersSubscreen = new OrdersSubscreen(this);
     }
@@ -58,7 +57,8 @@ public class TownScreen extends TabWindow {
             null
         ));
 
-        tabs.add(this.petitionsAndDirectives.subscreen);
+        if (this.act == null)
+            tabs.add(this.petitionsAndDirectives.subscreen);
         
         return tabs;
     }
