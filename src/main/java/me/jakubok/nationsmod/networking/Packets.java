@@ -9,6 +9,7 @@ public class Packets {
 
     public static final Identifier PREPARE_TOWNS_SCREEN = new Identifier(NationsMod.MOD_ID, "prepare_towns_screen");
     public static final Identifier PREPARE_TOWN_SCREEN = new Identifier(NationsMod.MOD_ID, "prepare_town_screen");
+    public static final Identifier GET_DISTRICTS_NAMES = new Identifier(NationsMod.MOD_ID, "get_districts_names");
 
     public static final Identifier OPEN_TOWN_CREATION_SCREEN = new Identifier(NationsMod.MOD_ID, "open_town_creation_screen");
 
@@ -49,5 +50,5 @@ public class Packets {
     public static final Identifier OPEN_TOWN_SCREEN_WITH_A_PETITION = new Identifier(NationsMod.MOD_ID, "open_town_screen_with_a_petition");
     public static final Identifier OPEN_ACT_SCREEN = new Identifier(NationsMod.MOD_ID, "open_act_screen");
 
-    public static final Identifier GET_DISTRICTS_NAMES = new Identifier(NationsMod.MOD_ID, "get_districts_names");
+    public static final Identifier SIGN_A_PETITION = new Identifier(NationsMod.MOD_ID, "sign_a_petition");
 }

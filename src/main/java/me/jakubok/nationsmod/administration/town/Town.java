@@ -60,6 +60,10 @@ public class Town extends AdministratingUnit<TownLawDescription> {
         return result;
     }
 
+    public boolean isACitizen(PlayerAccount account) {
+        return this.getPlayerMembers().contains(account);
+    }
+
     public boolean addAMember(PlayerEntity entity, MinecraftServer server) {
         if (this.getPlayerMembers().contains(new PlayerAccount(entity)))
             return false;
@@ -165,11 +169,9 @@ public class Town extends AdministratingUnit<TownLawDescription> {
     @Override
     public void readTheFormOfGovernment(NbtCompound nbt, MinecraftServer server) {
         switch (nbt.getString("formOfGovernment")) {
-            case "absolute_monarchy":
-                this.formOfGovernment = new AbsoluteMonarchy<>(this, server);
-                break;
-            default:
-                throw new CrashException(CrashReport.create(new Throwable(), "Unknown form of government"));
+            case "absolute_monarchy" ->
+                    this.formOfGovernment = new AbsoluteMonarchy<>(this, server, nbt.getCompound("formOfGovernmentData"));
+            default -> throw new CrashException(CrashReport.create(new Throwable(), "Unknown form of government"));
         }
     }
 

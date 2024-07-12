@@ -26,6 +26,11 @@ public class Monarch extends DecisiveEntity {
         }
     }
 
+    public Monarch(AdministratingUnit<?> administratedUnit, FormOfGovernment<?, ?, ?, ?> formOfGovernment, NbtCompound nbt) {
+        super(administratedUnit, formOfGovernment);
+        this.readFromNbt(nbt);
+    }
+
     public void setMonarch(PlayerAccount monarch) {
         if (this.AIMonarch != null)
             this.AIMonarch = null;

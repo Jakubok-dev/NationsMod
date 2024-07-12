@@ -1,28 +1,27 @@
 package me.jakubok.nationsmod.gui.miscellaneous;
 
 import com.google.common.collect.ImmutableList;
-import me.jakubok.nationsmod.administration.abstractEntities.LegalOrganisation;
-import me.jakubok.nationsmod.administration.abstractEntities.LegalOrganisationLawDescription;
-import me.jakubok.nationsmod.administration.law.Petition;
-import me.jakubok.nationsmod.gui.act.PetitionScreen;
+import me.jakubok.nationsmod.administration.law.Act;
 import me.jakubok.nationsmod.gui.miscellaneous.property.PropertyEntry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.Selectable;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 
 import java.util.List;
 
-public class PetitionEntry<T extends LegalOrganisationLawDescription> extends PropertyEntry {
+public class ActEntry extends PropertyEntry {
     public ButtonWidget nameButton;
-    public PetitionEntry(MinecraftClient client, Petition<T> petition, LegalOrganisation<T> organisation, boolean signable, Screen parentScreen) {
+    public final Act<?> act;
+
+    public ActEntry(MinecraftClient client, Act<?> act) {
         super(client);
+        this.act = act;
         this.nameButton = ButtonWidget.builder(
-                Text.of(petition.act.getName()),
-                b -> this.client.setScreen(new PetitionScreen<>(petition, organisation, signable, parentScreen))
+                Text.literal(this.act.getName()),
+                b -> {}
         ).dimensions(0, 0, 0, 20).build();
     }
 
@@ -46,8 +45,8 @@ public class PetitionEntry<T extends LegalOrganisationLawDescription> extends Pr
 
         this.client.textRenderer.drawWithShadow(
                 matrices,
-                Text.of("Petition"),
-                x + entryWidth - this.client.textRenderer.getWidth(Text.of("Petition")) - 7,
+                this.act.status.getDisplayText(),
+                x + entryWidth - this.client.textRenderer.getWidth(this.act.status.getDisplayText()) - 7,
                 y + (float) (20 - this.client.textRenderer.fontHeight) / 2,
                 0xFFFFFF
         );

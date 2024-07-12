@@ -7,6 +7,7 @@ public class ServerNetworking {
     public static void register() {
         ServerPlayNetworking.registerGlobalReceiver(Packets.CREATE_A_TOWN, new CreateATown());
         ServerPlayNetworking.registerGlobalReceiver(Packets.PREPARE_TOWNS_SCREEN, new PrepareTownsScreen());
+        ServerPlayNetworking.registerGlobalReceiver(Packets.GET_DISTRICTS_NAMES, new GetDistrictsNames());
         ServerPlayNetworking.registerGlobalReceiver(Packets.CHECK_POSITION, new CheckPosition());
         ServerPlayNetworking.registerGlobalReceiver(Packets.PREPARE_TOWN_SCREEN, new PrepareTownScreen());
         ServerPlayNetworking.registerGlobalReceiver(Packets.CREATE_A_NATION, new CreateANation());
@@ -21,8 +22,8 @@ public class ServerNetworking {
         ServerPlayNetworking.registerGlobalReceiver(Packets.CHANGE_THE_POLYGON_ALTERATION_MODE, new ChangeThePolygonAlterationMode());
         ServerPlayNetworking.registerGlobalReceiver(Packets.CREATE_AN_ACT, new CreateAnAct());
         ServerPlayNetworking.registerGlobalReceiver(Packets.SYNCHRONISE_AN_ACT, new SynchroniseAnAct());
-        ServerPlayNetworking.registerGlobalReceiver(Packets.GET_DISTRICTS_NAMES, new GetDistrictsNames());
         ServerPlayNetworking.registerGlobalReceiver(Packets.SEAL_AN_ACT, new SealAnAct());
         ServerPlayNetworking.registerGlobalReceiver(Packets.SUBMIT_AN_ACT, new SubmitAnAct());
+        ServerPlayNetworking.registerGlobalReceiver(Packets.SIGN_A_PETITION, new SignAPetition());
     }
 }

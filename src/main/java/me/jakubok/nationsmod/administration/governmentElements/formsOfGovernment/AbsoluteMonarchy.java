@@ -11,18 +11,24 @@ import me.jakubok.nationsmod.administration.governmentElements.decisiveEntities.
 import me.jakubok.nationsmod.administration.law.Act;
 import me.jakubok.nationsmod.administration.law.Act.ActStatus;
 import me.jakubok.nationsmod.administration.law.Petition;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.text.Text;
 
 public class AbsoluteMonarchy<U extends AdministratingUnit<D>, D extends AdministratingUnitLawDescription> extends FormOfGovernment<Monarch, Monarch, U, D> {
 
-    private final Monarch monarch;
+    private Monarch monarch;
     public final MinecraftServer server;
 
     public AbsoluteMonarchy(U administratedUnit, MinecraftServer server) {
         super(administratedUnit);
         this.server = server;
         this.monarch = new Monarch(administratedUnit, this, server);
+    }
+    public AbsoluteMonarchy(U administratedUnit, MinecraftServer server, NbtCompound nbt) {
+        super(administratedUnit);
+        this.server = server;
+        this.readFromNbt(nbt);
     }
 
     @Override
@@ -67,5 +73,17 @@ public class AbsoluteMonarchy<U extends AdministratingUnit<D>, D extends Adminis
     @Override
     public void executivesVerdictListener(UUID directivesID, DecisiveEntitysVerdict verdict) {
         this.legislativesVerdictListener(directivesID, verdict);
+    }
+
+    @Override
+    public void readFromNbt(NbtCompound nbt) {
+        super.readFromNbt(nbt);
+        this.monarch = new Monarch(this.administratedUnit, this, nbt.getCompound("monarch"));
+    }
+
+    @Override
+    public NbtCompound writeToNbtAndReturn(NbtCompound nbt) {
+        nbt.put("monarch", this.monarch.writeToNbtAndReturn(new NbtCompound()));
+        return super.writeToNbtAndReturn(nbt);
     }
 }

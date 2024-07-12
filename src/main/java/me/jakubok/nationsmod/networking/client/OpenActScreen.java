@@ -5,7 +5,7 @@ import me.jakubok.nationsmod.administration.nation.Nation;
 import me.jakubok.nationsmod.administration.nation.NationLawDescription;
 import me.jakubok.nationsmod.administration.town.Town;
 import me.jakubok.nationsmod.administration.town.TownLawDescription;
-import me.jakubok.nationsmod.gui.ActScreen;
+import me.jakubok.nationsmod.gui.act.ActScreen;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.client.MinecraftClient;

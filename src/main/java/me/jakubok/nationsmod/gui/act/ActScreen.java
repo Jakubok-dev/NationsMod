@@ -1,4 +1,4 @@
-package me.jakubok.nationsmod.gui;
+package me.jakubok.nationsmod.gui.act;
 
 import com.google.common.collect.ImmutableList;
 import me.jakubok.nationsmod.administration.abstractEntities.LegalOrganisation;
@@ -9,6 +9,7 @@ import me.jakubok.nationsmod.administration.nation.Nation;
 import me.jakubok.nationsmod.administration.nation.NationLawDescription;
 import me.jakubok.nationsmod.administration.town.Town;
 import me.jakubok.nationsmod.administration.town.TownLawDescription;
+import me.jakubok.nationsmod.gui.AreYouSureScreen;
 import me.jakubok.nationsmod.gui.miscellaneous.ResizableWindow;
 import me.jakubok.nationsmod.gui.miscellaneous.TextEntry;
 import me.jakubok.nationsmod.gui.miscellaneous.property.PropertyEntry;
@@ -113,6 +114,7 @@ public class ActScreen<T extends LegalOrganisationLawDescription> extends Resiza
                 Text.of("Close"),
                 b -> this.close()
         ).dimensions(0, 0, 0, 20).build();
+
 
         if (this.sealed) {
             ResizableWindow.alignButtons(

@@ -1,4 +1,4 @@
-package me.jakubok.nationsmod.gui;
+package me.jakubok.nationsmod.gui.act;
 
 import com.google.common.collect.ImmutableList;
 import me.jakubok.nationsmod.collection.Pair;

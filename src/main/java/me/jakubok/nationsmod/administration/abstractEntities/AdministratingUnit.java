@@ -63,7 +63,9 @@ public abstract class AdministratingUnit<D extends AdministratingUnitLawDescript
         Petition<D> petition = this.petitions.get(petitionID);
         if (petition == null)
             return false;
-        return petition.playerSignees.add(account);
+        boolean result = petition.playerSignees.add(account);
+        this.onPetitionSign(server, petition);
+        return result;
     }
     public boolean signAPetition(MinecraftServer server, UUID npc, UUID petitionID) {
         if (!this.isACitizen(server, npc))
@@ -71,13 +73,15 @@ public abstract class AdministratingUnit<D extends AdministratingUnitLawDescript
         Petition<D> petition = this.petitions.get(petitionID);
         if (petition == null)
             return false;
-        return petition.npcSignees.add(npc);
+        boolean result = petition.npcSignees.add(npc);
+        this.onPetitionSign(server, petition);
+        return result;
     }
     protected void onPetitionSign(MinecraftServer server, Petition<D> petition) {
         int signeesCount = petition.npcSignees.size() + petition.playerSignees.size();
         int citizensCount = this.getPlayerMembers(server).size() + this.getNPCMembers(server).size();
         if ((signeesCount / citizensCount) >= (this.getThePetitionSupport() / 100)) {
-            this.petitions.remove(petition.act.getId());
+            this.petitions.remove(petition.act.getID());
             this.formOfGovernment.putUnderDeliberation(petition.act);
         }
     }
@@ -106,7 +110,7 @@ public abstract class AdministratingUnit<D extends AdministratingUnitLawDescript
         this.petitions = new HashMap<>();
         for (int i = 0; i < tag.getInt("petitionsSize"); i++) {
             Petition<D> petition = new Petition<>(this.description, tag.getCompound("petition" + i));
-            this.petitions.put(petition.act.getId(), petition);
+            this.petitions.put(petition.act.getID(), petition);
         }
     }
 

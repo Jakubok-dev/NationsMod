@@ -1,7 +1,7 @@
 package me.jakubok.nationsmod.networking.client;
 
 import me.jakubok.nationsmod.collection.Pair;
-import me.jakubok.nationsmod.gui.ActCreationScreen;
+import me.jakubok.nationsmod.gui.act.ActCreationScreen;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.client.MinecraftClient;

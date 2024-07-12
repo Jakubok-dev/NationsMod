@@ -1,19 +1,22 @@
 package me.jakubok.nationsmod.gui.townScreen;
 
+import me.jakubok.nationsmod.administration.law.Act;
 import me.jakubok.nationsmod.administration.law.Petition;
 import me.jakubok.nationsmod.administration.town.TownLawDescription;
+import me.jakubok.nationsmod.collection.PlayerAccount;
+import me.jakubok.nationsmod.gui.miscellaneous.ActEntry;
 import me.jakubok.nationsmod.gui.miscellaneous.PetitionEntry;
 import me.jakubok.nationsmod.gui.miscellaneous.Subscreen;
 import me.jakubok.nationsmod.gui.miscellaneous.TabWindow;
 import me.jakubok.nationsmod.gui.miscellaneous.property.PropertyEntry;
 import me.jakubok.nationsmod.gui.miscellaneous.property.PropertyListWidget;
 import me.jakubok.nationsmod.registries.ItemRegistry;
+import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class ActsAndPetitionsSubscreen {
 
@@ -31,10 +34,32 @@ public class ActsAndPetitionsSubscreen {
     }
 
     protected void init(TabWindow instance) {
+        assert this.inst.getClient() != null;
+        assert this.inst.getClient().player != null;
         List<PropertyEntry> entries = new ArrayList<>();
-        for (Petition<TownLawDescription> petition : inst.town.petitions.values())
-            entries.add(new PetitionEntry(inst.getClient(), petition));
 
+        for (Act<TownLawDescription> act : inst.town.formOfGovernment.mapOfDirectives
+                .values()
+                .stream()
+                .sorted((a, b) -> {
+                    if (a.status.ordinal() == b.status.ordinal())
+                        return Comparator.<String>naturalOrder().compare(a.getName(), b.getName());
+                    if (a.status.ordinal() < b.status.ordinal())
+                        return 1;
+                    return -1;
+                })
+                .toList()
+        )
+            entries.add(new ActEntry(inst.getClient(), act));
+
+        for (Petition<TownLawDescription> petition : inst.town.petitions
+                .values()
+                .stream()
+                .sorted((a, b) -> Comparator.<String>naturalOrder().compare(a.act.getName(), b.act.getName()))
+                .toList()
+        ) {
+            entries.add(new PetitionEntry<>(inst.getClient(), petition, inst.town, inst.town.isACitizen(new PlayerAccount(this.inst.getClient().player)), inst));
+        }
         this.listWidget = new PropertyListWidget(
                 instance.getClient(),
                 entries,

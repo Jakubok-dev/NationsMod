@@ -34,11 +34,11 @@ public class SubmitAnAct implements ServerPlayNetworking.PlayChannelHandler {
                     player.sendMessage(Text.of("Submitting failed! You are not a citizen of the town of " + town.getName()));
                     return;
                 }
-                if (town.petitions.containsKey(petition.act.getId())) {
+                if (town.petitions.containsKey(petition.act.getID())) {
                     player.sendMessage(Text.of("Submitting failed! The same act is already submitted!"));
                     return;
                 }
-                town.petitions.put(petition.act.getId(), petition);
+                town.petitions.put(petition.act.getID(), petition);
                 player.setStackInHand(player.getActiveHand(), ItemStack.EMPTY);
                 return;
             }

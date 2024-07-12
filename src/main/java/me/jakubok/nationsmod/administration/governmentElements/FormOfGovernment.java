@@ -14,10 +14,15 @@ import net.minecraft.text.Text;
 
 public abstract class FormOfGovernment<L extends DecisiveEntity, E extends DecisiveEntity, U extends AdministratingUnit<D>, D extends AdministratingUnitLawDescription> implements Serialisable {
     public final U administratedUnit;
-    public final Map<UUID, Act<D>> mapOfDirectives = new HashMap<>();
+    public Map<UUID, Act<D>> mapOfDirectives;
 
     public FormOfGovernment(U administratedUnit) {
         this.administratedUnit = administratedUnit;
+        this.mapOfDirectives = new HashMap<>();
+    }
+    public FormOfGovernment(U administratedUnit, NbtCompound nbt) {
+        this.administratedUnit = administratedUnit;
+        this.readFromNbt(nbt);
     }
 
     public abstract L getLegislative();
@@ -34,15 +39,12 @@ public abstract class FormOfGovernment<L extends DecisiveEntity, E extends Decis
 
     @Override
     public void readFromNbt(NbtCompound nbt) {
-        this.mapOfDirectives.clear();
+        this.mapOfDirectives = new HashMap<>();
         for (int i = 0; i < nbt.getInt("Size"); i++) {
-            UUID id = nbt.getUuid("directivesID" + i);
-            Act<D> directive = new Act<>(administratedUnit.description, nbt.getCompound("directive" + i));
+            UUID id = nbt.getUuid("actsID" + i);
+            Act<D> directive = new Act<>(administratedUnit.description, nbt.getCompound("act" + i));
             this.mapOfDirectives.put(id, directive);
         }
-        this.getLegislative().readFromNbt(nbt.getCompound("legislative"));
-        if (this.getLegislative() != this.getExecutive())
-            this.getExecutive().readFromNbt(nbt.getCompound("executive"));
     }
     @Override
     public void writeToNbt(NbtCompound nbt) {
@@ -51,12 +53,10 @@ public abstract class FormOfGovernment<L extends DecisiveEntity, E extends Decis
     public NbtCompound writeToNbtAndReturn(NbtCompound nbt) {
         UUID[] uuids = this.mapOfDirectives.keySet().toArray(new UUID[]{});
         for (int i = 0; i < uuids.length; i++) {
-            nbt.putUuid("directivesID" + i, uuids[i]);
-            nbt.put("directive" + i, this.mapOfDirectives.get(uuids[i]).writeToNbtAndReturn(new NbtCompound()));
+            nbt.putUuid("actsID" + i, uuids[i]);
+            nbt.put("act" + i, this.mapOfDirectives.get(uuids[i]).writeToNbtAndReturn(new NbtCompound()));
         }
         nbt.putInt("Size", uuids.length);
-        nbt.put("legislative", this.getLegislative().writeToNbtAndReturn(new NbtCompound()));
-        nbt.put("executive", this.getExecutive().writeToNbtAndReturn(new NbtCompound()));
         return nbt;
     }
 }

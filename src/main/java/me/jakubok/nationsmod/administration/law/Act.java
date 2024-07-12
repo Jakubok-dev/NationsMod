@@ -17,13 +17,14 @@ public class Act<D extends LegalOrganisationLawDescription> extends LawHolder<D>
     protected String name;
     protected Map<String, NbtCompound> orders;
     protected UUID affectedBodyID;
-    public ActStatus status = ActStatus.UNSUBMITTED;
+    public ActStatus status;
     public Act(String name, D description, LegalOrganisation<D> affectedBody) {
         super(description);
         this.id = UUID.randomUUID();
         this.name = name;
         this.affectedBodyID = affectedBody.getId();
         this.orders = new HashMap<>();
+        this.status = ActStatus.UNSUBMITTED;
     }
     public Act(D description, NbtCompound nbt) {
         super(description, nbt);
@@ -35,10 +36,6 @@ public class Act<D extends LegalOrganisationLawDescription> extends LawHolder<D>
 
     public UUID getAffectedBodyID() {
         return affectedBodyID;
-    }
-
-    public UUID getId() {
-        return id;
     }
 
     public String getName() {
@@ -112,10 +109,10 @@ public class Act<D extends LegalOrganisationLawDescription> extends LawHolder<D>
 
     public enum ActStatus implements EnumWithText {
         UNSUBMITTED(0, Text.literal("Unsubmitted").formatted(Formatting.GRAY)),
-        DELIBERATED_BY_THE_LEGISLATIVE(1, Text.literal("Deliberated by the legislative")),
-        REJECTED_BY_THE_LEGISLATIVE(2, Text.literal("Rejected by the legislative").formatted(Formatting.RED)),
-        DELIBERATED_BY_THE_EXECUTIVE(3, Text.literal("Deliberated by the executive")),
-        REJECTED_BY_THE_EXECUTIVE(4, Text.literal("Rejected by the executive").formatted(Formatting.RED)),
+        REJECTED_BY_THE_LEGISLATIVE(1, Text.literal("Rejected (Legislative)").formatted(Formatting.RED)),
+        REJECTED_BY_THE_EXECUTIVE(2, Text.literal("Rejected (Executive)").formatted(Formatting.RED)),
+        DELIBERATED_BY_THE_LEGISLATIVE(3, Text.literal("Deliberated (Legislative)")),
+        DELIBERATED_BY_THE_EXECUTIVE(4, Text.literal("Deliberated (Executive)")),
         APPROVED(5, Text.literal("Approved").formatted(Formatting.GREEN));
 
         ActStatus(int value, Text displayText) {
