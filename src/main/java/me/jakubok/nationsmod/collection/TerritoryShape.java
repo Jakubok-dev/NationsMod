@@ -37,19 +37,24 @@ public class TerritoryShape implements Serialisable {
         if (node.left.value.key > node.value.key && node.right.value.key > node.value.key) {
             double slopeLeft = ((double)(node.left.value.value - node.value.value)) / ((double)(node.left.value.key - node.value.key));
             double slopeRight = ((double)(node.right.value.value - node.value.value)) / ((double)(node.right.value.key - node.value.key));
-            return Math.abs(slopeRight) <= Math.abs(slopeLeft) ? this.iterateToTheRight(node) : this.iterateToTheLeft(node);
+            if (Math.abs(slopeRight) > Math.abs(slopeLeft))
+                this.polygon.invert();
+            return this.iterate(node);
         }
-        if (node.left.value.key > node.value.key)
-            return this.iterateToTheLeft(node);
+        if (node.left.value.key > node.value.key) {
+            this.polygon.invert();
+            return this.iterate(node);
+        }
         if (node.right.value.key > node.value.key)
-            return this.iterateToTheRight(node);
+            return this.iterate(node);
         if (node.left.value.key.equals(node.value.key)) {
-            node = node.right;
-            return this.iterateToTheLeft(node);
+            this.polygon.invert();
+            node = node.left;
+            return this.iterate(node);
         }
         if (node.right.value.key.equals(node.value.key)) {
             node = node.left;
-            return this.iterateToTheRight(node);
+            return this.iterate(node);
         }
 
         double slopeLeft = ((double)(node.left.value.value - node.value.value)) / ((double)(node.left.value.key - node.value.key));
@@ -57,13 +62,14 @@ public class TerritoryShape implements Serialisable {
 
         if (Math.abs(slopeLeft) <= Math.abs(slopeRight)) {
             node = node.left;
-            return this.iterateToTheRight(node);
+            return this.iterate(node);
         }
-        node = node.right;
-        return this.iterateToTheLeft(node);
+        this.polygon.invert();
+        node = node.left;
+        return this.iterate(node);
     }
 
-    private Set<BorderEdge> iterateToTheRight(PolygonNode<Point> node) {
+    private Set<BorderEdge> iterate(PolygonNode<Point> node) {
         Set<BorderEdge> edges = new HashSet<>();
         PolygonNode<Point> firstNode = node;
 
@@ -88,35 +94,6 @@ public class TerritoryShape implements Serialisable {
                     startsTheShape
             ));
             node = node.right;
-        } while (node != firstNode);
-        return edges;
-    }
-
-    private Set<BorderEdge> iterateToTheLeft(PolygonNode<Point> node) {
-        Set<BorderEdge> edges = new HashSet<>();
-        PolygonNode<Point> firstNode = node;
-
-        do {
-            if (node.value.key.equals(node.left.value.key)) {
-                node = node.left;
-                continue;
-            }
-            boolean startsTheShape = node.left.value.key > node.value.key;
-            boolean doesTheNextStartTheShape = node.left.left.value.key > node.left.value.key;
-            boolean isTheEndingClosed = startsTheShape == doesTheNextStartTheShape || node.left.value.key.equals(node.left.left.value.key);
-            boolean isThePreviousLineALinearEquation = node.right.value.key.equals(node.value.key);
-
-            edges.add(new BorderEdge(
-                    (LinearFunction) MathEquation.fromTwoPoints(
-                            new Range(node.value.key + .5d, node.left.value.key + .5d, startsTheShape ? isThePreviousLineALinearEquation : isTheEndingClosed, startsTheShape ? isTheEndingClosed : isThePreviousLineALinearEquation),
-                            new Range(node.value.value + .5d, node.left.value.value + .5d, true, true),
-                            node.value.key + .5d, node.value.value + .5d,
-                            node.left.value.key + .5d, node.left.value.value + .5d
-                    ),
-                    this.id,
-                    startsTheShape
-            ));
-            node = node.left;
         } while (node != firstNode);
         return edges;
     }

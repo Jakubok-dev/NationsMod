@@ -23,10 +23,10 @@ public class Polygon implements Serialisable {
     public boolean add(Point added, Point pointInThePolygon) {
         if (this.isEmpty())
             this.addToTheRight(pointInThePolygon);
-        if (this.root.value.equals(pointInThePolygon))
-            return this.addToTheLeft(added);
         if (this.getTheLastNode().value.equals(pointInThePolygon))
             return this.addToTheRight(added);
+        if (this.root.value.equals(pointInThePolygon))
+            return this.addToTheLeft(added);
         return false;
     }
 
@@ -453,6 +453,47 @@ public class Polygon implements Serialisable {
         this.subscribers.forEach((k, v) -> {
             v.accept(this);
         });
+    }
+
+    public void invert() {
+        PolygonNode<Point> next = this.root;
+        while (true) {
+            PolygonNode<Point> current = next;
+            next = current.right;
+
+            PolygonNode<Point> temp = current.left;
+            current.left = current.right;
+            current.right = temp;
+
+            if (next == null || next == this.root) {
+                this.root = current;
+                break;
+            }
+        }
+    }
+
+
+    /**
+     * <a href="https://en.wikipedia.org/wiki/Shoelace_formula">Read more</a>
+     * Additionally: if the area turns out to be negative, that means that the points in the polygon are ordered clockwise and if the area turns out to be positive, that means that the points in the polygon are ordered counter-clockwise.
+     */
+    public double getArea() {
+        int sum = 0;
+
+        if (!this.isThePolygonClosed())
+            return 0d;
+
+        PolygonNode<Point> polygonNode = this.root;
+        do {
+            sum += (polygonNode.value.value + polygonNode.right.value.value) * (polygonNode.value.key - polygonNode.right.value.key);
+            polygonNode = polygonNode.right;
+        } while (polygonNode != this.root);
+
+        return ((double) sum) / 2;
+    }
+
+    public boolean isClockwise() {
+        return this.getArea() < 0d;
     }
 
     @Override

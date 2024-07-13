@@ -85,6 +85,19 @@ public class PolygonScreen extends ResizableWindow {
                 this.polygon.isThePolygonClosed() ? Text.of("Yes") : Text.of("No")
         ));
 
+        if (this.polygon.isThePolygonClosed()) {
+            this.properties.add(new TextProperty(
+                    this.client,
+                    Text.of("Area"),
+                    Text.of(String.valueOf(Math.abs(polygon.getArea())))
+            ));
+            this.properties.add(new TextProperty(
+                    this.client,
+                    Text.of("Clockwise"),
+                    this.polygon.isClockwise() ? Text.of("Yes") : Text.of("No")
+            ));
+        }
+
         super.init();
 
         this.select = ButtonWidget.builder(
@@ -142,9 +155,9 @@ public class PolygonScreen extends ResizableWindow {
                 this.properties,
                 this.getWindowLeft(),
                 this.getWindowWidth() - 5,
-                this.getWindowHeight() - 30,
+                this.getWindowHeight() - 55,
                 this.getWindowTop() + 25,
-                this.getWindowBottom() - 5,
+                this.getWindowBottom() - 30,
                 20
         );
         this.addDrawableChild(this.propertyListWidget);
